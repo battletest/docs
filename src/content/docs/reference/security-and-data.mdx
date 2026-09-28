@@ -1,0 +1,112 @@
+---
+title: Security & Data Handling
+description: What BattleTest accesses, what it retains, how AI-assisted analysis works, and the safeguards and providers involved.
+---
+
+This page explains BattleTest's data-handling practices at a customer-relevant level. It intentionally does not publish sensitive architecture, control configuration, or information that would reduce the security of the Service. Our [Privacy Policy](https://battletest.dev/privacy) controls how we handle personal data.
+
+## Repository access
+
+BattleTest accesses only the repositories and permissions made available through the GitHub integration you install. Repository access can be changed or revoked from GitHub.
+
+| Data | Why it is used | Typical handling |
+|------|----------------|------------------|
+| Repository and pull request metadata | Identify the repository, change, and review status | Stored with review records |
+| Relevant code changes and context | Perform the requested security review | Processed for analysis; not used to build a general-purpose copy of your repository |
+| Findings, evidence, and remediation | Present results and compare later changes | Stored in your BattleTest workspace |
+| Installation credentials | Access repositories you selected | Restricted and protected as security-sensitive data |
+
+Disconnecting GitHub stops future repository access. Existing findings and reports remain in your workspace until you delete them, delete the relevant workspace, or delete your account.
+
+## Live security testing
+
+For a live battletest, BattleTest processes the targets, scope, permission level, test configuration, and any test credentials you provide. During a run, the Service may process requests and responses, discovered assets, screenshots, browser state, tool output, approvals, and evidence needed to generate findings.
+
+Use dedicated test accounts and non-production credentials wherever practical. Only test systems you own or are authorised to test, and follow the [Acceptable Use Policy](https://battletest.dev/acceptable-use).
+
+## Records retained in your workspace
+
+BattleTest generally stores:
+
+- account, organisation, membership, role, and preference records;
+- repository and target registrations;
+- review and test status, findings, evidence, reports, and remediation notes;
+- notification, approval, usage, and billing-entitlement records; and
+- security, reliability, and diagnostic events needed to operate the Service.
+
+Temporary execution data and credentials expire or are deleted according to operational retention periods. Some evidence may contain selected code or response content when it is necessary to explain or reproduce a finding.
+
+## AI-assisted analysis
+
+BattleTest uses AI-assisted systems to analyse relevant code changes, application responses, screenshots, and security evidence. Depending on the feature, the minimum content needed for the task may be sent to an AI service provider. Current providers include:
+
+| Provider | Purpose |
+|----------|---------|
+| DeepInfra | Text-based security analysis and inference |
+| Anthropic | Visual analysis for supported live-testing workflows |
+| OpenAI | Embeddings and supported AI-assisted workflows |
+| Hugging Face | Embeddings and specialised model inference |
+
+Provider use may vary by feature and availability. AI output can be incomplete or wrong; review material findings before relying on them. BattleTest does not use customer content to train a public BattleTest model.
+
+## Other service providers
+
+We use service providers only where needed to operate or support the Service. Core providers include:
+
+| Provider | Role |
+|----------|------|
+| netcup | Application and database hosting in Nuremberg, Germany |
+| GitHub | Authentication and repository integration when connected by the customer |
+| Paddle | Authorised reseller, merchant of record, billing, tax, and buyer support |
+| Cloudflare | DNS, content delivery, bot protection, and object storage |
+| Plunk | Transactional and lifecycle email delivery |
+| Sentry | Error monitoring and service diagnostics |
+| Langfuse | AI workflow observability and diagnostics |
+| Webshare | Network routing for customer-authorised testing |
+| CapSolver | Challenge handling for customer-authorised testing |
+| 5SIM | Temporary test communications for customer-authorised testing |
+
+Security-intelligence workflows may query third-party sources using target indicators
+needed for the customer-authorised task. Two groups, both optional:
+
+**Keyed sources** — used only when you supply an API key: Shodan, Censys, AlienVault OTX,
+GreyNoise, Criminal IP, Netlas, ZoomEye, SecurityTrails.
+
+**Open sources** — no key required, and disabled unless the collector is explicitly
+enabled: crt.sh and Cert Spotter (certificate transparency), HackerTarget, CIRCL passive
+DNS, RDAP (registration data), the Internet Archive Wayback Machine, GitHub code search,
+and OpenCVE. Name resolution uses the container's own resolver. No public DNS-over-HTTPS service is
+contacted in any mode; set `DNS_RESOLVER` only if you want lookups sent to a DoH endpoint
+you nominate.
+
+Self-hosted deployments running in air-gapped mode reach none of the above: every one of
+these collectors fails closed rather than falling back to a public endpoint.
+
+Provider use varies by feature, target, availability, and the permissions you grant.
+Optional testing providers receive only the task information needed for the feature you
+authorise. First-party product analytics are operated by BattleTest and are not used for
+third-party advertising; they are **off by default in self-hosted deployments** and are
+enabled only by setting `PUBLIC_ANALYTICS_ENABLED=1`.
+
+## Security practices
+
+BattleTest uses layered administrative, organisational, and technical safeguards designed for the sensitivity of the data and the risks of a security-testing service. These include:
+
+- encrypted transport and protected storage;
+- role-based access and organisation boundaries;
+- restricted handling of credentials and other secret material;
+- request authentication, scoped integrations, and approval controls for higher-risk actions;
+- logging, monitoring, abuse prevention, and incident response processes; and
+- backup, recovery, dependency-management, and vulnerability-remediation practices.
+
+No internet service can guarantee absolute security. Keep your BattleTest account and connected providers secure, grant only required permissions, review organisation membership, and remove credentials or integrations that are no longer needed.
+
+## Retention, export, and deletion
+
+Account and workspace records are generally retained while the relevant account or workspace is active. You can export supported reports and findings from the product.
+
+Account deletion removes associated customer data from active systems, subject to limited records retained for billing, fraud prevention, security, legal compliance, dispute resolution, and backup rotation. Deleting an account may require cancelling an active subscription or transferring organisation ownership first. See the [Privacy Policy](https://battletest.dev/privacy) for details and privacy-request options.
+
+## Security disclosures
+
+Report a suspected vulnerability in BattleTest to [security@battletest.dev](mailto:security@battletest.dev). Include enough information to reproduce the issue, avoid accessing other customers' data, and do not disrupt the Service. We aim to acknowledge legitimate reports within two business days.

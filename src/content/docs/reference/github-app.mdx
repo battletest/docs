@@ -1,0 +1,60 @@
+---
+title: BattleTest GitHub App reference
+description: Reference for the BattleTest GitHub App — install URL, status check name, subscribed webhook events with actions, and the permissions the app requests.
+sidebar:
+  label: GitHub App
+---
+
+import { Note } from '@mintlify';
+
+## App details
+
+| Property | Value |
+|----------|-------|
+| App name | BattleTest Security |
+| Install URL | `https://github.com/apps/battletest-security` |
+| Check run name | `BattleTest Security Review` |
+
+## Subscribed webhook events
+
+BattleTest subscribes to the following events. Each maps to behaviour in the webhook handler; if an event is not enabled in the App's subscription settings, the corresponding behaviour will silently not fire.
+
+| Event | Actions used | What it drives |
+|-------|--------------|----------------|
+| **Pull request** | `opened`, `synchronize`, `reopened`, `ready_for_review` | Starts a review (drafts are skipped until `ready_for_review`) |
+| | `closed`, `converted_to_draft` | Cancels an in-flight review |
+| **Check run** | `rerequested` | Re-runs a review when you click **Re-run** |
+| **Check suite** | `rerequested` | Re-runs a review from the checks UI |
+| **Installation** | `created`, `deleted` | Links the installation on install; cleans up and emails on uninstall |
+| **Installation target** | `renamed` | Keeps the account/org login in sync after a rename |
+| **Repository** | `renamed` | Keeps scan history findable under the new repo name |
+
+## Permissions
+
+| Permission | Level | Purpose |
+|-----------|-------|---------|
+| Contents | Read | Read repository code and git history for security analysis |
+| Pull requests | Write | Post security review comments and dismiss stale reviews on PRs |
+| Checks | Write | Create and update the `BattleTest Security Review` check run |
+| Metadata | Read | Required by GitHub for all Apps |
+
+<Note>
+  BattleTest does not request push access, admin access, or access to Actions secrets.
+</Note>
+
+## Data handling
+
+BattleTest processes relevant repository code and pull request content to perform reviews. It stores review records, findings, and the selected evidence needed to explain them; it does not create a general-purpose copy of your repository. See [Security & Data Handling](/docs/reference/security-and-data) for details.
+
+## Status check behaviour
+
+The check conclusion mirrors the review verdict, so it can act as an opt-in merge gate.
+
+| State | GitHub conclusion | When | Blocks merge? |
+|-------|-------------------|------|---------------|
+| **In progress** | — | Review is running | No |
+| **Success** | `success` | Review completed; risk score below 40 (clean or low-risk) | No |
+| **Action required** | `action_required` | Review completed; risk score 40 or higher ("request changes" verdict) | Only if set as a required check |
+| **Failure** | `failure` | An internal review error prevented completion | Only if set as a required check |
+
+By default nothing blocks a merge — `action_required` simply surfaces a "needs attention" state on risky PRs. A single LOW finding or likely false positive (risk below 40) passes as `success`. To turn the review into a hard gate, add it as a required status check in GitHub branch protection — then PRs whose risk warrants changes are blocked until resolved. See [How to require security review before merging](/docs/how-to/require-security-review) and [Risk score](/docs/concepts/risk-score#score-bands).

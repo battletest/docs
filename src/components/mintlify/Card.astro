@@ -1,0 +1,10 @@
+---
+interface Props { title?: string; icon?: string; href?: string }
+const { title, href } = Astro.props;
+const Tag = href ? 'a' : 'div';
+const attrs = href ? { href } : {};
+---
+<Tag class:list={["mint-card", { 'mint-card--link': href }]} {...attrs}>
+	{title && <span class="mint-card-title">{title}</span>}
+	<span class="mint-card-body"><slot /></span>
+</Tag>

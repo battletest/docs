@@ -1,0 +1,49 @@
+---
+title: How to configure PR review
+description: Monitor BattleTest review usage, understand which branches get reviewed, and control what BattleTest posts to your pull requests.
+sidebar:
+  label: Configure PR review
+---
+
+import { Step, Steps } from '@mintlify';
+
+PR review usage lives in [Settings → Usage](https://battletest.dev/settings?tab=usage), and what BattleTest posts to your PRs is controlled from [Settings → Integrations](https://battletest.dev/settings?tab=integrations). For the limit figures themselves, see [Limits & Quotas](/docs/reference/limits-and-quotas#pr-review-limits).
+
+## Monitor your review usage
+
+<Steps>
+  <Step title="Open the Usage tab">
+    Go to [Settings → Usage](https://battletest.dev/settings?tab=usage).
+  </Step>
+  <Step title="Read the meters">
+    Each limit has a live meter showing current usage and when its window resets. Hourly windows reset on a rolling basis; monthly caps reset on the first of each UTC month. Reset times are shown in your local timezone.
+  </Step>
+</Steps>
+
+## Which branches get reviewed
+
+BattleTest reviews pull requests that **target your repository's default branch**. This is zero-config and applies automatically — a PR opened against any other base branch (for example, an intermediary `feature-A → feature-B` merge) is skipped so it doesn't burn your review limits.
+
+To make the review a required merge gate on the default branch, add a GitHub branch protection rule — see [How to require security review before merging](/docs/how-to/require-security-review).
+
+## What happens when you hit your limit
+
+When your advanced review limit is reached, BattleTest never drops the PR event — it falls back to a [basic scan](/docs/concepts/how-pr-review-works#advanced-vs-basic-reviews) so every PR still gets at least partial coverage. The PR comment notes that the basic scan ran.
+
+If both the advanced limit and the basic fallback limit are exhausted in the same window, BattleTest posts a non-blocking GitHub check run with the reset time — no PR event is ever silently dropped, and running out of quota never blocks a merge.
+
+## Control what BattleTest posts to your PRs
+
+You can change how much BattleTest writes to each pull request from [Settings → Integrations](https://battletest.dev/settings?tab=integrations) → **PR review output**:
+
+- **Full** (default) — inline comments on each finding plus a summary report.
+- **Minimal** — a one-line verdict with a link to the full report, no inline diff comments.
+- **None** — nothing is posted to the PR. The `BattleTest Security Review` check run and the report dashboard still update.
+
+## Configure notifications
+
+See [How to configure notifications](/docs/how-to/configure-notifications).
+
+## When you regularly hit a limit
+
+Hitting the hourly or monthly advanced-review limit is not an error state — a basic scan runs instead, so the pull request still gets coverage, and the PR comment says which mode ran. The limits and how each window resets are documented in [Limits & Quotas](/docs/reference/limits-and-quotas).

@@ -1,0 +1,139 @@
+---
+title: How to connect GitLab
+description: Connect a GitLab instance to BattleTest for merge request review, and understand what GitLab can and cannot show compared with GitHub.
+sidebar:
+  label: Connect GitLab
+---
+
+import { Note, Tab, Tabs } from '@mintlify';
+
+<Note>
+  **Self-hosted and enterprise deployments only.** GitLab is not available on
+  battletest.dev. A GitLab connection reviews merge requests for one organisation, which
+  is why it fits a dedicated instance and not a shared one.
+</Note>
+
+## Before you start
+
+You need:
+
+- **A GitLab access token** — a group access token if you want several projects covered,
+  or a project access token for one. It needs the `api` scope.
+- **A BattleTest organisation** to attribute reviews to. Every merge request reviewed
+  through this connection bills and reports to it.
+
+Reviews are posted as whoever owns the token. Create it under a service account rather
+than a personal one if you would rather comments not appear under an individual's name.
+
+## Connect the instance
+
+1. Open **Setup → Source control** and choose **GitLab / GitLab self-managed**.
+2. Fill in:
+   - **GitLab host** — leave blank for gitlab.com, or enter your hostname, e.g.
+     `gitlab.yourco.com`.
+   - **Access token** — the token from above.
+   - **Organisation** — which BattleTest organisation these reviews belong to.
+   - **Webhook secret token** — see below. You can come back to this.
+3. Select **Test connection**. BattleTest calls `GET /user` on your host and shows which
+   account it authenticated as. If the host answers but has no `/api/v4`, you will be
+   told that separately from a rejected token — it usually means a typo in the hostname.
+4. Save.
+
+<Note>
+  If your GitLab uses a certificate from an internal certificate authority, mount your CA
+  bundle and point `NODE_EXTRA_CA_CERTS` at it. BattleTest inspects that file at startup
+  and logs an error if it is unreadable or expired, rather than carrying on with nothing
+  trusted — which would otherwise show up as every internal integration failing TLS for
+  reasons that look like the remote host's fault.
+</Note>
+
+## Add the webhook
+
+In your GitLab project or group, go to **Settings → Webhooks** and add:
+
+- **URL** — `https://<your-battletest-host>/webhook/gitlab`
+- **Trigger** — **Merge request events** only. Other event types are accepted and
+  ignored, so enabling them adds deliveries that do nothing.
+
+### Choose a secret
+
+GitLab offers two ways to authenticate a webhook, and they are not equivalent.
+
+<Tabs>
+  <Tab title="Signing token (recommended)">
+    GitLab signs the request body, and BattleTest verifies the signature. Someone who
+    reads the request in a log learns nothing they can replay.
+
+    Paste the signing token — it begins `whsec_` — into the **Webhook secret token**
+    field in BattleTest.
+  </Tab>
+  <Tab title="Secret token (legacy)">
+    GitLab sends a shared secret in plain text on every delivery and BattleTest compares
+    it. It proves the sender knows the secret and says nothing about the body, and the
+    secret is exposed to anything that logs request headers.
+
+    Supported, because instances still use it. Prefer the signing token for anything new.
+  </Tab>
+</Tabs>
+
+BattleTest tells the two apart by the `whsec_` prefix. A delivery that carries a
+signature is always checked against it, so configuring the stronger option cannot be
+downgraded by an attacker who has the plaintext token.
+
+## What triggers a review
+
+A merge request is reviewed when it is opened, reopened, or receives a new commit.
+
+Not reviewed:
+
+- **Drafts**, until they are marked ready.
+- **Merge requests targeting a branch other than the project's default**, so a stack of
+  feature branches does not bill a review per link.
+- **Approvals, labels, assignees and title edits.** GitLab reports all of these as
+  `update`, the same event as a push, so BattleTest checks whether the source branch
+  actually moved.
+
+Closing or merging cancels a review that is still running.
+
+## What GitLab shows, compared with GitHub
+
+GitLab and GitHub are genuinely different here. Nothing below is a limitation of
+BattleTest that a later release removes — they are things GitLab's API does not have.
+
+| | GitHub | GitLab |
+|---|---|---|
+| Summary | Review body | Merge request note |
+| Per-line findings | Inline review comments | Inline discussions |
+| Per-line annotations on the check | Yes | **No** |
+| Pass/fail signal | Check run | Commit status |
+| Blocking review | Requests changes | **No** — use a required commit status |
+| Superseding an old review | Dismissed | Body replaced with a link to the current one |
+
+Two consequences worth planning for:
+
+**The full report lives in a note, not the status.** A GitLab commit status carries a
+description of at most 255 characters and no annotations, so BattleTest posts the summary
+and every per-line finding as a note on the merge request and uses the status purely as
+the pass/fail signal. Nothing is dropped — it is in a different place than on GitHub.
+
+**To block a merge, require the status.** BattleTest cannot request changes on GitLab. In
+**Settings → Merge requests**, require the `BattleTest Security Review` commit status to
+succeed. That is the GitLab equivalent, and it keeps the decision to block with your
+project settings rather than with an automated reviewer.
+
+## Troubleshooting
+
+**Deliveries return 404.** The host in the merge request payload does not match any
+configured GitLab instance, or it matched a GitHub one. Check the **GitLab host** field
+against the URL your projects actually use.
+
+**Deliveries return 401.** The secret in BattleTest does not match the one in GitLab.
+If you are using a signing token, confirm you pasted the whole value including the
+`whsec_` prefix.
+
+**Deliveries return 409.** The connection has no organisation set, so reviews cannot be
+attributed or metered. Set it in **Setup → Source control**.
+
+**Deliveries succeed but nothing happens.** The response body says why — the most common
+reasons are a draft merge request, one targeting a non-default branch, and an `update`
+event that changed no commits.

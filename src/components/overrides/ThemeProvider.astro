@@ -1,0 +1,7 @@
+---
+// Force dark. BattleTest's site is dark-only, so the docs never offer light.
+---
+<script is:inline>
+	document.documentElement.dataset.theme = 'dark';
+	try { localStorage.setItem('starlight-theme', 'dark'); } catch {}
+</script>

@@ -1,0 +1,48 @@
+---
+title: Scan Results
+description: Reference for live BattleTest scan reports — report structure, finding categories, Confirmed and Potential confidence levels, scan diffs, and export formats.
+---
+
+## Scan report structure
+
+Each completed battletest produces a report with:
+
+- **Overall risk score** (0–100)
+- **Attack surface summary:** endpoints discovered, forms found, subdomains enumerated, ports scanned
+- **Findings:** sorted by severity with full detail
+- **Diff vs previous scan:** new, resolved, persistent, and regression findings
+
+## Finding categories
+
+| Category | Examples |
+|----------|---------|
+| **Injection** | SQL injection, XSS, command injection, path traversal |
+| **Authentication** | Weak auth, session management issues, credential exposure |
+| **Misconfiguration** | Missing security headers, exposed admin interfaces, default credentials |
+| **Exposure** | Sensitive information in responses, directory listing, backup files accessible |
+| **Dependency** | Outdated server software or frameworks with known CVEs |
+| **SSL/TLS** | Certificate issues, weak ciphers, deprecated protocol versions |
+
+## Confidence levels
+
+| Level | Meaning |
+|-------|---------|
+| **Confirmed** | The agent verified the vulnerability with a working proof of concept. Act immediately. |
+| **Potential** | The endpoint or pattern is suspicious but could not be confirmed without a higher permission tier. Review manually or approve the next tier. |
+| **Informational** | Not a vulnerability. Noted for awareness (e.g., overly verbose server headers). |
+
+## Scan diff classification
+
+| Classification | Meaning |
+|----------------|---------|
+| **New** | Finding present in this scan, not in the previous scan |
+| **Persistent** | Finding present in both this scan and the previous scan |
+| **Resolved** | Finding present in the previous scan, absent in this scan |
+| **Regression** | Finding semantically similar to a previously resolved finding |
+
+## Export formats
+
+| Format | Use |
+|--------|-----|
+| **PDF** | Formatted report for sharing with customers, auditors, or security questionnaire responses |
+| **JSON** | Machine-readable findings for integration with ticketing systems, SIEMs, or security dashboards |

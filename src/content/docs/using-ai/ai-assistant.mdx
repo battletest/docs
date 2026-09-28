@@ -1,0 +1,39 @@
+---
+title: The in-app AI assistant
+description: A read-only AI assistant built into the BattleTest app that answers questions about your findings, PR reviews, and usage — grounded in your own data and the documentation.
+sidebar:
+  label: In-app assistant
+---
+
+import { Note } from '@mintlify';
+
+BattleTest ships with an AI assistant inside the app — the sparkle button in the bottom corner of any signed-in page. It answers questions about your account in plain language and links you to the right place to act.
+
+## What it can do
+
+The assistant is grounded in two things: this documentation, and **your own data** (read through a small set of read-only tools scoped to your signed-in account). It can:
+
+- **Explain your findings and PR reviews** — "why was this PR flagged?", "what are my open critical findings?", "summarise my last battletest."
+- **Answer usage and limit questions** — "am I close to a review limit?", "how many in-depth reviews have I used this month?".
+- **Explain how the product works** — anything covered in these docs: risk scores, the finding lifecycle, PR review vs live battletest, notifications.
+- **Take you there** — when doing something is the answer, it offers a button that deep-links to the exact page (a specific finding, your notification settings, the connect-GitHub flow).
+
+## What it will not do
+
+<Note>
+The assistant is **read-only**. It cannot change a setting, dismiss a finding, start a battletest, or modify billing. When you want to *do* something, it points you to where in the app to do it.
+</Note>
+
+- It only reads **your own** account's data — your sites, findings, PR reviews, and usage. It cannot see other organisations.
+- It **won't invent specifics.** Exact numbers, thresholds, tiers, and limits come from the documentation or your account data. If something isn't documented, it says so rather than guessing.
+- It isn't a security scanner. It reports on battletests and PR reviews that have already run — it doesn't test your site itself.
+
+## Privacy
+
+Conversations are tied to your user account and are used only to answer your questions. The assistant's data tools are read-only and scoped to your signed-in identity, so it can never surface another customer's findings or account. See [Security & Data Handling](/docs/reference/security-and-data) for how BattleTest handles your data overall.
+
+## Tips
+
+- Ask about your **current situation** directly — "my usage this month", "my open findings on `example.com`", "my last three PR reviews." The assistant looks these up rather than guessing.
+- If an answer needs an exact number that isn't in the docs, the assistant will tell you where in the app to find it.
+- Prefer to use your own AI tools (Claude, Cursor, ChatGPT)? You can connect the BattleTest documentation to them directly — see [Connect the docs to your AI tools](/docs/using-ai/docs-mcp).

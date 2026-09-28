@@ -1,0 +1,123 @@
+---
+title: Notification Events
+description: Complete reference for every BattleTest notification event — the six categories, each event, and its default and locked delivery channels across email, push, and in-app.
+---
+
+import { Note } from '@mintlify';
+
+BattleTest sends notifications on a fixed catalog of events. Each event belongs to one of six categories and has a default set of channels it is delivered on. You can override the channels per event from [Settings → Notifications](https://battletest.dev/settings?tab=notifications); to change them, see [How to configure notifications](/docs/how-to/configure-notifications).
+
+## Channels
+
+| Channel | Delivery |
+|---------|----------|
+| **Email** | Sent to your account email address from `noreply@battletest.dev` |
+| **Push** | Browser push (requires granting notification permission) |
+| **In-app** | The notification bell in the dashboard |
+
+In the tables below, ✓ marks a channel that is **on by default**. A ✓ 🔒 channel is **required** — it is always on and cannot be turned off, because the event is money- or security-critical and must not be silently missed.
+
+## PR Reviews
+
+Automated security reviews on your pull requests.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| PR review completed | A pull-request security review finished | | | ✓ |
+| PR review failed | A review couldn't complete and needs a retry | ✓ | | ✓ |
+| PR reviewed in basic mode | Your advanced-review limit was hit, so the PR got a basic scan instead of the full agentic review | ✓ | | ✓ |
+| PR not reviewed — limits reached | A PR was skipped because all review limits were exhausted | ✓ | | ✓ |
+| Approaching PR review limit | You're near your monthly advanced-review limit | | | ✓ |
+
+## Live Battletests
+
+Active security assessments against your domains.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| Battletest completed | A live security assessment finished | ✓ | | ✓ |
+| Battletest failed | A scan couldn't complete | ✓ | | ✓ |
+| Vulnerability found | A critical or high-severity issue was confirmed | ✓ | ✓ | ✓ |
+| Security report ready | Your full assessment report is ready to view | ✓ | | ✓ |
+| Battletest needs your approval | A scan is paused waiting for you to approve an exploit-gated step | ✓ | ✓ | ✓ |
+| Approval granted — scan resumed | An exploit-gated step you approved has resumed | | | ✓ |
+| Battletest stopped at your request | You declined an exploit-gated step; the scan stopped with findings gathered so far | | | ✓ |
+| Approval rejected | An approval request was rejected | | | ✓ |
+| Monthly battletest limit reached | You've used all the battletest runs available to you this cycle | ✓ | | ✓ |
+| Approaching battletest limit | You're near the monthly battletest run limit | | | ✓ |
+| Scheduled run skipped | A scheduled battletest didn't run (a lost DNS verification, or the monthly battletest cap was reached) | ✓ | | ✓ |
+| Scheduled run couldn't start | A scheduled battletest failed to launch | ✓ | | ✓ |
+
+<Note>
+  Live battletest runs only in a dedicated deployment, so the events in this section
+  fire only for accounts that have one. PR review notifications are unaffected.
+</Note>
+
+## Billing
+
+Payment and account-standing events. These fire only for accounts with existing billing
+records — BattleTest no longer sells plans, so nothing here is reachable from a new account.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| Payment failed | We couldn't charge your card | ✓ 🔒 | | ✓ |
+| Past due | An outstanding balance moved the account to past due | ✓ 🔒 | | ✓ |
+| Payment received | A payment went through | | | ✓ |
+| Plan changed | The plan on the account changed and new limits are in effect | ✓ 🔒 | | ✓ |
+| Change scheduled | A change or cancellation is scheduled for the end of the billing period | ✓ | | ✓ |
+| Cancelled | Billing was cancelled; access ends at the period end | ✓ 🔒 | | ✓ |
+| Refund issued | A refund was issued to your payment method | ✓ | | ✓ |
+| Card expiring | Your saved card is expiring | ✓ | | ✓ |
+| Payment method removed | The card on file was removed while billing was still active | ✓ | | ✓ |
+
+## Account & Security
+
+Sign-in, password, and account-security events.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| Password changed | Your account password was changed | ✓ 🔒 | | ✓ |
+| Email address changed | Your account email was changed (also sent to your previous address) | ✓ 🔒 | | ✓ |
+| New sign-in | A new sign-in from a new device or location | ✓ | | ✓ |
+| Welcome | A welcome message when you create your account | ✓ | | |
+| Email verified | Your email address was verified | | | ✓ |
+| Account deleted | Confirmation that your account was deleted | ✓ 🔒 | | |
+| API key created | A new API key was created on your account | ✓ | | ✓ |
+| API key revoked | An API key was revoked | ✓ | | ✓ |
+
+## Team & Organization
+
+Membership, roles, and org changes.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| Your role changed | Your role in an organization was changed | ✓ | | ✓ |
+| Removed from organization | You were removed from an organization | ✓ | | ✓ |
+| Organization deleted | An organization you belonged to was deleted | ✓ | | ✓ |
+| Invitation received | You were invited to an organization | ✓ | | ✓ |
+| Invitation accepted | Someone you invited joined your organization | | | ✓ |
+| Ownership transfer | An organization ownership transfer was offered or completed | ✓ | | ✓ |
+
+## Integrations
+
+GitHub and domain verification.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| GitHub account linked | A GitHub account was linked to your BattleTest account | ✓ | | ✓ |
+| GitHub account unlinked | A GitHub account was disconnected | ✓ | | ✓ |
+| GitHub connected to org | A GitHub installation was connected to an organization | | | ✓ |
+| GitHub disconnected from org | A GitHub installation was removed from an organization | ✓ | | ✓ |
+| GitHub App suspended | The BattleTest GitHub App was suspended; reviews are paused | ✓ | | ✓ |
+| GitHub App uninstalled | The BattleTest GitHub App was removed from an account | ✓ | | ✓ |
+| Domain verified | A domain passed DNS ownership verification | | | ✓ |
+| Domain verification lost | A domain's DNS verification record is missing; scans are paused | ✓ | | ✓ |
+
+<Note>
+  Push and in-app notifications carry a one-tap action button where one is useful — for example **Review & approve** on a paused battletest, **Update payment** on a failed charge, or **View finding** on a confirmed vulnerability. Tapping it deep-links to the exact page in the dashboard.
+</Note>
+
+## Related
+
+- [How to configure notifications](/docs/how-to/configure-notifications) — turn channels on or off, enable browser push, and install the app.
+- [How to export findings](/docs/how-to/export-findings) — get finding data out of BattleTest for your own reporting.

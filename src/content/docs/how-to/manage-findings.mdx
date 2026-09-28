@@ -1,0 +1,79 @@
+---
+title: How to review, dismiss, and track findings
+description: Triage BattleTest findings from PR reviews and live scans — dismiss false positives with a reason, mark issues resolved, and track open findings over time.
+sidebar:
+  label: Manage findings
+---
+
+import { Note, Step, Steps } from '@mintlify';
+
+## Where findings appear
+
+Findings from PR reviews appear in two places: as a comment on the GitHub pull request from `battletest[bot]`, and in the run detail page in the BattleTest dashboard (linked from the PR comment).
+
+Findings from live scans appear only in the dashboard.
+
+Both types share the same lifecycle: **Open → Dismissed** or **Resolved**.
+
+## Dismiss a false positive
+
+When a finding is not a real vulnerability — for example, a secret detected in a test fixture file, or an injection pattern in documentation — dismiss it so it doesn't affect future risk scores.
+
+<Steps>
+  <Step title="Open the finding">
+    Open the run detail page in the dashboard and click on the finding to expand it.
+  </Step>
+  <Step title="Dismiss">
+    Click **Dismiss**.
+  </Step>
+  <Step title="Select a reason">
+    Choose: _False positive_, _Accepted risk_, or _Not applicable_.
+  </Step>
+  <Step title="Add a note (optional)">
+    Optionally add a note explaining the decision.
+  </Step>
+</Steps>
+
+Dismissed findings are excluded from the risk score on subsequent scans of the same code path or endpoint. They're also excluded from regression detection — a dismissed finding will not trigger a regression alert if it reappears.
+
+<Note>
+  Dismissals are recorded against your account, not the GitHub PR. If you connect a new repository or add a new target, you'll need to re-dismiss findings there.
+</Note>
+
+## Mark a finding as resolved
+
+You don't need to mark findings as resolved manually. BattleTest detects resolution automatically: if the finding no longer appears in the next scan of the same PR branch or target, it's automatically classified as _Resolved_.
+
+For live scan findings, trigger a new scan after deploying the fix. In the comparison view, the fixed finding will appear under _Resolved_ in the scan diff.
+
+Resolved findings contribute to the regression detection baseline. If the same vulnerability pattern reappears in a future scan, it's flagged as a regression — not a new finding — and the risk score includes a regression penalty.
+
+## View all open findings for a repository
+
+<Steps>
+  <Step title="Select repository">
+    Go to [Dashboard → Repositories](https://battletest.dev/dashboard) and select a repository.
+  </Step>
+  <Step title="Open Findings tab">
+    Click the **Findings** tab.
+  </Step>
+</Steps>
+
+This shows all open findings across all PR runs for that repository, sorted by severity. Filter by severity, source (CVE, Secret, AI, etc.), and status.
+
+## View all open findings for a live target
+
+<Steps>
+  <Step title="Select environment">
+    Go to [Tests](https://battletest.dev/tests) and select the environment.
+  </Step>
+  <Step title="Open Findings tab">
+    Click the **Findings** tab.
+  </Step>
+</Steps>
+
+This shows persistent and new findings across all scans of the target, with scan-over-scan comparison available on each finding.
+
+## Export findings
+
+See [how to export findings for an audit or SOC 2](/docs/how-to/export-findings).

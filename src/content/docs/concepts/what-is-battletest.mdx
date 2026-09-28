@@ -1,0 +1,73 @@
+---
+title: About BattleTest
+description: BattleTest vs traditional pentest, vs SAST tools, and why continuous automated security testing catches more vulnerabilities than point-in-time engagements.
+---
+
+BattleTest is an AI-native security platform built around a simple observation: most application security tools are either too expensive for early-stage teams, too slow to fit into a development workflow, or only cover one slice of the attack surface.
+
+## Two products, one shared memory
+
+BattleTest has two complementary products that cover different parts of the vulnerability lifecycle:
+
+- **PR Review** catches vulnerabilities before they merge. Every pull request on your connected repositories gets an automated security review — CVE detection, secret scanning, injection analysis, and config hardening checks — posted as a comment on the PR within minutes.
+- **Live BattleTest** finds vulnerabilities in your running infrastructure. An AI agent coordinates a crawl-and-probe security assessment against a domain you specify, discovering endpoints, testing for active vulnerabilities, and producing a findings report.
+
+Both products share a common finding record. When a vulnerability found in a PR review later appears in a live scan — or when something previously resolved resurfaces — BattleTest flags the regression. This connection across products is what makes the coverage coherent rather than additive.
+
+## Why code review and live testing together
+
+A vulnerability has a lifecycle. It starts as a code pattern — a raw SQL query, a missing auth check, a committed secret. That code pattern becomes a runtime behaviour once it's deployed. A runtime behaviour becomes an exploitable vulnerability once an attacker finds it.
+
+Code-only tools (SAST, dependency scanners) catch the pattern early, but miss the context of what the running application actually exposes. Live pentesting tools catch the runtime exposure, but have no connection to the code that produced it and no insight into what's been introduced recently.
+
+BattleTest operates at both points. The PR review catches the pattern before it ships; the live battletest confirms whether it's exploitable in production; the shared memory connects the two so that a finding in code is not treated as unrelated to a finding in the live scan.
+
+## Who it's for
+
+BattleTest is designed for teams that want meaningful security coverage without the infrastructure of a dedicated security team:
+
+- Solo developers who want to know whether their code introduces obvious vulnerabilities before they push to production
+- Startups preparing for SOC 2, ISO 27001, or their first enterprise customer security questionnaire
+- Small engineering teams that want security checks integrated into their PR workflow rather than as a quarterly audit
+
+The design assumption is that your team knows how to build software but doesn't have a dedicated AppSec engineer. BattleTest fills that gap — not by replacing expert security judgment on complex architectural decisions, but by automating the class of checks that would otherwise be skipped because no one has time to do them manually.
+
+## BattleTest vs the alternatives
+
+**vs. traditional pentest**
+
+A pentest engagement runs once or twice a year, takes weeks to schedule, and produces a report that's already partially stale by the time you receive it. BattleTest runs on every PR and every deploy. For the class of vulnerabilities it covers — dependency CVEs, secrets, injection patterns, misconfiguration, surface exposure — continuous automated testing covers more of the year than two point-in-time engagements do.
+
+BattleTest doesn't replace a pentest for complex architectural reviews or threat-model-specific assessments. It replaces the pentest for the routine, automatable portion of security coverage.
+
+**vs. SAST tools (CodeQL, SonarQube, Semgrep)**
+
+Traditional static analysis tools work by pattern matching: a rule that looks for string concatenation into a SQL query, a rule for `eval()` on user input. They're fast and deterministic but blind to context — they can't trace a parameter across multiple function calls, understand the semantics of an ORM escape hatch, or recognise that a finding in a test file is not a production risk.
+
+BattleTest's AI analysis reads the diff in context — the changed lines plus the functions they call, the data they receive, and the historical finding record for the same files. It produces ranked, explained findings with remediation code in your stack, not just pattern hits. The trade-off is that it's probabilistic: it will occasionally flag something that turns out to be a false positive. The finding always includes its reasoning, so you can evaluate it quickly.
+
+BattleTest also does things SAST tools don't: it scans PRs for exposed secrets (and sweeps full git history during a repo-posture battletest), checks live infrastructure for exploitable vulnerabilities, and connects the finding record across code and runtime so regressions are caught automatically.
+
+**vs. doing nothing**
+
+The median time from vulnerability introduction to discovery is 197 days (IBM Cost of a Data Breach, 2023). For solo developers and small teams, that number is typically higher — there's no security review process to catch things as they ship. BattleTest cuts this to near-zero for the vulnerability classes it covers, on every PR, automatically.
+
+## What BattleTest does not do
+
+Understanding the boundaries helps you use BattleTest as part of a layered security approach rather than treating it as a complete solution.
+
+BattleTest doesn't replace a penetration test. A pentest is scoped to a specific threat model, conducted by humans who think adversarially, and produces a report tailored to your architecture. BattleTest automates broad coverage across a known vulnerability taxonomy — it will miss novel attack chains, business logic flaws, and vulnerabilities that depend on understanding how your users actually behave.
+
+BattleTest doesn't replace a security engineer on your team. If your architecture has a fundamental design flaw — a trust boundary that's incorrectly placed, a threat model that's been invalidated by a product change — BattleTest won't identify that. It operates at the level of individual code patterns, endpoint behaviours, and known vulnerability classes.
+
+BattleTest doesn't block all merges with findings by default. Findings are advisory unless you configure GitHub branch protection to require the status check. This is deliberate: a tool that blocks every PR on a false positive quickly gets bypassed. The goal is that every finding is visible and tracked, not that every finding must be resolved before shipping.
+
+## The shared memory in practice
+
+The shared finding record between PR review and live battletest is more useful than it might initially sound.
+
+Consider the common scenario: your AI analysis flags a potential SQL injection in a PR. The developer isn't sure it's a real risk — the ORM should be escaping correctly. They merge. Six weeks later, a live battletest confirms the injection via active probing. The live scan finding links back to the PR review finding from six weeks ago. You can see exactly which commit introduced it, what the original finding said, and that a developer reviewed it and concluded the risk was low.
+
+That audit trail — from code pattern through to confirmed exploitable vulnerability — is what makes the shared memory useful for both remediation (you know exactly where to look) and compliance (you have a record of when the vulnerability was introduced and how it was discovered).
+
+The reverse case matters too: a vulnerability confirmed in a live scan that then disappears from the next scan (because you deployed a fix) is automatically classified as Resolved. If a similar pattern reappears in a future PR review, BattleTest flags it as a regression rather than a new finding — you've seen this before, and it's back.

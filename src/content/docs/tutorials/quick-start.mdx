@@ -1,0 +1,104 @@
+---
+title: Get Your First PR Security Review
+description: Connect a GitHub repository to BattleTest, open a pull request, and read your first automated security review with CVE, secret, and AI findings in 5 minutes.
+sidebar:
+  label: First PR review
+---
+
+import { Card, CardGroup, Note, Step, Steps } from '@mintlify';
+
+In this tutorial you'll set up a BattleTest workspace, connect a GitHub repository, and get a real automated security review posted on a pull request. By the end you'll have seen what the tool does and be ready to use it on your own work.
+
+You'll need a GitHub account and at least one repository with an open (or easily openable) pull request.
+
+<Steps>
+  <Step title="Sign up">
+    Go to [battletest.dev/login](https://battletest.dev/login) and click **Continue with GitHub**. GitHub will ask you to authorise BattleTest to read your profile and email. Click **Authorize**.
+
+    BattleTest opens a short two-step setup: first you'll name your workspace, then connect GitHub.
+  </Step>
+
+  <Step title="Create your workspace">
+    A workspace is where your repositories, findings, team, and billing live. Enter a name — your own or your company's is fine — and click **Create workspace**.
+
+    You can rename it later, so don't overthink it.
+  </Step>
+
+  <Step title="Connect the GitHub App">
+    On the next step, click **Install GitHub App**.
+
+    GitHub opens the App installation page. Choose the account or organisation that owns the repository you want to review. Under **Repository access**, select **Only select repositories** and pick one repository to start with.
+
+    Click **Install & Authorize**.
+
+    You're returned to BattleTest and land on your dashboard. Your repository now appears with a green _Connected_ badge.
+
+    <Note>
+      BattleTest processes relevant code to produce review results and stores findings with the evidence needed to explain them. It does not create a general-purpose copy of your repository. [See what data is accessed and retained →](/docs/reference/security-and-data)
+    </Note>
+  </Step>
+
+  <Step title="Open a pull request">
+    Go to your repository on GitHub and open a pull request — any change, however small. If one is already open, push any new commit to it.
+
+    Within 30 seconds, a new check appears at the bottom of the PR page: _BattleTest Security Review — In progress_.
+  </Step>
+
+  <Step title="Read the security review">
+    After 2–4 minutes, BattleTest posts a comment from **battletest[bot]**.
+
+    The comment opens with a **risk score** (0–100). Scores up to 20 are clean — the diff looks clear. Scores above 60 mean findings require attention before merging. [How risk scores are calculated →](/docs/concepts/risk-score)
+
+    Below the score, findings are listed by severity: CRITICAL first, then HIGH, MEDIUM, LOW. Each finding shows:
+
+    - The file and line number
+    - What the vulnerability is, in plain English
+    - The vulnerable code in context
+    - A drop-in fix with a working code example
+    - CWE and OWASP category references
+
+    If the PR has no findings, the comment will say so — that's also useful signal. Not every finding requires immediate action; read [Understanding findings](/docs/concepts/findings) to know how to triage them.
+  </Step>
+
+  <Step title="View the full run in the dashboard">
+    Click **View full report →** at the bottom of the PR comment. This opens the run detail page where you can see expanded reasoning for each finding and compare this PR against others on the same repository.
+  </Step>
+</Steps>
+
+Every pull request on this repository will now be reviewed automatically — you don't need to trigger it manually. No YAML to write, no runner minutes, no configuration to maintain. Every PR that opens from this point forward gets a full security pass: dependency CVEs, exposed secrets, injection patterns, config gaps.
+
+Here's what a typical finding looks like in the PR comment:
+
+```
+CRITICAL · SQL Injection · src/api/users.ts:47
+
+User input flows directly into a raw SQL query without parameterisation.
+An attacker can manipulate the `id` parameter to exfiltrate any table.
+
+Vulnerable code:
+  const result = await db.query(`SELECT * FROM users WHERE id = ${req.params.id}`)
+
+Fix:
+  const result = await db.query('SELECT * FROM users WHERE id = $1', [req.params.id])
+
+References: CWE-89 · OWASP A03:2021
+```
+
+The finding tells you exactly what's wrong, where it is, why it's a problem, and what to type to fix it — in your language and framework.
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="PR Findings reference" icon="book" href="/docs/reference/pr-findings">
+    What each field in a finding means, how risk scores are calculated, and the finding lifecycle.
+  </Card>
+  <Card title="Run a live battletest" icon="terminal" href="/docs/tutorials/live-battletest">
+    Test your running infrastructure — not just the code.
+  </Card>
+  <Card title="Require review before merging" icon="lock" href="/docs/how-to/require-security-review">
+    Block PRs with the BattleTest status check.
+  </Card>
+  <Card title="Add a live target" icon="crosshairs" href="/docs/how-to/adding-a-target">
+    Add a domain for autonomous security assessment.
+  </Card>
+</CardGroup>

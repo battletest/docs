@@ -1,0 +1,41 @@
+---
+title: How BattleTest works
+description: How BattleTest reviews code changes, tests authorised live targets, validates findings, and tracks security issues over time.
+sidebar:
+  label: How it works
+---
+
+BattleTest provides two complementary forms of security testing: pull request review for code changes and live battletests for running applications. Both produce findings in the same workspace so your team can triage, remediate, and track recurring issues consistently.
+
+## Pull request review
+
+When an eligible pull request is opened or updated, BattleTest analyses the change for issues such as exposed secrets, vulnerable dependencies, unsafe configuration, and security-relevant code behaviour.
+
+Results appear in the BattleTest dashboard and the pull request's `BattleTest Security Review` check. Findings include the affected location, severity, evidence, explanation, and remediation guidance. You can use the check as an informational signal or configure it as a required merge gate.
+
+See [How PR review works](/docs/concepts/how-pr-review-works) for review coverage and [Risk score](/docs/concepts/risk-score) for verdict behaviour.
+
+## Live battletest
+
+A live battletest evaluates an application or API you have registered and verified. The run begins by mapping the authorised surface, then performs testing allowed by the permission level you selected. Higher-risk actions remain subject to scope and approval controls.
+
+BattleTest validates candidate issues against observed evidence before reporting them. Reports distinguish confirmed findings from items that need manual verification and provide reproduction and remediation information where available.
+
+See the [Live BattleTest overview](/docs/concepts/live-battletest-overview) for the testing phases and permission model before running a test.
+
+## Shared finding history
+
+PR reviews and live battletests contribute to the same organisation-level finding history. This allows BattleTest to recognise related issues, highlight possible regressions, and show whether a risk appears in a code change, a deployed application, or both.
+
+Similarity and regression signals support triage; they are not proof that two findings have the same root cause. Review the underlying evidence before closing or combining issues.
+
+## Safety and data boundaries
+
+- Repository access is limited to the GitHub installations and repositories you select.
+- Live testing requires ownership or explicit permission and must follow the [Acceptable Use Policy](https://battletest.dev/acceptable-use).
+- Testing intensity is constrained by the selected permission level, target scope, usage limits, and applicable approvals.
+- Findings can contain selected code or response evidence needed to explain an issue. See [Security & Data Handling](/docs/reference/security-and-data).
+
+## Timing
+
+Review and test duration varies with change size, target complexity, reachable surface, and the depth required to validate potential findings. The dashboard shows live status while a run is active. See [Limits & Quotas](/docs/reference/limits-and-quotas#scan-duration) for typical ranges and usage limits.

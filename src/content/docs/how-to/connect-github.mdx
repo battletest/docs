@@ -1,0 +1,60 @@
+---
+title: How to connect a GitHub repository
+description: Install the BattleTest GitHub App to get automated CVE, secret, and AI code review on every pull request, and manage which repositories are connected.
+sidebar:
+  label: Connect GitHub
+---
+
+import { Note, Step, Steps } from '@mintlify';
+
+<Note>
+  PR review works on **public and private repositories**, free. Public repos get 20 in-depth reviews per hour, metered per repository; private repos get 10 in-depth reviews per month, then lighter scans. See [Limits & Quotas](/docs/reference/limits-and-quotas).
+</Note>
+
+<Note>
+  **Signed up with email and password?** Verify your email address before connecting GitHub — the button is disabled until your address is confirmed. Check your inbox for the verification email or resend it from [Settings → Account](https://battletest.dev/settings?tab=account). GitHub OAuth sign-ups are verified automatically.
+</Note>
+
+You connect repositories to a **workspace**, so you need one first. If you just signed up, BattleTest guides you through creating a workspace and then straight into the connect step below — continue from there. If you already have a workspace, start at step one.
+
+## Install the GitHub App
+
+<Steps>
+  <Step title="Open the connect flow">
+    Go to [the dashboard](https://battletest.dev/dashboard) and click **Connect GitHub**.
+  </Step>
+  <Step title="Choose account and repositories">
+    On the GitHub App installation page, select the account or organisation that owns your repositories. Under **Repository access**, choose **Only select repositories** and tick the repositories you want to connect.
+  </Step>
+  <Step title="Complete installation">
+    Click **Install & Authorize**.
+
+    Repositories appear in the BattleTest Repositories list with a _Connected_ status. PR reviews begin immediately on the next pull request event.
+  </Step>
+</Steps>
+
+## Add or remove repositories from an existing installation
+
+<Steps>
+  <Step title="Open repository settings">
+    Go to [Dashboard → Repositories](https://battletest.dev/dashboard).
+  </Step>
+  <Step title="Configure the App">
+    Click **Configure GitHub App**.
+  </Step>
+  <Step title="Update access">
+    Under Repository access, add or remove repositories, then click **Save**.
+  </Step>
+</Steps>
+
+## Connect repositories in a GitHub organisation
+
+To install on an organisation you must have organisation **Owner** permissions, or the organisation must allow members to install Apps. If the install button is greyed out, ask an organisation owner to complete the installation.
+
+To install on all current and future repositories in an organisation, select **All repositories** on the installation page instead of selecting specific repositories.
+
+## Uninstall the GitHub App
+
+Uninstall from GitHub: **Settings → Applications → Installed GitHub Apps → BattleTest Security → Configure → Uninstall**.
+
+BattleTest loses repository access immediately. Historical findings are retained in your account until you delete them.

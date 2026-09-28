@@ -1,0 +1,95 @@
+---
+title: Bring your own key and storage
+description: Connect your own model provider to remove review limits, and your own S3-compatible bucket so finished reviews live in storage you control.
+---
+
+import { Note } from '@mintlify';
+
+PR review is free, and the limits on it exist for one reason: inference is the marginal cost of a review, and those limits bound our spend on your behalf.
+
+Connect your own model provider and there is nothing left for a limit to protect. Reviews stop being capped and always run at full depth. Connect your own storage as well and the durable copy of your review history lives in a bucket you own.
+
+Both are free. We charge nothing for either, because in both cases the resource is yours.
+
+<Note>
+These are organisation-level settings. Connect them once and they apply to every repository in that organisation.
+</Note>
+
+## Bring your own model connection
+
+The connection is provider-neutral. Choose the API format the host accepts (`OpenAI` or `Anthropic`), then use that format's official endpoint or enter a custom endpoint. Custom endpoints cover hosted providers, gateways and reachable local inference servers.
+
+1. Go to **Settings → Usage**.
+2. Under **Bring your own**, choose the API format and official/custom endpoint.
+3. Enter the model ID and, when the endpoint requires one, its API key. Leave the key blank for a keyless local endpoint.
+4. Save. BattleTest runs a real one-token model request in the selected format before accepting it.
+
+BattleTest resolves known model prices from its bundled aggregate snapshot. If the model is not present, enter input, cached-input and output prices per million tokens. For local inference those overrides can all be `0`.
+
+### What changes
+
+Every review runs at **advanced** depth, with no hourly or monthly cap. The public-repo hourly limit and the private-repo monthly allowance both stop applying — they are counted in reviews precisely because reviews are what costs us, and on your own key they cost us nothing.
+
+This is deliberately **not** a plan tier. Tiers describe what someone bought; this describes who pays for the compute, and the two are independent.
+
+### If the key stops working
+
+A configured key that fails **never silently falls back to ours**. If your provider rejects a request, the review fails and the error is surfaced — you are not quietly moved back onto our account while believing you are paying your own bill, and limits are not re-applied on that belief.
+
+The last verification result is shown in Settings, including the reason for the most recent failure.
+
+### How the key is stored
+
+Non-empty keys are encrypted at rest, decrypted per use, and never returned to a browser — the settings page shows only the last four characters. If the instance has no encryption key configured, saving a credential fails rather than writing it in cleartext. A deliberately blank key stores no secret.
+
+Remove it at any time from the same screen. Removing it puts the organisation back on our inference and back within the free limits.
+
+## Bring your own storage
+
+Storage is the companion setting, and it does something different: it changes who holds the data, not who pays for the compute.
+
+1. Go to **Settings → Usage**.
+2. Under **Bring your own**, enter your S3-compatible endpoint, region, bucket, access key ID and secret access key.
+3. Save. BattleTest verifies the credentials before accepting them.
+
+Works with any S3-compatible storage — AWS S3, Cloudflare R2, MinIO, Ceph.
+
+### What changes
+
+When a review finishes, its record is written to your bucket and **our copy is deleted**. The durable form of your review history then exists only in storage you control.
+
+This also means your credentials are used at view time, not just at run end: the full report linked from a PR comment is a real page, and once our copy is gone that page reads from your bucket.
+
+### Why verification writes, reads and deletes
+
+The check performs all three operations rather than simply asking whether the bucket exists.
+
+All three are operations BattleTest will actually perform: write at the end of a run, read when someone opens a report, delete to clean up and to let your own lifecycle rules work. A read-only key passes a bucket-exists check and then fails at the end of your first review — after the work is done, and with the local copy already queued for deletion. So the check is the real operations, not a proxy for them.
+
+The probe object it writes is deleted as part of the check.
+
+## Using both together
+
+They are independent and can be used separately, but together they are the configuration described in our [pricing](https://battletest.dev/pricing): reviews are unlimited because you pay your provider directly, and finished reports are stored in your bucket rather than ours.
+
+What we retain either way is review counts and organisation metadata, so we can see which teams are getting value from the product. See [Security & Data Handling](/docs/reference/security-and-data) for the full picture.
+
+## API
+
+The same settings are available over the API:
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/api/v1/settings/byo?orgId=` | Current key and storage status for an organisation |
+| `POST` | `/api/v1/settings/byo/model-key` | Save or replace model credentials |
+| `DELETE` | `/api/v1/settings/byo/model-key?orgId=` | Remove model credentials |
+| `POST` | `/api/v1/settings/byo/storage` | Save or replace storage credentials |
+| `DELETE` | `/api/v1/settings/byo/storage?orgId=` | Remove storage credentials |
+
+Saving through either route runs the same verification as the settings screen.
+
+## Related
+
+- [Limits and quotas](/docs/reference/limits-and-quotas) — what the limits are when you are on our inference
+- [Soft limits](/docs/reference/soft-limits) — what happens as an organisation approaches them
+- [Security & Data Handling](/docs/reference/security-and-data) — what is accessed and retained

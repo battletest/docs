@@ -1,0 +1,55 @@
+---
+title: How to require security review before merging
+description: Use GitHub branch protection rules to block pull requests from merging until a BattleTest security review has completed — no CI pipeline changes required.
+sidebar:
+  label: Require security review
+---
+
+import { Step, Steps } from '@mintlify';
+
+BattleTest posts findings as a PR comment and sets a commit status check, but does not block merges by default. To make the security review a required gate:
+
+## Add the required status check in GitHub
+
+<Steps>
+  <Step title="Open branch protection rules">
+    In your GitHub repository, go to **Settings → Branches**.
+  </Step>
+  <Step title="Edit the rule">
+    Under **Branch protection rules**, click **Edit** on your default branch rule (or **Add rule** if none exists).
+  </Step>
+  <Step title="Enable required status checks">
+    Enable **Require status checks to pass before merging**.
+  </Step>
+  <Step title="Add BattleTest check">
+    In the search field, type `BattleTest Security Review` and select it from the results.
+  </Step>
+  <Step title="Save">
+    Click **Save changes**.
+  </Step>
+</Steps>
+
+After this, a PR is blocked from merging when:
+
+- the review hasn't completed yet, or
+- the review encountered an internal error (`failure`), or
+- the review completed with a **risk score of 40 or higher** — the "request changes" verdict (`action_required`).
+
+PRs whose risk score is below 40 (clean, or only a low-severity / likely false-positive finding) pass as `success` and merge normally. This means requiring the check gates the PRs that warrant changes without blocking on trivial findings. See [Risk score](/docs/concepts/risk-score#score-bands) for what drives the score.
+
+## Adjust the blocking threshold
+
+The check blocks at risk score 40 and above, matching the verdict shown in the PR comment. A configurable per-repo threshold (for example, block only on CRITICAL findings) is on the roadmap — contact [wale@battletest.dev](mailto:wale@battletest.dev) if you need a custom threshold today.
+
+If you want the review visible but never blocking, simply don't add it as a required status check — the comment and check still appear on every PR.
+
+## Which branches are reviewed
+
+BattleTest reviews pull requests that target your repository's **default branch**. PRs opened against other base branches are skipped so they don't burn your review limits, so the required check is meaningful on merges into the default branch — which is where you want the merge gate. See [How to configure PR review](/docs/how-to/pr-settings#which-branches-get-reviewed).
+
+## Re-trigger a review that didn't run
+
+If a PR was opened before the GitHub App was installed, or if the webhook delivery failed, the review won't have run. Re-trigger it by:
+
+- Pushing any new commit to the PR branch, or
+- Closing and reopening the PR

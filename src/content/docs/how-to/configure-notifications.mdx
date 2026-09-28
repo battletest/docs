@@ -1,0 +1,74 @@
+---
+title: How to configure notifications
+description: Choose which BattleTest events notify you and where — email, browser push, or in-app — enable push, and install BattleTest as an app.
+sidebar:
+  label: Configure notifications
+---
+
+import { Step, Steps } from '@mintlify';
+
+BattleTest can notify you per event, per channel. Configure everything at [Settings → Notifications](https://battletest.dev/settings?tab=notifications). For the full list of events and their default channels, see the [Notification Events reference](/docs/reference/notification-events).
+
+## Channels
+
+| Channel | Where it arrives |
+|---------|------------------|
+| **Email** | Your account email address |
+| **Push** | Browser push notifications (requires granting permission in your browser) |
+| **In-app** | The notification bell in the dashboard |
+
+The GitHub PR comment is always posted regardless of these settings — it is the primary output of a PR review, not a notification channel.
+
+## Turn a notification on or off
+
+<Steps>
+  <Step title="Open the Notifications tab">
+    Go to [Settings → Notifications](https://battletest.dev/settings?tab=notifications). Events are grouped by category (PR Reviews, Live Battletests, Billing, Account, Team, Integrations), each with a master toggle.
+  </Step>
+  <Step title="Toggle the channel for an event">
+    Each event has an email, push, and in-app toggle. Switch the channel on or off for that event.
+  </Step>
+</Steps>
+
+Some security- and money-critical events (a password change, an ownership transfer, a failed payment on an account that still has billing records) keep **email locked on** — you can add channels but not remove email. These are marked in the [Notification Events reference](/docs/reference/notification-events).
+
+## Enable browser push
+
+<Steps>
+  <Step title="Toggle push on for any event">
+    The first time you enable a push toggle, your browser asks for notification permission.
+  </Step>
+  <Step title="Allow notifications">
+    Click **Allow**. If you previously blocked notifications for the BattleTest domain, re-enable them in your browser's site settings first, then toggle push again.
+  </Step>
+</Steps>
+
+Push notifications carry a one-tap action where one helps — **Review & approve** on a paused battletest, **View finding** on a confirmed vulnerability — that deep-links straight to the right page.
+
+## Install BattleTest as an app
+
+BattleTest is a Progressive Web App, so you can install it for a dedicated window and reliable push notifications even when no browser tab is open.
+
+<Steps>
+  <Step title="Open BattleTest in a supported browser">
+    Use Chrome, Edge, or another Chromium browser on desktop, or Safari / Chrome on mobile.
+  </Step>
+  <Step title="Install">
+    On desktop, click the **install** icon in the address bar (or the browser menu → **Install BattleTest**). On iOS Safari, use **Share → Add to Home Screen**.
+  </Step>
+  <Step title="Grant notification permission">
+    Open the installed app and enable a push toggle if you haven't already, so alerts arrive even when the app is closed.
+  </Step>
+</Steps>
+
+## See your notifications in the app
+
+The **notification bell** in the dashboard header shows your in-app feed with an unread count. Open it to read recent notifications, jump to the related page from a notification's action, or mark items as read (individually or all at once).
+
+## Get finding data into your own systems
+
+Per-channel notifications are for humans. To pull finding data into a spreadsheet, a ticket tracker, or your own reporting, export it instead. See [How to export findings](/docs/how-to/export-findings).
+
+## Not receiving emails?
+
+Check your spam folder — the first email from `noreply@battletest.dev` is sometimes filtered. Add the address to your contacts. See [Troubleshooting](/docs/how-to/troubleshooting#im-not-receiving-battletest-email-notifications) if it persists.

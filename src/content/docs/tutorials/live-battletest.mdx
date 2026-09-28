@@ -1,0 +1,93 @@
+---
+title: How a live battletest runs
+description: What a live BattleTest run does from discovery through active probing to a confirmed finding, and how a dedicated per-client deployment is set up.
+sidebar:
+  label: Live battletest
+---
+
+import { Card, CardGroup, Note } from '@mintlify';
+
+<Note>
+  Live battletest is not self-serve. It ships as a dedicated deployment for each client,
+  scoped per engagement. This page describes what a run actually does, so you know what
+  you would be buying before you talk to anyone.
+  [Talk about a dedicated deployment →](https://battletest.dev/contact)
+</Note>
+
+A run moves through the same sequence every time: map the application, probe it, confirm what
+is real, and report both what was found and what was not reachable.
+
+## 1. Discovery
+
+Discovery is passive. It sends ordinary HTTP requests to map what the application exposes,
+and nothing it does is distinguishable from normal traffic. It takes 5–15 minutes depending
+on application size, and it produces:
+
+- An **endpoint inventory** — pages, API routes, and forms the crawler found
+- A **technology fingerprint** — what stack the application appears to run
+- An **SSL/TLS assessment** and header analysis
+- Informational findings from the passive pass
+
+At the lowest permission tier this is where a run stops. There are no injection findings, no
+port scan results, and no active probes — not because the agent is asked to hold back, but
+because the tooling that would do those things is not available to it at that tier.
+
+## 2. Active probing
+
+Raising the permission tier makes injection testing, directory enumeration, and port scanning
+available. This is an explicit, recorded approval, and steps that could change state pause for
+a human decision. A typical application takes 15–30 minutes at this stage.
+
+The [permission tier model](/docs/concepts/live-battletest-overview#the-permission-tier-model)
+describes what each tier permits.
+
+## 3. Confirmation
+
+This is the part that decides what ends up in the report. A finding is marked **Confirmed**
+only when the agent replayed it against the running system and reproduced it from a second,
+unrelated account. A confirmed finding carries:
+
+- The endpoint and parameter that were vulnerable
+- The exact payload that triggered it
+- The server response that confirmed it
+- Reproduction steps you can run yourself
+- Remediation guidance for your stack
+
+Findings marked **Potential** were detected but not confirmed. They are reported as
+unconfirmed rather than promoted, and the report says why confirmation did not happen.
+
+A run also reports what it could **not** reach. An SSO-only login wall, an unreachable
+subdomain, or a tier that withheld the tooling needed to prove something are all stated in
+the record. Coverage you did not get is a fact about the assessment.
+
+## 4. Comparison
+
+Each run is compared against the previous run of the same environment. Findings are classified
+**new**, **persistent**, **resolved**, or **regression**. Regressions get the most attention:
+they mean something the team already spent time fixing has come back.
+
+This is what makes a repeated engagement compound. One run tells you what is vulnerable today.
+The comparison tells you whether your fixes held.
+
+## Setting one up
+
+The prerequisites — authorisation, reachability, and the self-serve signup requirement for
+authenticated coverage — are in [How to prepare a target](/docs/how-to/adding-a-target). Read that
+before the scoping conversation.
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Manage findings" icon="list-check" href="/docs/how-to/manage-findings">
+    Dismiss false positives, mark resolved, and track open issues.
+  </Card>
+  <Card title="Export for audits" icon="file-export" href="/docs/how-to/export-findings">
+    Export findings as PDF or JSON for SOC 2 evidence.
+  </Card>
+  <Card title="Scan results reference" icon="book" href="/docs/reference/scan-results">
+    What every field in a scan report means.
+  </Card>
+  <Card title="Prepare a target" icon="list-check" href="/docs/how-to/adding-a-target">
+    What an application needs in place before a run can cover it properly.
+  </Card>
+</CardGroup>

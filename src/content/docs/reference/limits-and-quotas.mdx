@@ -1,0 +1,66 @@
+---
+title: Limits & Quotas
+description: Canonical reference for BattleTest numeric limits — advanced and basic PR review caps by repository visibility, verified-domain ceiling, run duration, and the fair-use compute limit.
+---
+
+import { Note } from '@mintlify';
+
+This page is the canonical source for every numeric limit in BattleTest. The how-to guides link here rather than restating these figures.
+
+PR review is free. There are no tiers to compare — the only thing that changes a review limit is whether the repository is public or private.
+
+## PR review limits
+
+BattleTest runs two review types. **Advanced** reviews run the full agentic pipeline (AI code analysis, CVE scanning, regression detection). **Basic** reviews are a fast single-pass scan (secrets and CVEs only) that runs automatically as a fallback when the advanced limit is reached. See [How PR review works](/docs/concepts/how-pr-review-works#advanced-vs-basic-reviews) for the distinction.
+
+| Repository | Advanced reviews | Basic fallback |
+|------------|------------------|----------------|
+| Public | 20 per hour, **per repository** | 20 per hour, per repository |
+| Private | 10 per month | 5 per hour |
+
+<Note>
+  **Public-repo limits are metered per repository, not per account.** Twenty advanced
+  reviews per hour applies to each public repo independently, so a busy merge train on
+  one repo does not consume another's quota. Private-repo limits are metered per user,
+  because there the limit is the product boundary rather than an anti-runaway guard.
+  Aggregate spend is bounded globally rather than per user.
+</Note>
+
+On a public repo the accuracy-critical verifier agent runs on the higher-capability model
+even though the rest of the pipeline does not. A public PR comment is the surface strangers
+evaluate BattleTest on, and a false positive there costs more than the model does.
+
+Hourly limits use a rolling 60-minute window, not a clock-hour reset. Monthly caps reset on the first of each UTC month. When the monthly advanced cap is reached, reviews fall back to basic scans for the rest of the cycle so every PR still gets coverage.
+
+## Live battletest limits
+
+Live battletest is not self-serve. It runs as a dedicated per-client deployment, and run
+allowances, cadence, and depth are set as part of that engagement rather than by a limit
+on this page. A standard account cannot start a live battletest — the API refuses it.
+
+Domain registration and DNS verification remain open to any account, capped at **50 active
+verified domains** as an anti-abuse ceiling. That ceiling exists to bound pathological
+registration, not to price anything.
+
+One battletest is **one run regardless of scope**. Depth is chosen per run — Discover,
+Probe, or Full Exploit — and multiple domains or assets covered inside one run are still
+one run.
+
+## Scan duration
+
+A live battletest runs until the agents have thoroughly covered the target — there is **no time budget you need to plan around**. Duration scales with how much there is to test, so a small hardened site finishes quickly while a large or issue-rich application takes longer (the agents chase every confirmed weakness deeper). Total AI work per run is bounded by your [fair-use compute limit](/docs/reference/soft-limits), not a clock.
+
+A 90-minute wall-clock backstop exists as a safety net against a hung run, not as a
+coverage limit — runs are not designed to approach it, and one that does indicates a
+fault worth reporting rather than a target too large to finish.
+
+| Operation | Typical duration |
+|-----------|-----------------|
+| PR review (all four passes) | 2–4 minutes |
+| Discovery scan | 5–15 minutes (depends on application size) |
+| Live battletest (probe) | ~15–40 minutes for a typical application |
+| Live battletest (with exploit validation) | longer for large or exploit-rich targets |
+
+## Fair-use compute limit
+
+On top of the countable limits above, each account carries a **monthly fair-use compute limit** — a soft ceiling on total AI processing per month. It is sized well above typical usage, so most teams never see it. See [Soft limits & fair use](/docs/reference/soft-limits) for what it is, what makes a run use more of it, and what happens when you reach it.

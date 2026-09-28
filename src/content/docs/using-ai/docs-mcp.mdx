@@ -1,0 +1,34 @@
+---
+title: Connect the docs to your AI tools
+description: Point Claude, Cursor, ChatGPT or any AI coding tool at the BattleTest documentation as llms.txt, so answers come from the current docs instead of a model's memory. Public and read-only.
+sidebar:
+  label: Docs for AI tools
+---
+
+import { Note } from '@mintlify';
+
+The BattleTest documentation is published in the **llms.txt** format, so AI coding tools can read and cite it directly — answers about BattleTest come from the current documentation instead of a model's memory.
+
+<Note>
+These files are **public and read-only**. They contain only the **published documentation** you can already read on this site — no account data, no findings, no secrets.
+</Note>
+
+## The files
+
+| File | What it is |
+|---|---|
+| [`/docs/llms.txt`](/docs/llms.txt) | An index of the documentation — every page, with its title, description and URL. Small; a good starting point for a tool to decide what to read. |
+| [`/docs/llms-full.txt`](/docs/llms-full.txt) | The **entire documentation** as a single Markdown file. Give this to a tool when you want it grounded in everything at once. |
+| [`/docs/llms-small.txt`](/docs/llms-small.txt) | A trimmed full-text build for smaller context windows. |
+
+## Use it
+
+**Claude, ChatGPT and other chat tools** — paste the URL `https://battletest.dev/docs/llms-full.txt` into the conversation, or attach it as context, then ask your question. Many clients fetch and read the file automatically.
+
+**Cursor, Windsurf and other editors** — add `https://battletest.dev/docs/llms.txt` as a documentation source (in Cursor: **Settings → Features → Docs → Add new doc**). The editor indexes it and your assistant cites BattleTest docs when relevant.
+
+**Your own agents** — fetch `https://battletest.dev/docs/llms-full.txt` and include it in the model's context. It is plain Markdown with stable headings.
+
+<Note>
+A dedicated Model Context Protocol (MCP) endpoint for live search over the docs is being re-hosted after our docs platform move. Until it returns, `llms-full.txt` gives any AI tool the same grounding in a single fetch.
+</Note>

@@ -1,0 +1,73 @@
+---
+title: PR Findings
+description: Reference for BattleTest PR findings — severity definitions, risk score bands and weights, finding record fields, and the Open to Resolved lifecycle.
+---
+
+## Severity levels
+
+| Severity | Definition |
+|----------|-----------|
+| **CRITICAL** | Exploitable vulnerability with high impact: data breach, account takeover, remote code execution. Immediate action required. |
+| **HIGH** | Significant vulnerability. Should be addressed in this PR or tracked for immediate remediation. |
+| **MEDIUM** | Vulnerability with limited exploitability or impact. Triage and schedule. |
+| **LOW** | Best-practice deviation or informational finding. Address when convenient. |
+
+## Risk score
+
+The risk score (0–100) summarises the security posture of the PR. It is driven by finding severity and count, with regression findings carrying an additional penalty.
+
+| Component | Weight |
+|-----------|--------|
+| CRITICAL finding | Highest |
+| HIGH finding | High |
+| MEDIUM finding | Medium |
+| LOW finding | Low |
+| Regression penalty (similar to a previously resolved finding) | Significant additional penalty |
+
+| Score | Band |
+|-------|------|
+| 0–20 | Clean |
+| 21–40 | Low risk |
+| 41–60 | Moderate risk |
+| 61–80 | High risk |
+| 81–100 | Critical — fix before any deployment |
+
+See [Risk score](/docs/concepts/risk-score) for how these factors are weighted and how to use score trends over time.
+
+## Finding fields
+
+| Field | Description |
+|-------|-------------|
+| **Title** | Short description of the vulnerability type |
+| **Severity** | CRITICAL / HIGH / MEDIUM / LOW |
+| **Location** | File path and line number(s) |
+| **Description** | What the vulnerability is and why it's a problem |
+| **Evidence** | The code pattern or payload that triggered the finding |
+| **Remediation** | How to fix it, with a code example in the relevant language/framework |
+| **References** | CVE ID, OWASP category, or CWE number where applicable |
+| **Source** | How the finding was detected: `CVE`, `Secret`, `Config`, `Regression`, or `AI` |
+
+## Finding lifecycle
+
+| State | Meaning |
+|-------|---------|
+| **Open** | Finding detected, not yet acted on |
+| **Dismissed** | Marked as a false positive or accepted risk. Does not count toward risk score in future scans. Does not trigger regression detection. |
+| **Resolved** | Finding no longer present in subsequent scans of the same code path. Contributes to the regression detection baseline. |
+
+## PR review output
+
+Each completed review produces:
+
+- A GitHub PR comment from `battletest[bot]`
+- A `BattleTest Security Review` check run — `success` when the risk score is below 40, `action_required` at 40 or higher ("request changes"), and `failure` only on an internal review error
+- A run record in the BattleTest dashboard linked from the PR comment
+
+## Dashboard run detail
+
+The run detail page includes:
+
+- All findings with expanded reasoning
+- Historical comparison: how this PR compares to previous runs on the same repository
+- Export as JSON or PDF
+- Per-finding dismiss and status controls

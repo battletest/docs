@@ -1,0 +1,60 @@
+---
+title: How to export findings for a security audit or SOC 2
+description: Export BattleTest scan reports and PR findings as PDF or JSON for SOC 2 evidence, security questionnaires, auditor review, and ticketing imports.
+sidebar:
+  label: Export findings
+---
+
+import { Note, Step, Steps } from '@mintlify';
+
+## Export a single scan report
+
+<Steps>
+  <Step title="Open the scan run">
+    Go to [Tests](https://battletest.dev/tests), select the environment, and click on the scan run you want to export.
+  </Step>
+  <Step title="Export">
+    On the run detail page, click **Export**.
+  </Step>
+  <Step title="Choose format">
+    Choose **PDF** for a formatted report suitable for sharing with auditors, or **JSON** for integration with ticketing systems or security dashboards.
+  </Step>
+</Steps>
+
+## Export PR review findings
+
+<Steps>
+  <Step title="Open the PR run">
+    Go to the [Dashboard](https://battletest.dev/dashboard), select a repository, and click on a PR run to open its detail page.
+  </Step>
+  <Step title="Export">
+    Click **Export** and select the format.
+  </Step>
+</Steps>
+
+To export findings across all PRs for a repository, go to Dashboard → the repository → **Export all findings**. This produces a JSON file of all finding records for that repository.
+
+## What the PDF report includes
+
+- Scan date, target, and scope (permission tier)
+- Overall risk score
+- All findings with severity, location, description, and remediation
+- Attack surface summary (endpoints discovered, tests run)
+- Comparison with previous scan (new, resolved, persistent, regression)
+
+The PDF is formatted for sharing with external parties — customers, auditors, security questionnaire respondents. It does not include internal metadata (run IDs, database IDs).
+
+## Evidence of continuous testing for SOC 2
+
+SOC 2 Type II requires evidence that security controls operated continuously over the audit period, not just at a point in time.
+
+<Note>
+  Recurring battletests on a schedule — the source of the timestamped reports auditors usually want — run only in a dedicated deployment. [Talk about a dedicated deployment →](https://battletest.dev/contact)
+</Note>
+
+To build your evidence package:
+
+- Export monthly JSON findings dumps from the Dashboard for each repository
+- The PR findings history shows security review was applied to every code change throughout the period
+
+If your auditor needs a specific report format or additional metadata, contact [wale@battletest.dev](mailto:wale@battletest.dev).
