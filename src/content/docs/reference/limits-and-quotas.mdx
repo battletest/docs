@@ -48,7 +48,7 @@ one run.
 
 ## Scan duration
 
-A live battletest runs until the agents have thoroughly covered the target; there is **no time budget you need to plan around**. Duration scales with how much there is to test, so a small hardened site finishes quickly while a large or issue-rich application takes longer (the agents chase every confirmed weakness deeper). Total AI work per run is bounded by your [fair-use compute limit](/docs/reference/soft-limits), not a clock.
+A live battletest runs until the agents have thoroughly covered the target; there is **no time budget you need to plan around**. Duration scales with how much there is to test, so a small hardened site finishes quickly while a large or issue-rich application takes longer (the agents chase every confirmed weakness deeper). Total AI work per run is bounded by your [fair-use compute limit](#fair-use-compute-limit), not a clock.
 
 A 90-minute wall-clock backstop exists as a safety net against a hung run, not as a
 coverage limit; runs are not designed to approach it, and one that does indicates a
@@ -63,4 +63,29 @@ fault worth reporting rather than a target too large to finish.
 
 ## Fair-use compute limit
 
-On top of the countable limits above, each account carries a **monthly fair-use compute limit**: a soft ceiling on total AI processing per month. It is sized well above typical usage, so most teams never see it. See [Soft limits & fair use](/docs/reference/soft-limits) for what it is, what makes a run use more of it, and what happens when you reach it.
+Underneath the countable limits above sits a second limit, measured in compute rather than in events: a **monthly fair-use compute limit** on the total AI work an organisation runs, across PR reviews and battletests combined. It exists because the countable limits alone do not bound cost. Reviews vary enormously in how much work they take, so a month that looks identical by count can differ by an order of magnitude in compute. It is sized well above normal usage, so most teams never see it.
+
+- It is measured across **all** AI usage for your organisation: PR reviews and battletests together.
+- It is a **soft** limit. Work already in progress always finishes. It only affects **new** work.
+- It resets each month.
+
+The limit you will meet day to day is the countable one above, not the fair-use limit.
+
+### What makes a run use more compute
+
+Cost scales with how much there is to examine, not with a clock. A pull request uses more compute when the diff is large, when it touches security-relevant code paths that pull more of the surrounding codebase into context, or when confirmed findings send the analysis agent deeper. A battletest uses more when:
+
+- **The target is exploit-rich.** Every confirmed weakness opens new avenues: a recovered credential unlocks authenticated areas, an exposed endpoint reveals more endpoints. The agents follow each thread, so a target with many real issues is tested far more deeply than a hardened one.
+- **The site is large or dense.** More pages, forms, and API endpoints mean more surface to map and probe.
+
+This is the agent doing its job. It just consumes more of the monthly allowance.
+
+### What happens when you reach it
+
+When your organisation reaches its monthly fair-use compute limit:
+
+1. **Work already in progress finishes normally.** Nothing is interrupted mid-run.
+2. **PR reviews keep running in a lighter-weight mode.** The pipeline drops to the faster model rather than stopping, so no pull request is left unreviewed.
+3. **New battletests soft-stop** until the month resets. You will see a **Soft limit reached this month** note on **Settings → Usage**, and you will get a notification.
+
+The limit resets at the start of each month with no action needed. Reaching it regularly means BattleTest is doing more work than the free product is sized to absorb. If that is where you are, [get in touch](https://battletest.dev/contact) about a dedicated deployment.

@@ -16,6 +16,15 @@ export default defineConfig({
 			title: 'BattleTest',
 			description:
 				'BattleTest reviews every pull request for CVEs, secrets and AI-detected vulnerabilities, and runs autonomous live security testing.',
+			// The docs pages declared a summary_large_image card but no image, so shared
+			// links rendered blank. Point them at the same social card the marketing site
+			// uses (served by the web app at the apex).
+			head: [
+				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://battletest.dev/og.png' } },
+				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://battletest.dev/og.png' } },
+			],
 			plugins: [
 				starlightThemeRapide(),
 				// Exposes /docs/llms.txt and /docs/llms-full.txt for AI tools to consume.
@@ -91,7 +100,6 @@ export default defineConfig({
 						{ slug: 'reference/pr-findings' },
 						{ slug: 'reference/scan-results' },
 						{ slug: 'reference/limits-and-quotas' },
-						{ slug: 'reference/soft-limits' },
 						{ slug: 'reference/notification-events' },
 						{ slug: 'reference/github-app' },
 						{ slug: 'api-reference/overview' },
