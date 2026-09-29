@@ -12,7 +12,7 @@ Some vulnerabilities never tell you they worked. Blind SSRF, XXE, out-of-band SQ
 That server is the out-of-band (OAST) backend, and this page is about choosing one.
 
 <Warning>
-  A run with no OAST backend produces a report that looks exactly like a run against a target with no blind vulnerabilities. That is the failure this whole page exists to prevent, so a run without one says so in its own event stream, and the statement travels inside the signed export.
+  A run with no OAST backend produces a report that looks exactly like a run against a target with no blind vulnerabilities. A run without a backend says so in its own event stream, and the statement travels inside the signed export.
 </Warning>
 
 ## Why this is not simply "on"
@@ -21,7 +21,7 @@ The out-of-band hostname is embedded **in the payload**. It is therefore your ta
 
 The template scanner's own default is a set of public servers operated by its vendor. Left alone, that means a machine inside your network resolves and connects to a third-party host, disclosing that the machine exists, that it is reachable, and that it processes attacker-supplied input. A packet capture of the scanner would show none of it, because the scanner is not the thing making the call.
 
-**BattleTest never uses that default in any mode.** The image overrides it, so this page is about which backend you get instead, not about whether the vendor's servers are in play.
+**BattleTest never uses that default in any mode.** The image overrides it. This page is about which backend you get instead.
 
 ## The three modes
 
@@ -46,7 +46,7 @@ The deployment ships a small, self-hosted callback catcher (`oob-catcher`). It i
 - A single A record plus `OOB_PUBLIC_URL` gives path-token correlation (`https://oob.example.com/c/<id>`). Enough for payloads that take a URL.
 - A wildcard A record (`*.oast.example.com` → the catcher) additionally catches payloads that take a bare hostname rather than a URL, which is the common shape for XXE and for DNS-only exfiltration. Set `OOB_DOMAIN` to the wildcard's base.
 
-The address must be reachable **by your targets**. Check it from outside your network, not from the API host: an internal-only catcher observes nothing, and the run still looks clean.
+The address must be reachable **by your targets**. Check it from a host outside your network. An internal-only catcher observes nothing, and the run still looks clean.
 
 ### `interactsh`: the full capability
 
@@ -60,14 +60,14 @@ The rest of this page is about what it takes to run one, because that is the par
 
 The template scanner runs with OAST disabled, and the agent's out-of-band tools report themselves **unavailable** rather than returning an empty result that reads like a negative finding. The run emits a degradation notice naming the classes that went untested, and that notice is part of the signed export.
 
-Choose this deliberately. It is the honest setting for a deployment that cannot expose any callback surface, not a way to make a report look cleaner.
+Choose this deliberately. Use it when your deployment cannot expose any callback surface.
 
 ## What running interactsh actually requires
 
 <Warning>
   **interactsh cannot run on a delegated subdomain.** It runs its own authoritative DNS server for the domain you give it. You cannot hand it `oast.example.com` from your existing zone; you delegate the **nameservers** of a domain to it, which means that domain's DNS stops being served by your provider and starts being served by this container.
 
-  If your DNS is centrally managed, this is a conversation with your network team, not a configuration change. Have it before you plan the work.
+  If your DNS is centrally managed, plan this with your network team before you start.
 </Warning>
 
 Concretely, four things:

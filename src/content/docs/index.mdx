@@ -7,14 +7,14 @@ sidebar:
 
 import { Card, CardGroup } from '@mintlify';
 
-One agent, one evidence standard, two scopes. **PR security review is free and open to anyone**. It reviews every pull request and posts what it finds on the diff. **Live BattleTest** is the same agent at full scope against a running system, and it ships only as a dedicated deployment inside a client's own network.
+One agent, one evidence standard, two scopes. **PR security review is free and open to anyone**: it reviews every pull request and posts what it finds on the diff. **Live BattleTest** is the same agent at full scope against a running system, shipped only as a dedicated deployment inside a client's own network.
 
 <CardGroup cols={2}>
   <Card title="PR Security Review" icon="code-pull-request">
     Every pull request gets a full security analysis (CVE detection, secret scanning, injection analysis, config hardening checks) posted as a GitHub comment within minutes.
   </Card>
   <Card title="Live BattleTest" icon="shield-halved">
-    The agent crawls and probes a running application, discovering endpoints, testing for active vulnerabilities, and reporting what it confirmed, and what it could not reach. Runs as a dedicated per-client deployment.
+    The agent crawls and probes a running application, discovering endpoints, testing for active vulnerabilities, and reporting what it confirmed and what it could not reach. Runs as a dedicated per-client deployment.
   </Card>
 </CardGroup>
 
@@ -40,7 +40,7 @@ HIGH · Missing rate limiting · src/middleware/auth.ts:18
 
 No configuration. No CI pipeline changes. Nothing to remember to trigger.
 
-The two products share one finding record, so a vulnerability caught in a PR and later confirmed in a live scan is linked. A resolved issue that resurfaces is flagged as a regression. For the reasoning behind this design, read [About BattleTest](/docs/concepts/what-is-battletest).
+The two products share one finding record, so a vulnerability caught in a PR and later confirmed in a live scan is linked. A resolved issue that resurfaces is flagged as a regression. For the design behind this, read [About BattleTest](/docs/concepts/what-is-battletest).
 
 ## Where to start
 
@@ -55,9 +55,9 @@ The two products share one finding record, so a vulnerability caught in a PR and
 
 ## How the docs are organised
 
-The documentation follows four distinct sections:
+The documentation has four sections:
 
-- **Tutorials**: step-by-step learning guides that take you through a complete task from start to finish. Start here if you're new.
-- **Concepts**: explanations of how BattleTest works, why it's designed the way it is, and how to interpret what it produces. Read these when you want to understand, not just do.
+- **Tutorials**: step-by-step guides through a complete task. Start here if you're new.
+- **Concepts**: how BattleTest works, why it's designed this way, and how to interpret what it produces.
 - **How-to guides**: task-focused instructions for specific goals: configuring settings, managing findings, exporting reports. Assumes you know your way around the product.
-- **Reference**: complete technical specifications: finding fields, scan report structure, GitHub App permissions, limits, and notification events.
+- **Reference**: technical specifications: finding fields, scan report structure, GitHub App permissions, limits, and notification events.

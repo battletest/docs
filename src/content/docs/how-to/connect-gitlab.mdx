@@ -43,8 +43,7 @@ than a personal one if you would rather comments not appear under an individual'
   If your GitLab uses a certificate from an internal certificate authority, mount your CA
   bundle and point `NODE_EXTRA_CA_CERTS` at it. BattleTest inspects that file at startup
   and logs an error if it is unreadable or expired, rather than carrying on with nothing
-  trusted, which would otherwise show up as every internal integration failing TLS for
-  reasons that look like the remote host's fault.
+  trusted.
 </Note>
 
 ## Add the webhook
@@ -97,8 +96,8 @@ Closing or merging cancels a review that is still running.
 
 ## What GitLab shows, compared with GitHub
 
-GitLab and GitHub are genuinely different here. Nothing below is a limitation of
-BattleTest that a later release removes; they are things GitLab's API does not have.
+GitLab and GitHub are genuinely different here. The differences below are things GitLab's
+API does not have.
 
 | | GitHub | GitLab |
 |---|---|---|
@@ -118,8 +117,8 @@ the pass/fail signal. Nothing is dropped; it is in a different place than on Git
 
 **To block a merge, require the status.** BattleTest cannot request changes on GitLab. In
 **Settings → Merge requests**, require the `BattleTest Security Review` commit status to
-succeed. That is the GitLab equivalent, and it keeps the decision to block with your
-project settings rather than with an automated reviewer.
+succeed. That is the GitLab equivalent, and it keeps the block decision in your project
+settings.
 
 ## Troubleshooting
 

@@ -9,16 +9,16 @@ import { Note, Warning } from '@mintlify';
 
 <Note>
   Live battletest is not self-serve. It runs as a dedicated deployment inside a client's own
-  network, scoped per engagement. This page describes what has to be true of an application
-  before a run can cover it properly. Read it before the scoping conversation, not after.
+  network, scoped per engagement. This page covers what an application needs before a run can
+  cover it properly. Read it before the scoping conversation.
   [Talk about a dedicated deployment →](https://battletest.dev/contact)
 </Note>
 
 ## Prerequisites
 
-- You must own the domain or hold explicit written authorisation to test it. Scope is enforced in code, not in the prompt: an unauthorised target is capped at passive observation and active testing is refused outright.
+- You must own the domain or hold explicit written authorisation to test it. Scope is enforced in code: an unauthorised target is capped at passive observation and active testing is refused outright.
 - The application must be reachable from wherever the deployment runs.
-- **If the hostname CNAMEs out of your own infrastructure, an administrator must authorise the delegation target by name before the run will start.** Controlling a DNS zone is not the same as controlling the machine behind it, so a chain that leaves your declared scope refuses the run rather than warning about it. Anything behind a CDN hits this. See below.
+- **If the hostname CNAMEs out of your own infrastructure, an administrator must authorise the delegation target by name before the run will start.** Controlling a DNS zone does not mean controlling the machine behind it, so a chain that leaves your declared scope refuses the run. Anything behind a CDN hits this. See below.
 - **For authenticated coverage, the app must offer self-serve email/password signup.** Most of an application's attack surface (IDOR, broken access control, privilege escalation) lives behind login, and the agent acquires its own test identities by registering real accounts. See below.
 
 ## Authenticated testing requires self-serve signup
@@ -38,35 +38,33 @@ For this to work, the target must allow **self-serve registration with email and
 ## Hosts served by someone else's infrastructure
 
 Both authorisation paths (declared scope, and the DNS TXT proof) establish something about
-a **name**. Neither establishes anything about the machine that answers for it. A hostname can
-legitimately pass both while resolving, by CNAME, into a multi-tenant host you do not own; an
-exploit lands on the machine, not on the name, and the tenants sharing it authorised nothing.
+a **name**, not about the machine that answers for it. A hostname can pass both while
+resolving, by CNAME, into a multi-tenant host you do not own. An exploit lands on the machine,
+and the tenants sharing it authorised nothing.
 
 So when the CNAME chain leaves the scope this deployment declared, the run is **refused** until
 an administrator authorises the delegation target itself. `www.example.com` →
 `d111.cloudfront.net` is the same DNS shape as the dangerous case and is entirely ordinary.
-Nothing in DNS distinguishes "my CDN" from "someone else's tenant", because that is a fact
-about a commercial relationship. A person has to state it.
+Nothing in DNS distinguishes "my CDN" from "someone else's tenant": that is a fact about a
+commercial relationship, so a person has to state it.
 
 Authorise it in **Settings → Testing scope**, on the same record that gates a public host: the
-hostname, a justification (required: it is the whole reason the record exists rather than a
-boolean), an approver, and an expiry that defaults to 90 days. It is revocable and it is
-visible to an auditor afterwards. Approve `d111.cloudfront.net` once and every hostname behind
-that distribution stops being friction.
+hostname, a justification (required), an approver, and an expiry that defaults to 90 days. It is
+revocable and visible to an auditor afterwards. Approve `d111.cloudfront.net` once and every
+hostname behind that distribution stops being friction.
 
 Two details worth knowing before you hit this:
 
-- **Matching is exact.** Approving `vendor-saas.com` does not authorise `you.vendor-saas.com`,
-  because a suffix match would authorise precisely the set of names belonging to other people.
+- **Matching is exact.** Approving `vendor-saas.com` does not authorise `you.vendor-saas.com`;
+  a suffix match would authorise precisely the names belonging to other people.
 - **A lookup that does not complete also refuses.** A CNAME loop, a chain longer than eight
   hops, and a resolver that stops answering are each reported as their own failure rather than
-  treated as a chain that ended. "We could not tell who serves this" is not a weaker version
-  of "nobody else does".
+  treated as a chain that ended.
 
 An **address** outside your declared CIDR ranges is reported but does **not** block. There is no
 named party to authorise for an anycast edge address, and a check that fires on ordinary public
-hosting is one operators route around rather than use. Address checking only happens at all if
-you declared CIDR scope; without that there is no baseline for which addresses are yours.
+hosting gets routed around rather than used. Address checking only happens if you declared CIDR
+scope; without that there is no baseline for which addresses are yours.
 
 ## Environments and domains
 
@@ -74,8 +72,8 @@ A target is described as an **environment**: one application, and every hostname
 to it. `api.example.com` and `app.example.com` are one environment, not two. One battletest
 run covers the whole environment regardless of how many hostnames it contains.
 
-Group by application, not by DNS. Splitting one application across two environments hides
-exactly the flaws worth finding: an agent that can move from the web app to the API in a
+Group by application. Do not group by DNS. Splitting one application across two environments
+hides exactly the flaws worth finding: an agent that can move from the web app to the API in a
 single run is what surfaces a cross-service access-control break.
 
 ## Permission tiers
@@ -91,9 +89,8 @@ for what each tier permits.
 
 ## What a run reports
 
-A run reports what it confirmed and what it could **not** reach. The second half matters as
-much as the first: coverage you did not get is a fact about the assessment, not something to
-be quietly omitted from it. Discovery output (the endpoint inventory the run built) is
-part of the record.
+A run reports what it confirmed and what it could **not** reach. Coverage you did not get is a
+fact about the assessment and appears in the report. Discovery output (the endpoint inventory
+the run built) is part of the record.
 
 For the shape of the report itself, see [Scan results](/docs/reference/scan-results).

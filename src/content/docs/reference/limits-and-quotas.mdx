@@ -27,8 +27,8 @@ BattleTest runs two review types. **Advanced** reviews run the full agentic pipe
 </Note>
 
 On a public repo the accuracy-critical verifier agent runs on the higher-capability model
-even though the rest of the pipeline does not. A public PR comment is the surface strangers
-evaluate BattleTest on, and a false positive there costs more than the model does.
+even though the rest of the pipeline does not: a false positive on a public PR comment costs
+more than the model does.
 
 Hourly limits use a rolling 60-minute window, not a clock-hour reset. Monthly caps reset on the first of each UTC month. When the monthly advanced cap is reached, reviews fall back to basic scans for the rest of the cycle so every PR still gets coverage.
 

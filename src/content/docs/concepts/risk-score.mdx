@@ -3,21 +3,21 @@ title: Risk score
 description: How BattleTest calculates the risk score, what the score bands mean, and how to use score trends to track security posture over time.
 ---
 
-Every completed PR review and live battletest produces a risk score from **0 to 100** (e.g. `72 / 100`). The score summarises the security posture of a single PR or the current state of a live target. It's designed to be glanceable, but it's worth understanding what goes into it so you can interpret it correctly.
+Every completed PR review and live battletest produces a risk score from **0 to 100** (e.g. `72 / 100`). The score summarises the security posture of a single PR or the current state of a live target. It's designed to be glanceable. Understanding what goes into it helps you interpret it correctly.
 
 ## What the score measures
 
-The risk score is a weighted aggregate of the findings in that scan. It's not a normalised percentage of vulnerabilities found, and it's not a compliance score: it's a signal about how much risk the current scan introduces, relative to severity and your organisation's history with the same code or target.
+The risk score is a weighted aggregate of the findings in that scan. It's a signal about how much risk the current scan introduces, relative to severity and your organisation's history with the same code or target. It's not a normalised percentage of vulnerabilities found, and it's not a compliance score.
 
 Four factors drive the score:
 
-**Severity distribution** is the primary driver. Critical findings have exponential weight: a single confirmed Critical finding can push a previously clean score past 80. High findings have substantial weight; Medium and Low findings have diminishing contributions. The intent is that one Critical finding demands immediate attention regardless of how many Low findings are also present.
+**Severity distribution** is the primary driver. Critical findings have exponential weight: a single confirmed Critical finding can push a previously clean score past 80. High findings have substantial weight; Medium and Low findings have diminishing contributions. One Critical finding demands immediate attention regardless of how many Low findings are also present.
 
 **Exploitability** modifies the base weight for CVE findings. If a CVE has a public exploit or a proof-of-concept available, the finding contributes more to the score than an unproven theoretical vulnerability with the same CVSS score.
 
-**Regression penalty** adds to the score for any finding classified as a regression: a vulnerability that your team previously resolved and that has returned. The regression penalty reflects the operational cost of fixing the same issue twice. A regression in a MEDIUM finding can contribute as much to the score as a new HIGH finding.
+**Regression penalty** adds to the score for any finding classified as a regression: a vulnerability that your team previously resolved and that has returned. The penalty reflects the operational cost of fixing the same issue twice. A regression in a MEDIUM finding can contribute as much to the score as a new HIGH finding.
 
-**Finding count** has a diminishing effect. The second Critical finding adds less to the score than the first; ten Medium findings together add less than two Highs. This prevents a large number of Low findings from pushing the score into the Critical band if the underlying issues are minor.
+**Finding count** has a diminishing effect. The second Critical finding adds less to the score than the first; ten Medium findings together add less than two Highs. This prevents a large number of Low findings from pushing the score into the Critical band when the underlying issues are minor.
 
 ## Score bands
 
@@ -35,7 +35,7 @@ These bands match the [PR Findings reference](/docs/reference/pr-findings#risk-s
 
 A score near 0 on a PR that introduced a lot of new code is a positive signal: the diff looks clean from the analysis. A score near 0 on a one-line change is less informative (there wasn't much to analyse).
 
-A score in the High or Critical band doesn't always mean the PR should be rejected. Read the findings that are driving the score. If the Critical finding is a secret that was removed in a later commit (but still in branch history), the fix is to purge it from history, not to close the PR. If the High finding is a dependency CVE in a package that's only used in tests, the risk profile is different from the same CVE in a production-facing library.
+A score in the High or Critical band doesn't always mean the PR should be rejected. Read the findings driving the score. If the Critical finding is a secret that was removed in a later commit (but still in branch history), the fix is to purge it from history, not to close the PR. If the High finding is a dependency CVE in a package that's only used in tests, the risk profile differs from the same CVE in a production-facing library.
 
 The score is a prompt to look, not a verdict.
 
@@ -43,22 +43,22 @@ The score is a prompt to look, not a verdict.
 
 A live scan score above 60 with Confirmed findings means your running application has verified vulnerabilities. This is more urgent than the same score on a PR review, because the vulnerability is already in production.
 
-A score above 60 with only Potential findings means the agent detected suspicious patterns but couldn't verify them at the current permission tier. Either investigate manually or approve the next permission tier on a staging environment to get Confirmed findings.
+A score above 60 with only Potential findings means the agent detected suspicious patterns but couldn't verify them at the current permission tier. Investigate manually, or approve the next permission tier on a staging environment to get Confirmed findings.
 
 ## Using score trends
 
 The dashboard shows a score trend line per repository and per live target. This is often more useful than any individual score.
 
-**A falling trend** after a remediation sprint confirms that the fixes are working. Export the trend as evidence for SOC 2 Type II ("security controls operated continuously and effectively").
+**A falling trend** after a remediation sprint confirms the fixes are working. Export the trend as evidence for SOC 2 Type II ("security controls operated continuously and effectively").
 
 **A rising trend** despite no new features suggests technical debt accumulation: old dependencies drifting toward known CVEs, configuration gaps not being closed.
 
-**A flat trend at a non-zero score** is a warning sign. If your score has sat at 55 for six weeks, it means the same findings are being generated repeatedly without being addressed. The baseline isn't clean; it's stagnant.
+**A flat trend at a non-zero score** is a warning sign. If your score has sat at 55 for six weeks, the same findings are being generated repeatedly without being addressed. The baseline is stagnant.
 
 **Spikes on PR reviews** are expected when a large refactor or a new integration lands. A spike followed by a return to baseline suggests the PR introduced temporary risk that was mitigated. A spike that doesn't return to baseline suggests a new vulnerability class entered the codebase and wasn't resolved.
 
 ## What the score is not
 
-The risk score is not a compliance grade. A score of 0 doesn't mean your application is secure against a determined attacker: it means the automated analysis found nothing. BattleTest covers a wide surface but it's not exhaustive. The score is one signal among several, not a security certification.
+The risk score is not a compliance grade. A score of 0 means the automated analysis found nothing. It does not mean your application is secure against a determined attacker. BattleTest covers a wide surface but it's not exhaustive. The score is one signal among several, not a security certification.
 
-The score also doesn't directly reflect the count of findings. A scan with two Critical findings and no others will score higher than a scan with thirty Low findings. This is intentional: volume of minor findings shouldn't obscure the severity signal.
+The score also doesn't directly reflect the count of findings. A scan with two Critical findings and no others scores higher than a scan with thirty Low findings. Volume of minor findings must not obscure the severity signal.

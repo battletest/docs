@@ -19,9 +19,9 @@ is real, and report both what was found and what was not reachable.
 
 ## 1. Discovery
 
-Discovery is passive. It sends ordinary HTTP requests to map what the application exposes,
-and nothing it does is distinguishable from normal traffic. It takes 5–15 minutes depending
-on application size, and it produces:
+Discovery is passive. It sends ordinary HTTP requests to map what the application exposes, and
+nothing it does is distinguishable from normal traffic. It takes 5–15 minutes depending on
+application size, and it produces:
 
 - An **endpoint inventory**: pages, API routes, and forms the crawler found
 - A **technology fingerprint**: what stack the application appears to run
@@ -29,8 +29,8 @@ on application size, and it produces:
 - Informational findings from the passive pass
 
 At the lowest permission tier this is where a run stops. There are no injection findings, no
-port scan results, and no active probes, not because the agent is asked to hold back, but
-because the tooling that would do those things is not available to it at that tier.
+port scan results, and no active probes, because the tooling that would do those things is not
+available to the agent at that tier.
 
 ## 2. Active probing
 
@@ -43,7 +43,7 @@ describes what each tier permits.
 
 ## 3. Confirmation
 
-This is the part that decides what ends up in the report. A finding is marked **Confirmed**
+Confirmation decides what ends up in the report. A finding is marked **Confirmed**
 only when the agent replayed it against the running system and reproduced it from a second,
 unrelated account. A confirmed finding carries:
 
@@ -54,7 +54,7 @@ unrelated account. A confirmed finding carries:
 - Remediation guidance for your stack
 
 Findings marked **Potential** were detected but not confirmed. They are reported as
-unconfirmed rather than promoted, and the report says why confirmation did not happen.
+unconfirmed, and the report says why confirmation did not happen.
 
 A run also reports what it could **not** reach. An SSO-only login wall, an unreachable
 subdomain, or a tier that withheld the tooling needed to prove something are all stated in
@@ -66,7 +66,7 @@ Each run is compared against the previous run of the same environment. Findings 
 **new**, **persistent**, **resolved**, or **regression**. Regressions get the most attention:
 they mean something the team already spent time fixing has come back.
 
-This is what makes a repeated engagement compound. One run tells you what is vulnerable today.
+This makes a repeated engagement compound. One run tells you what is vulnerable today.
 The comparison tells you whether your fixes held.
 
 ## Setting one up

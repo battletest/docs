@@ -7,21 +7,21 @@ A finding is BattleTest's conclusion that a specific, locatable vulnerability ex
 
 ## What a finding contains
 
-Every finding has the same core anatomy regardless of whether it came from a PR review or a live scan:
+Every finding has the same core anatomy whether it came from a PR review or a live scan:
 
-**Title** names the vulnerability class plainly: "SQL Injection in /api/users", "Exposed AWS secret in commit history", "Missing CSRF protection on state-changing form". The title is written to be understandable without needing to read the full finding.
+**Title** names the vulnerability class plainly: "SQL Injection in /api/users", "Exposed AWS secret in commit history", "Missing CSRF protection on state-changing form". The title is understandable without reading the full finding.
 
-**Evidence** is the specific thing that triggered the finding: the exact code pattern, the committed credential, the payload that elicited a confirming response, or the configuration state that was checked. The evidence is what distinguishes a finding from a guess. If the evidence doesn't make sense given your code, the finding is likely a false positive.
+**Evidence** is the specific thing that triggered the finding: the exact code pattern, the committed credential, the payload that elicited a confirming response, or the configuration state that was checked. Evidence is what distinguishes a finding from a guess. If the evidence doesn't make sense given your code, the finding is likely a false positive.
 
-**Explanation** is why this is a risk in your specific context. BattleTest doesn't just identify vulnerability classes. It explains the data flow that makes this particular instance a problem. A SQL injection finding will describe how the untrusted input reaches the database call, not just that a SQL call exists.
+**Explanation** is why this is a risk in your specific context. BattleTest explains the data flow that makes this particular instance a problem: a SQL injection finding describes how the untrusted input reaches the database call.
 
 **Remediation** is what to change, with a code example in the language and framework used by the affected code. The remediation is written for the diff context, not as a generic "sanitise your inputs" instruction.
 
-**References** link to the CVE, CWE, or OWASP category that classifies this vulnerability type, for teams that need to track findings against a compliance framework.
+**References** link to the CVE, CWE, or OWASP category that classifies this vulnerability type, for teams that track findings against a compliance framework.
 
 ## Severity levels
 
-Severity reflects impact and exploitability, not just the class of vulnerability.
+Severity reflects the impact and exploitability of the finding in your context.
 
 | Severity | What it means |
 |----------|--------------|
@@ -30,21 +30,21 @@ Severity reflects impact and exploitability, not just the class of vulnerability
 | **MEDIUM** | Exploitable under specific conditions: a particular attacker position, a specific sequence of operations, or a non-default configuration. Triage and schedule for the current sprint. |
 | **LOW** | Defense-in-depth gap, best-practice deviation, or informational finding with low direct impact. Track and address when convenient. |
 
-Severity is assessed against your actual code context, not the vulnerability class in general. A reflected XSS in an admin panel behind authentication is lower severity than the same pattern in a public-facing login form, even though they're the same vulnerability type.
+Severity is assessed against your actual code context. A reflected XSS in an admin panel behind authentication is lower severity than the same pattern in a public-facing login form.
 
 ## How findings from different sources differ
 
 The **Source** field on a finding tells you how it was detected:
 
-- **CVE**: The finding came from matching a new or updated dependency against vulnerability databases. These are deterministic: the CVE either applies to this version or it doesn't. Near zero false positives, but only covers known, catalogued vulnerabilities.
+- **CVE**: matched a new or updated dependency against vulnerability databases. Deterministic: the CVE either applies to this version or it doesn't. Near zero false positives, but only covers known, catalogued vulnerabilities.
 
-- **Secret**: A credential, API key, or cryptographic key was found in the commit history or current code. Also deterministic: the pattern either matches or it doesn't. Check the evidence to confirm it's a real credential and not a test fixture.
+- **Secret**: a credential, API key, or cryptographic key found in the commit history or current code. Also deterministic: the pattern either matches or it doesn't. Check the evidence to confirm it's a real credential and not a test fixture.
 
-- **Config**: A structural repository check failed (missing `SECURITY.md`, no lockfile committed, no Dependabot). These are observations, not exploitable vulnerabilities on their own. They represent gaps in your security process.
+- **Config**: a structural repository check failed (missing `SECURITY.md`, no lockfile committed, no Dependabot). These are observations that represent gaps in your security process, not exploitable vulnerabilities on their own.
 
-- **AI**: The AI agent identified a vulnerability through semantic analysis of the diff. These findings have evidence and context-specific explanations, but unlike CVE and Secret findings, they're probabilistic. Occasionally one will be a false positive. Read the explanation and judge whether the risk is real.
+- **AI**: the AI agent identified a vulnerability through semantic analysis of the diff. These findings have evidence and context-specific explanations, but they're probabilistic. Occasionally one will be a false positive. Read the explanation and judge whether the risk is real.
 
-- **Regression**: A finding that is semantically similar to one previously resolved on this repository or target. The regression classification doesn't change the underlying finding type; it adds a penalty to the risk score because you've fixed this before.
+- **Regression**: a finding semantically similar to one previously resolved on this repository or target. It keeps the underlying finding type and adds a penalty to the risk score because you've fixed this before.
 
 ## Confirmed vs Potential (live scans only)
 
@@ -52,9 +52,9 @@ In live battletest results, findings have a confidence level in addition to a se
 
 **Confirmed** means the agent verified the vulnerability with a working proof of concept: a payload that produced the confirming server response. These are real vulnerabilities. Act on them.
 
-**Potential** means the endpoint or pattern looked suspicious but couldn't be verified without a higher permission tier, or without risking data corruption. These are worth investigating manually. Approving the next permission tier on a staging environment will often promote a Potential to Confirmed or rule it out.
+**Potential** means the endpoint or pattern looked suspicious but couldn't be verified without a higher permission tier, or without risking data corruption. These are worth investigating manually. Approving the next permission tier on a staging environment often promotes a Potential to Confirmed or rules it out.
 
-PR review findings don't use this classification: there's no live target to probe, so the AI makes a judgment call about exploitability, which is reflected in severity instead.
+PR review findings don't use this classification: with no live target to probe, the AI makes a judgment call about exploitability, reflected in severity instead.
 
 ## How to triage a finding
 
@@ -66,20 +66,20 @@ For each finding, the decision flow is:
 
 3. **If real:** fix it. The remediation section has a working example. For findings in a PR, fix in that branch before merging. For live scan findings, deploy the fix and run a new scan to confirm resolution.
 
-4. **If not real (false positive):** dismiss it with a reason. See [how to review, dismiss, and track findings](/docs/how-to/manage-findings). Dismissing a finding removes it from future risk scores for this code path or endpoint, and excludes it from regression detection.
+4. **If not real (false positive):** dismiss it with a reason. See [how to review, dismiss, and track findings](/docs/how-to/manage-findings). Dismissing a finding removes it from future risk scores for this code path or endpoint and excludes it from regression detection.
 
 ## How findings behave across scans
 
-Findings aren't one-off events. They have a lifecycle that spans multiple scans.
+Findings have a lifecycle that spans multiple scans.
 
 When a vulnerability is fixed and disappears from a subsequent scan, BattleTest classifies it as **Resolved** and adds it to the regression detection baseline. If the same vulnerability pattern reappears in a future scan (because the fix was reverted, because similar code was introduced elsewhere, or because a dependency re-introduced the same CVE) it's classified as a **Regression** and weighted more heavily in the risk score.
 
-Dismissed findings don't contribute to the regression baseline. A dismissed finding won't trigger a regression alert if it reappears: that's intentional, because you've already judged it not worth tracking.
+Dismissed findings don't contribute to the regression baseline. A dismissed finding won't trigger a regression alert if it reappears, because you've already judged it not worth tracking.
 
-The practical effect: your first few PR reviews will surface a backlog of findings. As you address and dismiss them, subsequent reviews become more signal-dense: they surface what's genuinely new or regressed rather than restating the full history.
+The practical effect: your first few PR reviews surface a backlog of findings. As you address and dismiss them, subsequent reviews become more signal-dense, surfacing what's genuinely new or regressed rather than restating the full history.
 
 ## When findings disagree with your own assessment
 
-BattleTest's AI analysis is context-aware but not infallible. If a finding doesn't reflect how your code actually works, the right response is to dismiss it with a note explaining why, not to ignore it. The dismissal is recorded in your audit trail and feeds back into the model for your repository.
+BattleTest's AI analysis is context-aware but not infallible. If a finding doesn't reflect how your code actually works, dismiss it with a note explaining why. Do not simply ignore it. The dismissal is recorded in your audit trail and feeds back into the model for your repository.
 
 If you believe a finding is systematically wrong (the same false positive keeps appearing across PRs) contact [wale@battletest.dev](mailto:wale@battletest.dev) with the finding IDs. Patterns in false positives usually indicate a codebase pattern that the model isn't handling correctly.
