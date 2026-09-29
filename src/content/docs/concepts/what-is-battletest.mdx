@@ -10,7 +10,7 @@ BattleTest is an AI-native security platform built around a simple observation: 
 BattleTest has two complementary products that cover different parts of the vulnerability lifecycle:
 
 - **PR Review** catches vulnerabilities before they merge. Every pull request on your connected repositories gets an automated security review (CVE detection, secret scanning, injection analysis, and config hardening checks) posted as a comment on the PR within minutes.
-- **Live BattleTest** finds vulnerabilities in your running infrastructure. An AI agent coordinates a crawl-and-probe security assessment against a domain you specify, discovering endpoints, testing for active vulnerabilities, and producing a findings report.
+- **BattleTest Enterprise** finds vulnerabilities in your running infrastructure. An AI agent coordinates a crawl-and-probe security assessment against a domain you specify, discovering endpoints, testing for active vulnerabilities, and producing a findings report.
 
 Both products share a common finding record. When a vulnerability found in a PR review later appears in a live scan (or when something previously resolved resurfaces) BattleTest flags the regression. This connection across products makes the coverage coherent rather than additive.
 
@@ -20,7 +20,7 @@ A vulnerability has a lifecycle. It starts as a code pattern: a raw SQL query, a
 
 Code-only tools (SAST, dependency scanners) catch the pattern early but miss the context of what the running application actually exposes. Live pentesting tools catch the runtime exposure but have no connection to the code that produced it and no insight into what's been introduced recently.
 
-BattleTest operates at both points. The PR review catches the pattern before it ships; the live battletest confirms whether it's exploitable in production; the shared memory connects the two, so a finding in code is linked to a related finding in the live scan.
+BattleTest operates at both points. The PR review catches the pattern before it ships; the live run confirms whether it's exploitable in production; the shared memory connects the two, so a finding in code is linked to a related finding in the live scan.
 
 ## Who it's for
 
@@ -64,7 +64,7 @@ BattleTest doesn't block all merges with findings by default. Findings are advis
 
 ## The shared memory in practice
 
-Consider a common scenario: your AI analysis flags a potential SQL injection in a PR. The developer isn't sure it's a real risk, since the ORM should be escaping correctly. They merge. Six weeks later, a live battletest confirms the injection via active probing. The live scan finding links back to the PR review finding from six weeks ago. You can see exactly which commit introduced it, what the original finding said, and that a developer reviewed it and concluded the risk was low.
+Consider a common scenario: your AI analysis flags a potential SQL injection in a PR. The developer isn't sure it's a real risk, since the ORM should be escaping correctly. They merge. Six weeks later, a live security test confirms the injection via active probing. The live scan finding links back to the PR review finding from six weeks ago. You can see exactly which commit introduced it, what the original finding said, and that a developer reviewed it and concluded the risk was low.
 
 That audit trail (from code pattern through to confirmed exploitable vulnerability) makes the shared memory useful for both remediation (you know exactly where to look) and compliance (you have a record of when the vulnerability was introduced and how it was discovered).
 

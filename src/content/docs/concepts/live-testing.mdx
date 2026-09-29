@@ -1,11 +1,11 @@
 ---
-title: How Live BattleTest works
-description: "How Live BattleTest tests infrastructure: passive discovery, active vulnerability probing, proof-of-concept findings, and scan-over-scan regression checks."
+title: How live testing works
+description: "How live application testing works: passive discovery, active vulnerability probing, proof-of-concept findings, and scan-over-scan regression checks."
 sidebar:
-  label: Live BattleTest
+  label: Live testing
 ---
 
-A live battletest is an autonomous security assessment run against a domain you control. A PR review analyses code before it ships; a live battletest operates against your running application from the perspective of an external attacker.
+Live application testing is an autonomous security assessment run against a domain you control. A PR review analyses code before it ships; a live run operates against your running application from the perspective of an external attacker.
 
 ## Why dynamic testing catches what code review doesn't
 
@@ -25,7 +25,7 @@ A battletest runs in three sequential phases:
 
 ## The permission tier model
 
-The permission tier model is the central design decision in live battletest. BattleTest never runs at a higher permission tier than you've explicitly approved.
+The permission tier model is the central design decision in live application testing. BattleTest never runs at a higher permission tier than you've explicitly approved.
 
 | Tier | What it does |
 |------|-------------|

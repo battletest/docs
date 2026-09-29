@@ -32,11 +32,11 @@ more than the model does.
 
 Hourly limits use a rolling 60-minute window, not a clock-hour reset. Monthly caps reset on the first of each UTC month. When the monthly advanced cap is reached, reviews fall back to basic scans for the rest of the cycle so every PR still gets coverage.
 
-## Live battletest limits
+## Live testing limits
 
-Live battletest is not self-serve. It runs as a dedicated per-client deployment, and run
+Live application testing is not self-serve. It runs as a dedicated per-client deployment, and run
 allowances, cadence, and depth are set as part of that engagement rather than by a limit
-on this page. A standard account cannot start a live battletest; the API refuses it.
+on this page. A standard account cannot start a live run; the API refuses it.
 
 Domain registration and DNS verification remain open to any account, capped at **50 active
 verified domains** as an anti-abuse ceiling. That ceiling exists to bound pathological
@@ -48,7 +48,7 @@ one run.
 
 ## Scan duration
 
-A live battletest runs until the agents have thoroughly covered the target; there is **no time budget you need to plan around**. Duration scales with how much there is to test, so a small hardened site finishes quickly while a large or issue-rich application takes longer (the agents chase every confirmed weakness deeper). Total AI work per run is bounded by your [fair-use compute limit](#fair-use-compute-limit), not a clock.
+A live security test runs until the agents have thoroughly covered the target; there is **no time budget you need to plan around**. Duration scales with how much there is to test, so a small hardened site finishes quickly while a large or issue-rich application takes longer (the agents chase every confirmed weakness deeper). Total AI work per run is bounded by your [fair-use compute limit](#fair-use-compute-limit), not a clock.
 
 A 90-minute wall-clock backstop exists as a safety net against a hung run, not as a
 coverage limit; runs are not designed to approach it, and one that does indicates a
@@ -58,8 +58,8 @@ fault worth reporting rather than a target too large to finish.
 |-----------|-----------------|
 | PR review (all four passes) | 2–4 minutes |
 | Discovery scan | 5–15 minutes (depends on application size) |
-| Live battletest (probe) | ~15–40 minutes for a typical application |
-| Live battletest (with exploit validation) | longer for large or exploit-rich targets |
+| Live test (probe) | ~15–40 minutes for a typical application |
+| Live test (with exploit validation) | longer for large or exploit-rich targets |
 
 ## Fair-use compute limit
 

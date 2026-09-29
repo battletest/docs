@@ -11,6 +11,13 @@ export default defineConfig({
 	site: 'https://battletest.dev',
 	base: '/docs',
 	trailingSlash: 'ignore',
+	// Old slugs for the live-testing pages, renamed away from "battletest".
+	redirects: {
+		'/concepts/live-battletest-overview': '/docs/concepts/live-testing',
+		'/tutorials/live-battletest': '/docs/tutorials/live-testing',
+		// soft-limits was merged into limits-and-quotas.
+		'/reference/soft-limits': '/docs/reference/limits-and-quotas#fair-use-compute-limit',
+	},
 	integrations: [
 		starlight({
 			title: 'BattleTest',
@@ -53,7 +60,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Introduction', slug: '' },
 						{ slug: 'tutorials/quick-start' },
-						{ slug: 'tutorials/live-battletest' },
+						{ slug: 'tutorials/live-testing' },
 					],
 				},
 				{
@@ -62,7 +69,7 @@ export default defineConfig({
 						{ slug: 'concepts/what-is-battletest' },
 						{ slug: 'concepts/how-it-works' },
 						{ slug: 'concepts/how-pr-review-works' },
-						{ slug: 'concepts/live-battletest-overview' },
+						{ slug: 'concepts/live-testing' },
 						{ slug: 'concepts/findings' },
 						{ slug: 'concepts/risk-score' },
 					],
@@ -79,7 +86,7 @@ export default defineConfig({
 					],
 				},
 				{
-					label: 'Live BattleTest guides',
+					label: 'Live testing guides',
 					items: [
 						{ slug: 'how-to/adding-a-target' },
 						{ slug: 'how-to/out-of-band-testing' },
