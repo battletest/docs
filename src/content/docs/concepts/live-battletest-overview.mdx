@@ -1,15 +1,15 @@
 ---
 title: How Live BattleTest works
-description: How Live BattleTest tests infrastructure — passive discovery, active vulnerability probing, proof-of-concept findings, and scan-over-scan regression checks.
+description: "How Live BattleTest tests infrastructure: passive discovery, active vulnerability probing, proof-of-concept findings, and scan-over-scan regression checks."
 sidebar:
   label: Live BattleTest
 ---
 
-A live battletest is an autonomous security assessment run against a domain you control. Unlike a PR review — which analyses code before it ships — a live battletest operates against your running application from the perspective of an external attacker.
+A live battletest is an autonomous security assessment run against a domain you control. Unlike a PR review (which analyses code before it ships) a live battletest operates against your running application from the perspective of an external attacker.
 
 ## Why dynamic testing catches what code review doesn't
 
-Code review, however thorough, cannot observe the interaction between components at runtime. A vulnerability that depends on the specific configuration of a load balancer, the presence of a misconfigured header in a particular environment, or the combination of how your application processes a request and what your database does with the result — these only manifest in a running system.
+Code review, however thorough, cannot observe the interaction between components at runtime. A vulnerability that depends on the specific configuration of a load balancer, the presence of a misconfigured header in a particular environment, or the combination of how your application processes a request and what your database does with the result: these only manifest in a running system.
 
 Dynamic testing also reveals your actual attack surface: what's reachable from the internet, what endpoints exist that documentation doesn't mention, what subdomains are exposed. Code review tells you what you built; live testing tells you what's exposed.
 
@@ -17,7 +17,7 @@ Dynamic testing also reveals your actual attack surface: what's reachable from t
 
 A battletest runs in three sequential phases:
 
-**Discovery** maps the application: pages, API endpoints, forms, subdomains, and the technologies detected at each. This is passive reconnaissance — no active probing — and produces the inventory that the next phase uses.
+**Discovery** maps the application: pages, API endpoints, forms, subdomains, and the technologies detected at each. This is passive reconnaissance (no active probing) and produces the inventory that the next phase uses.
 
 **Targeted testing** probes the discovered endpoints with techniques you've approved. The security testing layer runs injection tests against identified input surfaces, directory enumeration against directory structures, port scanning against the open port profile, and a browser-based agent for JavaScript-rendered content and form analysis. Each technique is permission-gated.
 
@@ -29,12 +29,12 @@ The most important design decision in live battletest is the permission tier mod
 
 | Tier | What it does |
 |------|-------------|
-| **Read-only** | Passive observation — header analysis, SSL configuration, public endpoint mapping. Nothing is sent to the application except ordinary HTTP requests. |
+| **Read-only** | Passive observation: header analysis, SSL configuration, public endpoint mapping. Nothing is sent to the application except ordinary HTTP requests. |
 | **Safe probing** | Non-destructive probing for common misconfigurations. Still does not send attack payloads. |
-| **Active probing** | Active vulnerability testing — injection testing, directory enumeration, port scanning. Where most confirmed findings originate. |
+| **Active probing** | Active vulnerability testing: injection testing, directory enumeration, port scanning. Where most confirmed findings originate. |
 | **Exploit chain** | Full exploit chain execution against confirmed vulnerabilities. Reserved for environments specifically set up to receive it, such as a dedicated testing instance. |
 
-The reason for this model is that active security testing against production without careful control is dangerous — it can affect real users, corrupt real data, and trigger alerts in your monitoring. The permission tiers let you advance the assessment at a pace you control, against targets you've prepared appropriately.
+The reason for this model is that active security testing against production without careful control is dangerous: it can affect real users, corrupt real data, and trigger alerts in your monitoring. The permission tiers let you advance the assessment at a pace you control, against targets you've prepared appropriately.
 
 Most production assessments stop at active probing. Exploit chain testing is typically used on staging environments.
 
@@ -42,11 +42,11 @@ Most production assessments stop at active probing. Exploit chain testing is typ
 
 Each battletest is compared against the previous scan of the same target. Findings are classified as:
 
-- **New** — appeared this scan
-- **Persistent** — present in both scans
-- **Resolved** — was present, now absent
-- **Regression** — similar to a previously resolved finding
+- **New**: appeared this scan
+- **Persistent**: present in both scans
+- **Resolved**: was present, now absent
+- **Regression**: similar to a previously resolved finding
 
-The regression category gets the most attention — it indicates something your team spent time fixing has come back.
+The regression category gets the most attention: it indicates something your team spent time fixing has come back.
 
 It is also why run timing matters. A run immediately after a deploy tells you whether the deploy introduced new issues. A run after the system has stabilised tells you the steady-state security posture. A deployment's run cadence is agreed as part of the engagement.

@@ -7,15 +7,15 @@ Every completed PR review and live battletest produces a risk score from **0 to 
 
 ## What the score measures
 
-The risk score is a weighted aggregate of the findings in that scan. It's not a normalised percentage of vulnerabilities found, and it's not a compliance score — it's a signal about how much risk the current scan introduces, relative to severity and your organisation's history with the same code or target.
+The risk score is a weighted aggregate of the findings in that scan. It's not a normalised percentage of vulnerabilities found, and it's not a compliance score: it's a signal about how much risk the current scan introduces, relative to severity and your organisation's history with the same code or target.
 
 Four factors drive the score:
 
-**Severity distribution** is the primary driver. Critical findings have exponential weight — a single confirmed Critical finding can push a previously clean score past 80. High findings have substantial weight; Medium and Low findings have diminishing contributions. The intent is that one Critical finding demands immediate attention regardless of how many Low findings are also present.
+**Severity distribution** is the primary driver. Critical findings have exponential weight: a single confirmed Critical finding can push a previously clean score past 80. High findings have substantial weight; Medium and Low findings have diminishing contributions. The intent is that one Critical finding demands immediate attention regardless of how many Low findings are also present.
 
 **Exploitability** modifies the base weight for CVE findings. If a CVE has a public exploit or a proof-of-concept available, the finding contributes more to the score than an unproven theoretical vulnerability with the same CVSS score.
 
-**Regression penalty** adds to the score for any finding classified as a regression — a vulnerability that your team previously resolved and that has returned. The regression penalty reflects the operational cost of fixing the same issue twice. A regression in a MEDIUM finding can contribute as much to the score as a new HIGH finding.
+**Regression penalty** adds to the score for any finding classified as a regression: a vulnerability that your team previously resolved and that has returned. The regression penalty reflects the operational cost of fixing the same issue twice. A regression in a MEDIUM finding can contribute as much to the score as a new HIGH finding.
 
 **Finding count** has a diminishing effect. The second Critical finding adds less to the score than the first; ten Medium findings together add less than two Highs. This prevents a large number of Low findings from pushing the score into the Critical band if the underlying issues are minor.
 
@@ -33,7 +33,7 @@ These bands match the [PR Findings reference](/docs/reference/pr-findings#risk-s
 
 ## Reading the score for PR review
 
-A score near 0 on a PR that introduced a lot of new code is a positive signal — the diff looks clean from the analysis. A score near 0 on a one-line change is less informative (there wasn't much to analyse).
+A score near 0 on a PR that introduced a lot of new code is a positive signal: the diff looks clean from the analysis. A score near 0 on a one-line change is less informative (there wasn't much to analyse).
 
 A score in the High or Critical band doesn't always mean the PR should be rejected. Read the findings that are driving the score. If the Critical finding is a secret that was removed in a later commit (but still in branch history), the fix is to purge it from history, not to close the PR. If the High finding is a dependency CVE in a package that's only used in tests, the risk profile is different from the same CVE in a production-facing library.
 
@@ -53,12 +53,12 @@ The dashboard shows a score trend line per repository and per live target. This 
 
 **A rising trend** despite no new features suggests technical debt accumulation: old dependencies drifting toward known CVEs, configuration gaps not being closed.
 
-**A flat trend at a non-zero score** is a warning sign. If your score has sat at 55 for six weeks, it means the same findings are being generated repeatedly without being addressed. The baseline isn't clean — it's stagnant.
+**A flat trend at a non-zero score** is a warning sign. If your score has sat at 55 for six weeks, it means the same findings are being generated repeatedly without being addressed. The baseline isn't clean; it's stagnant.
 
 **Spikes on PR reviews** are expected when a large refactor or a new integration lands. A spike followed by a return to baseline suggests the PR introduced temporary risk that was mitigated. A spike that doesn't return to baseline suggests a new vulnerability class entered the codebase and wasn't resolved.
 
 ## What the score is not
 
-The risk score is not a compliance grade. A score of 0 doesn't mean your application is secure against a determined attacker — it means the automated analysis found nothing. BattleTest covers a wide surface but it's not exhaustive. The score is one signal among several, not a security certification.
+The risk score is not a compliance grade. A score of 0 doesn't mean your application is secure against a determined attacker: it means the automated analysis found nothing. BattleTest covers a wide surface but it's not exhaustive. The score is one signal among several, not a security certification.
 
-The score also doesn't directly reflect the count of findings. A scan with two Critical findings and no others will score higher than a scan with thirty Low findings. This is intentional — volume of minor findings shouldn't obscure the severity signal.
+The score also doesn't directly reflect the count of findings. A scan with two Critical findings and no others will score higher than a scan with thirty Low findings. This is intentional: volume of minor findings shouldn't obscure the severity signal.

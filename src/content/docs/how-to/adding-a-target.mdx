@@ -1,6 +1,6 @@
 ---
 title: How to prepare a target for a live battletest
-description: What an application needs in place before a live BattleTest engagement — authorisation, reachability, permission tiers, and self-serve signup for authenticated coverage.
+description: "What an application needs in place before a live BattleTest engagement: authorisation, reachability, permission tiers, and self-serve signup for authenticated coverage."
 sidebar:
   label: Prepare a target
 ---
@@ -10,7 +10,7 @@ import { Note, Warning } from '@mintlify';
 <Note>
   Live battletest is not self-serve. It runs as a dedicated deployment inside a client's own
   network, scoped per engagement. This page describes what has to be true of an application
-  before a run can cover it properly — read it before the scoping conversation, not after.
+  before a run can cover it properly. Read it before the scoping conversation, not after.
   [Talk about a dedicated deployment →](https://battletest.dev/contact)
 </Note>
 
@@ -23,12 +23,12 @@ import { Note, Warning } from '@mintlify';
 
 ## Authenticated testing requires self-serve signup
 
-To test everything behind login, BattleTest signs up its own disposable accounts (using throwaway mailboxes it controls), logs in, and drives the app as a real user — including creating a second identity to probe for cross-user access flaws (IDOR/BOLA/RBAC). The second identity is also how findings are confirmed: nothing is reported unless it was replayed against the running system and reproduced from a second, unrelated account.
+To test everything behind login, BattleTest signs up its own disposable accounts (using throwaway mailboxes it controls), logs in, and drives the app as a real user, including creating a second identity to probe for cross-user access flaws (IDOR/BOLA/RBAC). The second identity is also how findings are confirmed: nothing is reported unless it was replayed against the running system and reproduced from a second, unrelated account.
 
 For this to work, the target must allow **self-serve registration with email and password** (or another credential BattleTest can create on demand).
 
 <Warning>
-  **SSO-only apps get discovery-only coverage.** If the only way in is "Sign in with Google/GitHub" and there is no email/password signup, BattleTest will **not** automate a third-party login (it's outside your authorisation and against those providers' terms). It reports the app as SSO-only and tests only the unauthenticated surface. To get authenticated testing, expose a self-serve email/password signup — even a staging-only or feature-flagged one is enough.
+  **SSO-only apps get discovery-only coverage.** If the only way in is "Sign in with Google/GitHub" and there is no email/password signup, BattleTest will **not** automate a third-party login (it's outside your authorisation and against those providers' terms). It reports the app as SSO-only and tests only the unauthenticated surface. To get authenticated testing, expose a self-serve email/password signup: even a staging-only or feature-flagged one is enough.
 </Warning>
 
 <Note>
@@ -37,19 +37,19 @@ For this to work, the target must allow **self-serve registration with email and
 
 ## Hosts served by someone else's infrastructure
 
-Both authorisation paths — declared scope, and the DNS TXT proof — establish something about
+Both authorisation paths (declared scope, and the DNS TXT proof) establish something about
 a **name**. Neither establishes anything about the machine that answers for it. A hostname can
 legitimately pass both while resolving, by CNAME, into a multi-tenant host you do not own; an
 exploit lands on the machine, not on the name, and the tenants sharing it authorised nothing.
 
 So when the CNAME chain leaves the scope this deployment declared, the run is **refused** until
 an administrator authorises the delegation target itself. `www.example.com` →
-`d111.cloudfront.net` is the same DNS shape as the dangerous case and is entirely ordinary —
-nothing in DNS distinguishes "my CDN" from "someone else's tenant", because that is a fact
+`d111.cloudfront.net` is the same DNS shape as the dangerous case and is entirely ordinary.
+Nothing in DNS distinguishes "my CDN" from "someone else's tenant", because that is a fact
 about a commercial relationship. A person has to state it.
 
 Authorise it in **Settings → Testing scope**, on the same record that gates a public host: the
-hostname, a justification (required — it is the whole reason the record exists rather than a
+hostname, a justification (required: it is the whole reason the record exists rather than a
 boolean), an approver, and an expiry that defaults to 90 days. It is revocable and it is
 visible to an auditor afterwards. Approve `d111.cloudfront.net` once and every hostname behind
 that distribution stops being friction.
@@ -66,7 +66,7 @@ Two details worth knowing before you hit this:
 An **address** outside your declared CIDR ranges is reported but does **not** block. There is no
 named party to authorise for an anycast edge address, and a check that fires on ordinary public
 hosting is one operators route around rather than use. Address checking only happens at all if
-you declared CIDR scope — without that there is no baseline for which addresses are yours.
+you declared CIDR scope; without that there is no baseline for which addresses are yours.
 
 ## Environments and domains
 
@@ -75,7 +75,7 @@ to it. `api.example.com` and `app.example.com` are one environment, not two. One
 run covers the whole environment regardless of how many hostnames it contains.
 
 Group by application, not by DNS. Splitting one application across two environments hides
-exactly the flaws worth finding — an agent that can move from the web app to the API in a
+exactly the flaws worth finding: an agent that can move from the web app to the API in a
 single run is what surfaces a cross-service access-control break.
 
 ## Permission tiers
@@ -93,7 +93,7 @@ for what each tier permits.
 
 A run reports what it confirmed and what it could **not** reach. The second half matters as
 much as the first: coverage you did not get is a fact about the assessment, not something to
-be quietly omitted from it. Discovery output — the endpoint inventory the run built — is
+be quietly omitted from it. Discovery output (the endpoint inventory the run built) is
 part of the record.
 
 For the shape of the report itself, see [Scan results](/docs/reference/scan-results).

@@ -1,6 +1,6 @@
 ---
 title: BattleTest GitHub App reference
-description: Reference for the BattleTest GitHub App — install URL, status check name, subscribed webhook events with actions, and the permissions the app requests.
+description: "Reference for the BattleTest GitHub App: install URL, status check name, subscribed webhook events with actions, and the permissions the app requests."
 sidebar:
   label: GitHub App
 ---
@@ -57,4 +57,4 @@ The check conclusion mirrors the review verdict, so it can act as an opt-in merg
 | **Action required** | `action_required` | Review completed; risk score 40 or higher ("request changes" verdict) | Only if set as a required check |
 | **Failure** | `failure` | An internal review error prevented completion | Only if set as a required check |
 
-By default nothing blocks a merge — `action_required` simply surfaces a "needs attention" state on risky PRs. A single LOW finding or likely false positive (risk below 40) passes as `success`. To turn the review into a hard gate, add it as a required status check in GitHub branch protection — then PRs whose risk warrants changes are blocked until resolved. See [How to require security review before merging](/docs/how-to/require-security-review) and [Risk score](/docs/concepts/risk-score#score-bands).
+By default nothing blocks a merge; `action_required` simply surfaces a "needs attention" state on risky PRs. A single LOW finding or likely false positive (risk below 40) passes as `success`. To turn the review into a hard gate, add it as a required status check in GitHub branch protection; then PRs whose risk warrants changes are blocked until resolved. See [How to require security review before merging](/docs/how-to/require-security-review) and [Risk score](/docs/concepts/risk-score#score-bands).

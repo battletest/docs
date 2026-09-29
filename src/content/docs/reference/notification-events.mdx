@@ -1,11 +1,11 @@
 ---
-title: Notification Events
-description: Complete reference for every BattleTest notification event — the six categories, each event, and its default and locked delivery channels across email, push, and in-app.
+title: Notification events
+description: "Complete reference for every BattleTest notification event: the seven categories, each event, and its default and locked delivery channels across email, push, and in-app."
 ---
 
 import { Note } from '@mintlify';
 
-BattleTest sends notifications on a fixed catalog of events. Each event belongs to one of six categories and has a default set of channels it is delivered on. You can override the channels per event from [Settings → Notifications](https://battletest.dev/settings?tab=notifications); to change them, see [How to configure notifications](/docs/how-to/configure-notifications).
+BattleTest sends notifications on a fixed catalog of events. Each event belongs to one of seven categories and has a default set of channels it is delivered on. You can override the channels per event from [Settings → Notifications](https://battletest.dev/settings?tab=notifications); to change them, see [How to configure notifications](/docs/how-to/configure-notifications).
 
 ## Channels
 
@@ -15,11 +15,11 @@ BattleTest sends notifications on a fixed catalog of events. Each event belongs 
 | **Push** | Browser push (requires granting notification permission) |
 | **In-app** | The notification bell in the dashboard |
 
-In the tables below, ✓ marks a channel that is **on by default**. A ✓ 🔒 channel is **required** — it is always on and cannot be turned off, because the event is money- or security-critical and must not be silently missed.
+In the tables below, ✓ marks a channel that is **on by default**. A ✓ 🔒 channel is **required**: it is always on and cannot be turned off, because the event is money- or security-critical and must not be silently missed.
 
-## PR Reviews
+## Change Reviews
 
-Automated security reviews on your pull requests.
+Automated security reviews on your pull requests and merge requests.
 
 | Event | Fires when | Email | Push | In-app |
 |-------|-----------|:-----:|:----:|:------:|
@@ -53,10 +53,10 @@ Active security assessments against your domains.
   fire only for accounts that have one. PR review notifications are unaffected.
 </Note>
 
-## Billing
+## Billing & Plan
 
-Payment and account-standing events. These fire only for accounts with existing billing
-records — BattleTest no longer sells plans, so nothing here is reachable from a new account.
+Payment, add-on, and self-hosted licence events. Most fire only for accounts with existing
+billing records; the licence events fire during a self-hosted deployment purchase.
 
 | Event | Fires when | Email | Push | In-app |
 |-------|-----------|:-----:|:----:|:------:|
@@ -69,6 +69,10 @@ records — BattleTest no longer sells plans, so nothing here is reachable from 
 | Refund issued | A refund was issued to your payment method | ✓ | | ✓ |
 | Card expiring | Your saved card is expiring | ✓ | | ✓ |
 | Payment method removed | The card on file was removed while billing was still active | ✓ | | ✓ |
+| Add-on added | An add-on was added to your subscription | ✓ | | ✓ |
+| Add-on removed | An add-on was removed | | | ✓ |
+| Licence request staged | A completed payment is waiting for a self-hosted licence to be signed and delivered | ✓ | | ✓ |
+| Licence key issued | Your self-hosted licence key was issued and sent to you | ✓ | | ✓ |
 
 ## Account & Security
 
@@ -84,6 +88,7 @@ Sign-in, password, and account-security events.
 | Account deleted | Confirmation that your account was deleted | ✓ 🔒 | | |
 | API key created | A new API key was created on your account | ✓ | | ✓ |
 | API key revoked | An API key was revoked | ✓ | | ✓ |
+| Could not save a review to your storage | A bring-your-own-storage export failed | ✓ | | ✓ |
 
 ## Team & Organization
 
@@ -113,11 +118,24 @@ GitHub and domain verification.
 | Domain verified | A domain passed DNS ownership verification | | | ✓ |
 | Domain verification lost | A domain's DNS verification record is missing; scans are paused | ✓ | | ✓ |
 
+## Run Rooms
+
+Access requests and invitations for the live run room. These are time-sensitive: a run is in
+flight while someone waits to be let in, so the two that block a person default to push as well.
+
+| Event | Fires when | Email | Push | In-app |
+|-------|-----------|:-----:|:----:|:------:|
+| Someone asked to join a run room | A person with the link requested access to a run you can admit them to | ✓ | ✓ | ✓ |
+| You were added to a run room | Your request to join a run room was approved | ✓ | | ✓ |
+| Someone asked to steer a run | A watcher asked for permission to steer a live run | ✓ | ✓ | ✓ |
+| Your run access was upgraded | You were granted a higher level of access in a run room | ✓ | | ✓ |
+| You were invited to a run room | Someone invited you to watch or steer a run | ✓ | | ✓ |
+
 <Note>
-  Push and in-app notifications carry a one-tap action button where one is useful — for example **Review & approve** on a paused battletest, **Update payment** on a failed charge, or **View finding** on a confirmed vulnerability. Tapping it deep-links to the exact page in the dashboard.
+  Push and in-app notifications carry a one-tap action button where one is useful: for example **Review & approve** on a paused battletest, **Update payment** on a failed charge, or **View finding** on a confirmed vulnerability. Tapping it deep-links to the exact page in the dashboard.
 </Note>
 
 ## Related
 
-- [How to configure notifications](/docs/how-to/configure-notifications) — turn channels on or off, enable browser push, and install the app.
-- [How to export findings](/docs/how-to/export-findings) — get finding data out of BattleTest for your own reporting.
+- [How to configure notifications](/docs/how-to/configure-notifications): turn channels on or off, enable browser push, and install the app.
+- [How to export findings](/docs/how-to/export-findings): get finding data out of BattleTest for your own reporting.

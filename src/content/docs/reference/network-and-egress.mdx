@@ -23,11 +23,11 @@ EGRESS_MODE=proxied   # outbound allowed, but only through your forward proxy
 EGRESS_MODE=open      # direct internet (managed SaaS)
 ```
 
-**`airgap`** — Category A is hard-disabled. Category B is served from your mirror or an offline database and **fails closed**: it never silently falls back to a public host. Category C vendors require a key or DSN and have no hardcoded fallbacks. Category D is your own infrastructure.
+**`airgap`**: Category A is hard-disabled. Category B is served from your mirror or an offline database and **fails closed**: it never silently falls back to a public host. Category C vendors require a key or DSN and have no hardcoded fallbacks. Category D is your own infrastructure.
 
-**`proxied`** — outbound is permitted but routed through your forward proxy. Because Bun's `fetch` honours `HTTP(S)_PROXY` natively, this is a transport concern rather than a per-call change. One deliberate exception: **Category A stays gated exactly as in airgap.** Proxying a connection does not un-leak the target to the aggregator receiving it, so third-party reconnaissance still requires explicit opt-in.
+**`proxied`**: outbound is permitted but routed through your forward proxy. Because Bun's `fetch` honours `HTTP(S)_PROXY` natively, this is a transport concern rather than a per-call change. One deliberate exception: **Category A stays gated exactly as in airgap.** Proxying a connection does not un-leak the target to the aggregator receiving it, so third-party reconnaissance still requires explicit opt-in.
 
-**`open`** — direct internet, with per-feature disclosure.
+**`open`**: direct internet, with per-feature disclosure.
 
 The effective posture is surfaced in the setup wizard as **Completely Offline**, **Outbound via Proxy**, **Direct Outbound**, or **Hybrid** (an air-gapped control plane with a proxy for test traffic).
 
@@ -38,26 +38,26 @@ The effective posture is surfaced in the setup wizard as **Completely Offline**,
 | `EGRESS_MODE=airgap\|proxied\|open` | Global posture. Defaults to `airgap` in the enterprise image |
 | `EGRESS_PROXY_URL` | Forward proxy for `proxied` mode. Falls back to `HTTPS_PROXY`/`HTTP_PROXY` if set directly |
 | `NO_PROXY` | Proxy-bypass list, merged with internal defaults (localhost, sidecars, `.internal`) |
-| `BATTLETEST_PROXY_URL` | Separate proxy for test **target** traffic on the sidecars — an independent axis from control-plane egress |
+| `BATTLETEST_PROXY_URL` | Separate proxy for test **target** traffic on the sidecars: an independent axis from control-plane egress |
 | `DNS_RESOLVER` | Optional. Lookups use the container's own resolver by default; set only when there is no usable system resolver |
 | `DNS_SERVERS` | Optional. Pin lookups to specific internal servers instead of `/etc/resolv.conf` |
 | `VULN_DB_PATH` | Offline vulnerability database (OSV-format snapshot). Takes priority over feed URLs |
 | `OSV_BASE_URL`, `NVD_BASE_URL`, `GHSA_BASE_URL`, `OPENCVE_BASE_URL`, `CVEDB_BASE_URL` | Your mirror or self-hosted instance for each vulnerability feed |
 | `PACKAGE_MIRROR_<ECOSYSTEM>` | Your internal registry mirror per ecosystem. Fails closed if unset in airgap |
 | `SENTRY_MODE=off\|battletest\|custom` | Error reporting. Opt-in, default off, redacted |
-| `OAST_MODE=catcher\|interactsh\|off` | Which out-of-band callback backend runs. Defaults to `catcher`, the bundled receive-only catcher. The vendor's public servers are unreachable in all three — see [out-of-band testing](/docs/how-to/out-of-band-testing) |
+| `OAST_MODE=catcher\|interactsh\|off` | Which out-of-band callback backend runs. Defaults to `catcher`, the bundled receive-only catcher. The vendor's public servers are unreachable in all three; see [out-of-band testing](/docs/how-to/out-of-band-testing) |
 
 ## The principle
 
 Every outbound call sorts into one of two kinds, and they get opposite treatment.
 
-**Data about you going out** — your domains sent to a certificate-transparency log, your DNS sent to a public resolver, your target IPs sent to an intelligence aggregator. These are leaks: they broadcast your internal attack surface to third parties. They are eliminated — off by default, enabled only with explicit per-target consent, and disclosed when used.
+**Data about you going out**: your domains sent to a certificate-transparency log, your DNS sent to a public resolver, your target IPs sent to an intelligence aggregator. These are leaks: they broadcast your internal attack surface to third parties. They are eliminated: off by default, enabled only with explicit per-target consent, and disclosed when used.
 
-**Reference data coming in** — vulnerability databases, CVE feeds, advisories. Genuinely needed, but the data lives outside, and *querying* it leaks your private dependency names and your CVE interests. These are served from your mirror or an offline snapshot.
+**Reference data coming in**: vulnerability databases, CVE feeds, advisories. Genuinely needed, but the data lives outside, and *querying* it leaks your private dependency names and your CVE interests. These are served from your mirror or an offline snapshot.
 
 Both end in the same place: **zero required runtime egress.** Everything is off, served locally, or pointed at infrastructure you control.
 
-## Category A — Data about you going out
+## Category A: Data about you going out
 
 Disabled by default in `airgap` and `proxied`. Each becomes available only when named in `RECON_ENABLE` *and* the target carries `external_recon_authorized`. Both gates must agree.
 
@@ -71,7 +71,7 @@ Disabled by default in `airgap` and `proxied`. Each becomes available only when 
 | `web.archive.org` | Wayback history | Off unless in `RECON_ENABLE` |
 | `api.github.com/search/code` | Public code-leak search | Off unless in `RECON_ENABLE`. The GitHub token is dual-purpose, so key presence alone is **not** treated as opt-in |
 | `ipinfo.io`, `ip-api.com` | Proxy exit-IP geolocation | Skipped unless `open` |
-| `web.archive.org`, `otx.alienvault.com`, `urlscan.io`, `commoncrawl.org` via `url-mining` | Passive endpoint discovery | Off unless in `RECON_ENABLE`. It never touches your target — it asks these archives *about* it, which is why it is listed here rather than as target traffic |
+| `web.archive.org`, `otx.alienvault.com`, `urlscan.io`, `commoncrawl.org` via `url-mining` | Passive endpoint discovery | Off unless in `RECON_ENABLE`. It never touches your target; it asks these archives *about* it, which is why it is listed here rather than as target traffic |
 | `api.shodan.io`, `api.platform.censys.io`, `otx.alienvault.com`, `api.greynoise.io`, `api.criminalip.io`, `app.netlas.io`, `api.zoomeye.org`, `api.securitytrails.com` | Keyed OSINT | Key-gated. Supplying the key is itself the opt-in |
 | `subfinder` aggregators (sidecar) | Passive DNS / CT | Refused unless `open`, at both the request validator and the shell. Note the limits described under [what we have not proved](#where-the-enforcement-is-thinner-than-the-tables-imply) |
 
@@ -83,9 +83,9 @@ The public DoH default was an artifact of the original Cloudflare Workers runtim
 
 Your resolver's own forwarding policy is outside this process and remains your configuration to make.
 
-## Category B — Reference data coming in
+## Category B: Reference data coming in
 
-Each feed resolves to your mirror if configured, the public host in `open` mode, and otherwise **null** — the caller skips the lookup and degrades to an empty result. It never falls back to the public host.
+Each feed resolves to your mirror if configured, the public host in `open` mode, and otherwise **null**: the caller skips the lookup and degrades to an empty result. It never falls back to the public host.
 
 | Host | Purpose | Override |
 |---|---|---|
@@ -96,15 +96,15 @@ Each feed resolves to your mirror if configured, the public host in `open` mode,
 | `cvedb.shodan.io` | EPSS / KEV enrichment | `CVEDB_BASE_URL` |
 | `registry.npmjs.org`, `pypi.org`, `crates.io`, `proxy.golang.org`, `repo.packagist.org`, `rubygems.org`, `hex.pm`, `api.nuget.org`, `search.maven.org`, `pub.dev` | Package identity and typosquat checks | `PACKAGE_MIRROR_<ECOSYSTEM>` |
 
-A transparent caching proxy — an Artifactory remote repository or a Nexus proxy — preserves the registry's URL layout, so swapping the host is sufficient.
+A transparent caching proxy (an Artifactory remote repository or a Nexus proxy) preserves the registry's URL layout, so swapping the host is sufficient.
 
 ### The fully offline path
 
-Point `VULN_DB_PATH` at an OSV-format snapshot directory and every vulnerability lookup — dependency scanning, CVE enrichment, the verifier's oracle — is answered from disk. No mirror, no URLs, zero egress. It takes **priority** over the feed URLs when set.
+Point `VULN_DB_PATH` at an OSV-format snapshot directory and every vulnerability lookup (dependency scanning, CVE enrichment, the verifier's oracle) is answered from disk. No mirror, no URLs, zero egress. It takes **priority** over the feed URLs when set.
 
 Refresh it by running the sync script against OSV or your own mirror, shipping the resulting folder in, and restarting. This is the path that makes a completely offline deployment lose no vulnerability coverage.
 
-## Category C — Vendor services
+## Category C: Vendor services
 
 Off by default, opt-in, or absent from the enterprise image.
 
@@ -114,7 +114,7 @@ Off by default, opt-in, or absent from the enterprise image.
 | `cloud.langfuse.com` | LLM tracing | Key-gated. In airgap, disabled unless `LANGFUSE_BASE_URL` is your own instance |
 | `api.paddle.com`, `cdn.paddle.com` | Billing | `BILLING_PROVIDER=none` removes the billing router entirely; `PUBLIC_BILLING_ENABLED=false` stops the frontend loading the CDN |
 | `next-api.useplunk.com` | Lifecycle email | Hard no-op in airgap |
-| `api.pdtm.sh` | Version ping from the bundled ProjectDiscovery scanners | Disabled image-wide. Sends tool name, version, OS and Go version — no target data — but it is still an undeclared call, so it is switched off rather than documented |
+| `api.pdtm.sh` | Version ping from the bundled ProjectDiscovery scanners | Disabled image-wide. Sends tool name, version, OS and Go version (no target data), but it is still an undeclared call, so it is switched off rather than documented |
 | FCM / Mozilla autopush | Web Push relay | Off in airgap unless explicitly enabled |
 | `proxy.webshare.io`, `api.capsolver.com`, `5sim.net` | Anti-blocking for authorised external testing | Off in airgap. Keyed |
 | `api.endpoints.huggingface.cloud` | Managed inference-endpoint lifecycle | Only when Hugging Face endpoints are configured. Unused if you run your own inference |
@@ -122,30 +122,30 @@ Off by default, opt-in, or absent from the enterprise image.
 
 ### Licensing is offline
 
-`BILLING_PROVIDER=none` is backed by an Ed25519-signed licence verified locally against a public key baked into the image. **Zero egress.** Entitlements — tier, caps, feature flags, expiry and grace period — drive the product directly. A missing or forged licence falls back to a locked free floor.
+`BILLING_PROVIDER=none` is backed by an Ed25519-signed licence verified locally against a public key baked into the image. **Zero egress.** Entitlements (tier, caps, feature flags, expiry and grace period) drive the product directly. A missing or forged licence falls back to a locked free floor.
 
 This is forgery-proof rather than tamper-proof, which is the inherent limit of client-side enforcement.
 
 ### The image is signed and ships an SBOM
 
-You can verify provenance and integrity offline, air-gapped, with no call home — key-based `cosign` with no transparency-log lookup, plus an SPDX/CycloneDX SBOM attached as an attestation. Docker does not check signatures at runtime, so this is a check you run deliberately rather than one that happens invisibly.
+You can verify provenance and integrity offline, air-gapped, with no call home: key-based `cosign` with no transparency-log lookup, plus an SPDX/CycloneDX SBOM attached as an attestation. Docker does not check signatures at runtime, so this is a check you run deliberately rather than one that happens invisibly.
 
-## Category D — Your own infrastructure
+## Category D: Your own infrastructure
 
 | Destination | Notes |
 |---|---|
 | Your SCM | `GITHUB_HOST` points every GitHub call at your GitHub Enterprise Server. Unset means github.com |
 | The test target | The system you authorised us to test |
-| Your SMTP relay | The **only** mail transport. `MAIL_PROVIDER` is `smtp` by default and there is no vendor alternative — the managed email provider was removed from the product entirely. With no `SMTP_HOST` set, the email channel is disabled and in-app and push notifications continue unaffected |
+| Your SMTP relay | The **only** mail transport. `MAIL_PROVIDER` is `smtp` by default and there is no vendor alternative; the managed email provider was removed from the product entirely. With no `SMTP_HOST` set, the email channel is disabled and in-app and push notifications continue unaffected |
 | Your object storage | Any S3-compatible endpoint |
 | Your model endpoints | Chat, embeddings and vision all resolve through one seam |
 | Callback catcher | Receive-only, self-hosted. No egress. The default out-of-band backend |
-| Self-hosted interactsh (optional) | Receive-only, self-hosted, and off unless you start it. Restores the template scanner's out-of-band coverage without any third-party callback host. Runs its own authoritative DNS, so it needs a **delegated domain** — see [out-of-band testing](/docs/how-to/out-of-band-testing). Give it your server's public IP explicitly: left to discover its own address it makes two undeclared calls at startup and then exits when they fail |
+| Self-hosted interactsh (optional) | Receive-only, self-hosted, and off unless you start it. Restores the template scanner's out-of-band coverage without any third-party callback host. Runs its own authoritative DNS, so it needs a **delegated domain**; see [out-of-band testing](/docs/how-to/out-of-band-testing). Give it your server's public IP explicitly: left to discover its own address it makes two undeclared calls at startup and then exits when they fail |
 | Signalling broker and TURN server | Self-hosted. See below |
 
 ### Inference resolves through one seam
 
-Every model transport — chat, embeddings and vision, including the compatibility layer that serves `env.AI.run` — resolves its endpoint and its credential **immediately before each request**, not once at startup. Configuring a model slot therefore routes all of them to your endpoint, including calls made before configuration finishes loading.
+Every model transport (chat, embeddings and vision, including the compatibility layer that serves `env.AI.run`) resolves its endpoint and its credential **immediately before each request**, not once at startup. Configuring a model slot therefore routes all of them to your endpoint, including calls made before configuration finishes loading.
 
 In `airgap`, the endpoint is checked against an **allowlist**: a request proceeds only if the destination is private (loopback, RFC1918, CGNAT, unique-local, a single-label host) or is an endpoint you configured. Anything else throws at the point of the fetch, so a misconfigured instance fails its run instead of disclosing the prompt. Comparison is by parsed URL origin, so a lookalike host such as `api.deepinfra.com.example.net` does not pass.
 
@@ -157,23 +157,23 @@ This is asserted as a **property** rather than a function: the test suite constr
 
 This deserves its own section, because the default configuration of the library we use would have made it a Category A leak, and the problem is not visible from a dependency list.
 
-**PeerJS ships public TURN servers in its default config.** A TURN server is not a broker: when two browsers cannot reach each other directly, media **relays through it**. An instance using the default would have relayed the audio of a call about your unpatched criticals through a third party you have no agreement with. The packets are encrypted, so the relay could not hear the call — but it would see every participant's IP address, who called whom, when, and for how long.
+**PeerJS ships public TURN servers in its default config.** A TURN server is not a broker: when two browsers cannot reach each other directly, media **relays through it**. An instance using the default would have relayed the audio of a call about your unpatched criticals through a third party you have no agreement with. The packets are encrypted, so the relay could not hear the call, but it would see every participant's IP address, who called whom, when, and for how long.
 
 We pass an explicit ICE configuration and **refuse any TURN URL containing `peerjs.com`**, including one an operator supplies. Two tests fail if that changes.
 
-**There is no public STUN fallback either.** An unconfigured deployment resolves to no ICE servers at all: LAN calls work, everything else fails visibly. A public default would have worked, which is exactly the danger — every unconfigured instance would quietly hand a third party the address of every browser that opened a room, and nobody would have looked.
+**There is no public STUN fallback either.** An unconfigured deployment resolves to no ICE servers at all: LAN calls work, everything else fails visibly. A public default would have worked, which is exactly the danger: every unconfigured instance would quietly hand a third party the address of every browser that opened a room, and nobody would have looked.
 
-**TURN credentials are minted per user and never shipped.** The API issues a short-lived HMAC credential after the room's view check. The shared secret is derived from the instance secret on both sides — never transmitted, never in the browser bundle.
+**TURN credentials are minted per user and never shipped.** The API issues a short-lived HMAC credential after the room's view check. The shared secret is derived from the instance secret on both sides: never transmitted, never in the browser bundle.
 
 **Relay is the default**, so media goes through your own TURN server even when a direct path exists. It costs bandwidth and buys one thing: participants stop learning each other's IP addresses. The Room is built to hold guests and external auditors, and neither party opted into revealing their address to the other.
 
-**The TURN server will not relay into private ranges.** RFC1918, link-local and loopback are denied — a TURN server that forwards into private space is an SSRF pivot into whatever network it sits in, and this one sits next to the scanners.
+**The TURN server will not relay into private ranges.** RFC1918, link-local and loopback are denied; a TURN server that forwards into private space is an SSRF pivot into whatever network it sits in, and this one sits next to the scanners.
 
 None of this requires egress. Both services are containers in your deployment; a call between two people on your network never leaves it.
 
 ## Build-time only
 
-Fetched when the image is built, never at runtime: Kali packages and pinned tool tarballs, vulnerability-scanner templates, and Playwright browsers. The template scanner's out-of-band callback feature is disabled unless you configure a backend for it — see below.
+Fetched when the image is built, never at runtime: Kali packages and pinned tool tarballs, vulnerability-scanner templates, and Playwright browsers. The template scanner's out-of-band callback feature is disabled unless you configure a backend for it; see below.
 
 If your build pipeline runs inside your boundary, note that the catalogue and payload import scripts reach public sources at build time. They are not runtime paths.
 
@@ -181,7 +181,7 @@ If your build pipeline runs inside your boundary, note that the catalogue and pa
 
 A deployment may legitimately use a public model endpoint, live advisory feeds, or a hosted callback catcher. All three are supported. **None of them may be silent.**
 
-Each dependency is classified as `self`, `battletest`, or `external`. The readiness panel shows the classification, and the list of anything that ran off-instance is recorded **inside the signed manifest content** — so the disclosure cannot be separated from the report it qualifies. An empty list is a positive claim, and it is only ever empty when nothing left your network.
+Each dependency is classified as `self`, `battletest`, or `external`. The readiness panel shows the classification, and the list of anything that ran off-instance is recorded **inside the signed manifest content**, so the disclosure cannot be separated from the report it qualifies. An empty list is a positive claim, and it is only ever empty when nothing left your network.
 
 Classification errs toward disclosure: a host we cannot prove is internal is reported as `external`. Over-disclosure starts a conversation; under-disclosure is a false claim in a signed document.
 
@@ -189,32 +189,32 @@ Classification errs toward disclosure: a host we cannot prove is internal is rep
 
 This list is maintained by source audit plus packet capture on a live deployment. Some things are neither confirmed present nor confirmed absent, and we would rather say so.
 
-- **The crawler SDK has no telemetry to disable.** We audited the pinned version's complete set of environment variables and found no telemetry, analytics or reporting entry, and the vendor's own SDK is not a dependency of that image. This previously read "not proven disabled"; it is now established. We set no opt-out variable, because inventing one that the library ignores would be worse than none — it would be believed.
+- **The crawler SDK has no telemetry to disable.** We audited the pinned version's complete set of environment variables and found no telemetry, analytics or reporting entry, and the vendor's own SDK is not a dependency of that image. This previously read "not proven disabled"; it is now established. We set no opt-out variable, because inventing one that the library ignores would be worse than none: it would be believed.
 - **The sandbox layer** is not yet audited to the same standard. Treat it as unproven.
 - **A Cloudflare API token** is accepted as configuration, but no runtime call using it was found in the application source.
-- Confirmed **absent**: PostHog and OpenTelemetry exporters. Not merely unimported — no dependency and no source match.
-- **Turnstile** (`challenges.cloudflare.com`) is reached only when a Turnstile secret is set. Unset — the self-hosted default — skips the check before any request is made.
+- Confirmed **absent**: PostHog and OpenTelemetry exporters. Not merely unimported: no dependency and no source match.
+- **Turnstile** (`challenges.cloudflare.com`) is reached only when a Turnstile secret is set. Unset (the self-hosted default) skips the check before any request is made.
 - **The browser binary** in the crawler image is a third-party build. The launch flags disable its background networking, but that is the browser's behaviour rather than something this deployment's configuration controls.
 
 ### Where the enforcement is thinner than the tables imply
 
 Being specific about this, because a ledger that overstates its own guarantees is worse than none.
 
-**The command tool in the security sidecar accepts arbitrary shell.** This is deliberate — it is an offensive testing tool and its agents need a shell — and it means the sidecar's egress controls are layered rather than absolute:
+**The command tool in the security sidecar accepts arbitrary shell.** This is deliberate (it is an offensive testing tool and its agents need a shell) and it means the sidecar's egress controls are layered rather than absolute:
 
 - Package installation is **refused** outside `open` mode. That layer is solid: installing reaches the network by definition, so refusing it cannot be worked around at that entry point.
-- Known out-of-band and passive-recon tool names are **refused on the shell path** as well as the task path. This layer is an honest speed bump against accidental invocation, **not** a security boundary — the argument is arbitrary shell, and a determined caller can obfuscate a tool name.
+- Known out-of-band and passive-recon tool names are **refused on the shell path** as well as the task path. This layer is an honest speed bump against accidental invocation, **not** a security boundary: the argument is arbitrary shell, and a determined caller can obfuscate a tool name.
 - The out-of-band callback client has been **removed from the image** entirely. It was never wired into any executor.
 
 **The enforceable control for this container is network-level.** Deny egress from the security-tools container in air-gapped operation and allow only what your deployment declares. Everything above is a supporting layer over that, and we would rather say so than imply the shell can be sandboxed by string matching.
 
-**The vendor's public out-of-band servers are never used, in any mode.** The template-based vulnerability scanner defaults to a set of callback servers operated by its vendor, and the hostname is embedded in the payload — so it is **your own target systems** that call out, a disclosure originating inside your network rather than from this container, and one a packet capture here would never show.
+**The vendor's public out-of-band servers are never used, in any mode.** The template-based vulnerability scanner defaults to a set of callback servers operated by its vendor, and the hostname is embedded in the payload, so it is **your own target systems** that call out, a disclosure originating inside your network rather than from this container, and one a packet capture here would never show.
 
-That default is overridden at the image level rather than per call site, so it holds however the scanner is invoked, and the build fails if the override is not in place. What varies is which backend you get instead — see [out-of-band testing](/docs/how-to/out-of-band-testing) for the full decision:
+That default is overridden at the image level rather than per call site, so it holds however the scanner is invoked, and the build fails if the override is not in place. What varies is which backend you get instead; see [out-of-band testing](/docs/how-to/out-of-band-testing) for the full decision:
 
-- **`OAST_MODE=catcher`** (the default) — the bundled callback catcher, which is receive-only and self-hosted. It covers the agent-driven blind-vulnerability paths and needs at most one wildcard DNS record. It is **not** protocol-compatible with the template scanner, so that scanner's out-of-band templates stay excluded.
-- **`OAST_MODE=interactsh`** — a self-hosted interactsh server that you run. The scanner is pointed at it and its full out-of-band template set is restored. This requires **delegating a domain's nameservers** to that server, which is a real commitment rather than a configuration flag; the how-to page states what it costs before you agree to it.
-- **`OAST_MODE=off`** — no out-of-band testing anywhere. The agent's callback tools report themselves unavailable rather than returning an empty result that reads like a negative finding.
+- **`OAST_MODE=catcher`** (the default): the bundled callback catcher, which is receive-only and self-hosted. It covers the agent-driven blind-vulnerability paths and needs at most one wildcard DNS record. It is **not** protocol-compatible with the template scanner, so that scanner's out-of-band templates stay excluded.
+- **`OAST_MODE=interactsh`**: a self-hosted interactsh server that you run. The scanner is pointed at it and its full out-of-band template set is restored. This requires **delegating a domain's nameservers** to that server, which is a real commitment rather than a configuration flag; the how-to page states what it costs before you agree to it.
+- **`OAST_MODE=off`**: no out-of-band testing anywhere. The agent's callback tools report themselves unavailable rather than returning an empty result that reads like a negative finding.
 
 The trade-off, stated plainly: under `catcher` or `off`, blind vulnerability classes that only prove themselves via an outbound connection are not covered by the template scanner. A run reports what it could not reach, and that statement travels inside the signed export rather than beside it.
 
@@ -222,7 +222,7 @@ An explicitly configured `-iserver` from a caller is still treated as a declared
 
 **Check the value your deployment actually receives.** The code defaults `EGRESS_MODE` to `airgap` when unset, but the published compose files set it explicitly for managed operation. Read the value in your own environment rather than assuming the code default applies.
 
-At boot and during normal application runtime, an empirical capture on a live deployment showed the only external connection was error reporting, which is now off by default. Test-time egress is enumerated statically above rather than observed dynamically — which is precisely why the items in this section are listed rather than omitted.
+At boot and during normal application runtime, an empirical capture on a live deployment showed the only external connection was error reporting, which is now off by default. Test-time egress is enumerated statically above rather than observed dynamically, which is precisely why the items in this section are listed rather than omitted.
 
 ## Reporting a discrepancy
 
@@ -253,14 +253,14 @@ the mode in which an extension's declared boundary is a boundary rather than a p
 
 Every request an extension makes through the runtime carries an `x-battletest-extension`
 header naming it. A request reaching your proxy **without** that header came from something
-that bypassed the runtime wrapper — that is the case to alert on, not to treat as ordinary
+that bypassed the runtime wrapper; that is the case to alert on, not to treat as ordinary
 traffic.
 
 Extensions also declare how much they need the network at all, which lets a run distinguish
 a source your policy blocked from one that cannot work in your deployment:
 
-- **`none`** — reaches nothing off-host; runs in every mode.
-- **`required`** — cannot function without network. Under airgap this is reported as a
+- **`none`**: reaches nothing off-host; runs in every mode.
+- **`required`**: cannot function without network. Under airgap this is reported as a
   capability mismatch, not a policy refusal: no grant would change it.
-- **`optional`** — works either way.
-- **`degraded`** — works without network and returns less; the run says what was missing.
+- **`optional`**: works either way.
+- **`degraded`**: works without network and returns less; the run says what was missing.

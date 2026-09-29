@@ -1,6 +1,6 @@
 ---
 title: How to configure notifications
-description: Choose which BattleTest events notify you and where — email, browser push, or in-app — enable push, and install BattleTest as an app.
+description: Choose which BattleTest events notify you and where (email, browser push, or in-app), enable push, and install BattleTest as an app.
 sidebar:
   label: Configure notifications
 ---
@@ -17,20 +17,20 @@ BattleTest can notify you per event, per channel. Configure everything at [Setti
 | **Push** | Browser push notifications (requires granting permission in your browser) |
 | **In-app** | The notification bell in the dashboard |
 
-The GitHub PR comment is always posted regardless of these settings — it is the primary output of a PR review, not a notification channel.
+The GitHub PR comment is always posted regardless of these settings; it is the primary output of a PR review, not a notification channel.
 
 ## Turn a notification on or off
 
 <Steps>
   <Step title="Open the Notifications tab">
-    Go to [Settings → Notifications](https://battletest.dev/settings?tab=notifications). Events are grouped by category (PR Reviews, Live Battletests, Billing, Account, Team, Integrations), each with a master toggle.
+    Go to [Settings → Notifications](https://battletest.dev/settings?tab=notifications). Events are grouped by category (Change Reviews, Live Battletests, Billing & Plan, Account & Security, Team & Organization, Integrations, Run Rooms), each with a master toggle.
   </Step>
   <Step title="Toggle the channel for an event">
     Each event has an email, push, and in-app toggle. Switch the channel on or off for that event.
   </Step>
 </Steps>
 
-Some security- and money-critical events (a password change, an ownership transfer, a failed payment on an account that still has billing records) keep **email locked on** — you can add channels but not remove email. These are marked in the [Notification Events reference](/docs/reference/notification-events).
+Some security- and money-critical events (a password change, an ownership transfer, a failed payment on an account that still has billing records) keep **email locked on**; you can add channels but not remove email. These are marked in the [Notification Events reference](/docs/reference/notification-events).
 
 ## Enable browser push
 
@@ -43,7 +43,7 @@ Some security- and money-critical events (a password change, an ownership transf
   </Step>
 </Steps>
 
-Push notifications carry a one-tap action where one helps — **Review & approve** on a paused battletest, **View finding** on a confirmed vulnerability — that deep-links straight to the right page.
+Push notifications carry a one-tap action where one helps (**Review & approve** on a paused battletest, **View finding** on a confirmed vulnerability) that deep-links straight to the right page.
 
 ## Install BattleTest as an app
 
@@ -71,4 +71,4 @@ Per-channel notifications are for humans. To pull finding data into a spreadshee
 
 ## Not receiving emails?
 
-Check your spam folder — the first email from `noreply@battletest.dev` is sometimes filtered. Add the address to your contacts. See [Troubleshooting](/docs/how-to/troubleshooting#im-not-receiving-battletest-email-notifications) if it persists.
+Check your spam folder; the first email from `noreply@battletest.dev` is sometimes filtered. Add the address to your contacts. See [Troubleshooting](/docs/how-to/troubleshooting#im-not-receiving-battletest-email-notifications) if it persists.

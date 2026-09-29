@@ -28,19 +28,19 @@ BattleTest resolves known model prices from its bundled aggregate snapshot. If t
 
 ### What changes
 
-Every review runs at **advanced** depth, with no hourly or monthly cap. The public-repo hourly limit and the private-repo monthly allowance both stop applying — they are counted in reviews precisely because reviews are what costs us, and on your own key they cost us nothing.
+Every review runs at **advanced** depth, with no hourly or monthly cap. The public-repo hourly limit and the private-repo monthly allowance both stop applying; they are counted in reviews precisely because reviews are what costs us, and on your own key they cost us nothing.
 
 This is deliberately **not** a plan tier. Tiers describe what someone bought; this describes who pays for the compute, and the two are independent.
 
 ### If the key stops working
 
-A configured key that fails **never silently falls back to ours**. If your provider rejects a request, the review fails and the error is surfaced — you are not quietly moved back onto our account while believing you are paying your own bill, and limits are not re-applied on that belief.
+A configured key that fails **never silently falls back to ours**. If your provider rejects a request, the review fails and the error is surfaced. You are not quietly moved back onto our account while believing you are paying your own bill, and limits are not re-applied on that belief.
 
 The last verification result is shown in Settings, including the reason for the most recent failure.
 
 ### How the key is stored
 
-Non-empty keys are encrypted at rest, decrypted per use, and never returned to a browser — the settings page shows only the last four characters. If the instance has no encryption key configured, saving a credential fails rather than writing it in cleartext. A deliberately blank key stores no secret.
+Non-empty keys are encrypted at rest, decrypted per use, and never returned to a browser; the settings page shows only the last four characters. If the instance has no encryption key configured, saving a credential fails rather than writing it in cleartext. A deliberately blank key stores no secret.
 
 Remove it at any time from the same screen. Removing it puts the organisation back on our inference and back within the free limits.
 
@@ -52,7 +52,7 @@ Storage is the companion setting, and it does something different: it changes wh
 2. Under **Bring your own**, enter your S3-compatible endpoint, region, bucket, access key ID and secret access key.
 3. Save. BattleTest verifies the credentials before accepting them.
 
-Works with any S3-compatible storage — AWS S3, Cloudflare R2, MinIO, Ceph.
+Works with any S3-compatible storage: AWS S3, Cloudflare R2, MinIO, Ceph.
 
 ### What changes
 
@@ -62,9 +62,9 @@ This also means your credentials are used at view time, not just at run end: the
 
 ### Why verification writes, reads and deletes
 
-The check performs all three operations rather than simply asking whether the bucket exists.
+The check performs all three operations rather than asking whether the bucket exists.
 
-All three are operations BattleTest will actually perform: write at the end of a run, read when someone opens a report, delete to clean up and to let your own lifecycle rules work. A read-only key passes a bucket-exists check and then fails at the end of your first review — after the work is done, and with the local copy already queued for deletion. So the check is the real operations, not a proxy for them.
+All three are operations BattleTest will actually perform: write at the end of a run, read when someone opens a report, delete to clean up and to let your own lifecycle rules work. A read-only key passes a bucket-exists check and then fails at the end of your first review, after the work is done, and with the local copy already queued for deletion. So the check is the real operations, not a proxy for them.
 
 The probe object it writes is deleted as part of the check.
 
@@ -90,6 +90,6 @@ Saving through either route runs the same verification as the settings screen.
 
 ## Related
 
-- [Limits and quotas](/docs/reference/limits-and-quotas) — what the limits are when you are on our inference
-- [Soft limits](/docs/reference/soft-limits) — what happens as an organisation approaches them
-- [Security & Data Handling](/docs/reference/security-and-data) — what is accessed and retained
+- [Limits and quotas](/docs/reference/limits-and-quotas): what the limits are when you are on our inference
+- [Soft limits](/docs/reference/soft-limits): what happens as an organisation approaches them
+- [Security & Data Handling](/docs/reference/security-and-data): what is accessed and retained

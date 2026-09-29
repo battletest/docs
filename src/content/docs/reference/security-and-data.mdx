@@ -1,5 +1,5 @@
 ---
-title: Security & Data Handling
+title: Security and data handling
 description: What BattleTest accesses, what it retains, how AI-assisted analysis works, and the safeguards and providers involved.
 ---
 
@@ -51,7 +51,9 @@ Provider use may vary by feature and availability. AI output can be incomplete o
 
 ## Other service providers
 
-We use service providers only where needed to operate or support the Service. Core providers include:
+The providers below apply to the **managed (SaaS) service** at battletest.dev. A **self-hosted deployment** reaches none of them by default: email, error reporting, and AI-observability are off or point at your own infrastructure, and the egress controls are described in [Network and egress](/docs/reference/network-and-egress).
+
+We use service providers only where needed to operate or support the managed Service. Core providers include:
 
 | Provider | Role |
 |----------|------|
@@ -69,10 +71,10 @@ We use service providers only where needed to operate or support the Service. Co
 Security-intelligence workflows may query third-party sources using target indicators
 needed for the customer-authorised task. Two groups, both optional:
 
-**Keyed sources** — used only when you supply an API key: Shodan, Censys, AlienVault OTX,
+**Keyed sources**: used only when you supply an API key: Shodan, Censys, AlienVault OTX,
 GreyNoise, Criminal IP, Netlas, ZoomEye, SecurityTrails.
 
-**Open sources** — no key required, and disabled unless the collector is explicitly
+**Open sources**: no key required, and disabled unless the collector is explicitly
 enabled: crt.sh and Cert Spotter (certificate transparency), HackerTarget, CIRCL passive
 DNS, RDAP (registration data), the Internet Archive Wayback Machine, GitHub code search,
 and OpenCVE. Name resolution uses the container's own resolver. No public DNS-over-HTTPS service is

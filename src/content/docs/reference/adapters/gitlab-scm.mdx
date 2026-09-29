@@ -1,6 +1,6 @@
 ---
 title: "GitLab / GitLab self-managed"
-description: "An access-token connection to gitlab.com or a self-managed GitLab. Merge requests get a summary note, inline discussions and a commit status. GitLab has no per-line annotations and no blocking review, so those degrade — see the SCM provider docs."
+description: "An access-token connection to gitlab.com or a self-managed GitLab. Merge requests get a summary note, inline discussions and a commit status. GitLab has no per-line annotations and no blocking review, so those degrade. See the SCM provider docs."
 ---
 
 import { Note } from '@mintlify';
@@ -10,7 +10,7 @@ import { Note } from '@mintlify';
     instead. Those are the same strings the setup wizard renders, so changing them here
     would fix the docs and leave the product saying the old thing. */}
 
-An access-token connection to gitlab.com or a self-managed GitLab. Merge requests get a summary note, inline discussions and a commit status. GitLab has no per-line annotations and no blocking review, so those degrade — see the SCM provider docs.
+An access-token connection to gitlab.com or a self-managed GitLab. Merge requests get a summary note, inline discussions and a commit status. GitLab has no per-line annotations and no blocking review, so those degrade. See the SCM provider docs.
 
 This provider fills the **scm** slot. Configure it in
 **Settings → Providers**, or during first-run setup.
@@ -25,7 +25,7 @@ This provider fills the **scm** slot. Configure it in
 | `webhookSecret` | Webhook secret token | secret reference | No | The token GitLab sends as X-Gitlab-Token on this instance’s inbound webhooks. |
 
 <Note>
-  2 fields are secrets (`accessToken`, `webhookSecret`). Secrets are never stored in the database — you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
+  2 fields are secrets (`accessToken`, `webhookSecret`). Secrets are never stored in the database: you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
 </Note>
 
 ## What the connection test checks

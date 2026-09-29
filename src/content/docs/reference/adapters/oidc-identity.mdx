@@ -1,6 +1,6 @@
 ---
 title: "OIDC single sign-on"
-description: "Any OpenID Connect provider — Okta, Entra ID, Keycloak, Auth0, Google Workspace, Ping. Configured by issuer URL; endpoints come from discovery."
+description: "Any OpenID Connect provider: Okta, Entra ID, Keycloak, Auth0, Google Workspace, Ping. Configured by issuer URL; endpoints come from discovery."
 ---
 
 import { Note } from '@mintlify';
@@ -10,7 +10,7 @@ import { Note } from '@mintlify';
     instead. Those are the same strings the setup wizard renders, so changing them here
     would fix the docs and leave the product saying the old thing. */}
 
-Any OpenID Connect provider — Okta, Entra ID, Keycloak, Auth0, Google Workspace, Ping. Configured by issuer URL; endpoints come from discovery.
+Any OpenID Connect provider: Okta, Entra ID, Keycloak, Auth0, Google Workspace, Ping. Configured by issuer URL; endpoints come from discovery.
 
 This provider fills the **identity** slot. Configure it in
 **Settings → Providers**, or during first-run setup.
@@ -19,15 +19,15 @@ This provider fills the **identity** slot. Configure it in
 
 | Key | Field | Type | Required | Notes |
 |---|---|---|---|---|
-| `issuer` | Issuer URL | URL | Yes | The base URL. We read /.well-known/openid-configuration from it — no need to find the individual endpoints. |
+| `issuer` | Issuer URL | URL | Yes | The base URL. We read /.well-known/openid-configuration from it, so there is no need to find the individual endpoints. |
 | `clientId` | Client ID | text | Yes | — |
-| `clientSecret` | Client secret | secret reference | Yes | Stored as a reference (env:NAME or file:/path) — the value itself never reaches our database. |
+| `clientSecret` | Client secret | secret reference | Yes | Stored as a reference (env:NAME or file:/path); the value itself never reaches our database. |
 | `scopes` | Scopes | text | No | We need openid and email. Add more only if your provider requires them. Default: `openid email profile`. |
 | `redirectUri` | Redirect URI | URL | No | Derived from this instance’s web origin. Register this exact value with your provider. |
 | `allowLocalLogin` | Keep password login enabled | yes / no | No | Turn off once SSO works. Leaving it on during rollout means a broken IdP does not lock everyone out. Default: `true`. |
 
 <Note>
-  One field is a secret (`clientSecret`). Secrets are never stored in the database — you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
+  One field is a secret (`clientSecret`). Secrets are never stored in the database: you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
 </Note>
 
 ## What the connection test checks

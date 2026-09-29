@@ -1,11 +1,11 @@
 ---
 title: How PR review works
-description: How BattleTest's automated PR review works — CVE scanning, secret detection, AI code analysis, and regression detection on every pull request.
+description: "How BattleTest's automated PR review works: CVE scanning, secret detection, AI code analysis, and regression detection on every pull request."
 sidebar:
   label: PR review
 ---
 
-When a pull request event arrives from GitHub, BattleTest runs several layers of analysis in sequence. Understanding what gets checked — and what each layer can and cannot catch — helps you interpret findings accurately.
+When a pull request event arrives from GitHub, BattleTest runs several layers of analysis in sequence. Understanding what gets checked (and what each layer can and cannot catch) helps you interpret findings accurately.
 
 ## Advanced vs basic reviews
 
@@ -30,30 +30,30 @@ This catches the most automatable and most commonly exploited vulnerability clas
 
 ## Secret scanning
 
-Secret scanning runs against the PR diff — the lines the pull request adds or changes — using gitleaks with 150+ rules. Any changed file that looks like a credential store (`.env`, key files, and similar) is additionally fetched and scanned in full, not just the diffed lines. PR review scans the change, not the repository's entire git history; full-history secret sweeps run as part of the repo-posture battletest, not on every PR.
+Secret scanning runs against the PR diff (the lines the pull request adds or changes) using gitleaks with 150+ rules. Any changed file that looks like a credential store (`.env`, key files, and similar) is additionally fetched and scanned in full, not just the diffed lines. PR review scans the change, not the repository's entire git history; full-history secret sweeps run as part of the repo-posture battletest, not on every PR.
 
 The rule set covers cloud credentials (AWS, GCP, Azure), SaaS API keys (Stripe, SendGrid, Twilio, and hundreds of others), database connection strings, and cryptographic key formats. Findings include the file path and line number.
 
-If you receive a secret finding, the credential needs to be rotated immediately — removing it from the current branch is not sufficient, because it remains readable in the commit history of anyone who has already cloned the branch. See [how to respond to an exposed credential](/docs/how-to/exposed-secrets).
+If you receive a secret finding, the credential needs to be rotated immediately: removing it from the current branch is not sufficient, because it remains readable in the commit history of anyone who has already cloned the branch. See [how to respond to an exposed credential](/docs/how-to/exposed-secrets).
 
 ## Configuration hardening
 
-A set of structural checks against the repository itself: is there a `SECURITY.md`? Is Dependabot configured? Is there a `CODEOWNERS` file? Are lockfiles committed alongside package manifests? Does a CI configuration include security gates? These are not code vulnerabilities — they're the organisational prerequisites for a healthy security posture.
+A set of structural checks against the repository itself: is there a `SECURITY.md`? Is Dependabot configured? Is there a `CODEOWNERS` file? Are lockfiles committed alongside package manifests? Does a CI configuration include security gates? These are not code vulnerabilities. They're the organisational prerequisites for a healthy security posture.
 
 ## Regression detection
 
-New findings are compared against your repository's finding history. If the same vulnerability class was previously resolved and has returned, it's flagged as a regression and weighted more heavily in the risk score. This comparison is what makes consecutive reviews useful — each PR is assessed not just in isolation but against what your team has already fixed.
+New findings are compared against your repository's finding history. If the same vulnerability class was previously resolved and has returned, it's flagged as a regression and weighted more heavily in the risk score. This comparison is what makes consecutive reviews useful: each PR is assessed not just in isolation but against what your team has already fixed.
 
 ## AI security analysis
 
-An AI agent analyses the complete diff in context — the changed lines, the functions they interact with, and the data flow from request input to storage and output. The agent produces a prioritised finding list with severity classification, code location, a plain-English explanation of why the finding is a problem, and a remediation example in the language and framework used by the PR.
+An AI agent analyses the complete diff in context: the changed lines, the functions they interact with, and the data flow from request input to storage and output. The agent produces a prioritised finding list with severity classification, code location, a plain-English explanation of why the finding is a problem, and a remediation example in the language and framework used by the PR.
 
-This layer runs after the others because it's richer for it: a CVE in a new dependency informs the analysis of what risk surface has changed; a detected secret is cross-referenced against the rest of the codebase. The AI analysis is not a replacement for the earlier layers — it adds semantic understanding on top of them.
+This layer runs after the others because it's richer for it: a CVE in a new dependency informs the analysis of what risk surface has changed; a detected secret is cross-referenced against the rest of the codebase. The AI analysis is not a replacement for the earlier layers. It adds semantic understanding on top of them.
 
 This layer only runs in advanced reviews.
 
 ## Why findings are advisory by default
 
-BattleTest posts findings as a PR comment and creates a check run. It does not, by default, block merges. This is deliberate: a security tool that blocks deploys on every false positive quickly gets bypassed. The goal is that every finding is visible and tracked — not that every finding requires resolution before a PR can merge.
+BattleTest posts findings as a PR comment and creates a check run. It does not, by default, block merges. This is deliberate: a security tool that blocks deploys on every false positive quickly gets bypassed. The goal is that every finding is visible and tracked, not that every finding requires resolution before a PR can merge.
 
-The check conclusion mirrors the review verdict: a risk score of 40 or higher reports `action_required` ("request changes"), anything lower reports `success`. On its own this only surfaces a status — it blocks nothing. Teams that want a hard gate add the check as a required status check in GitHub branch protection, which then blocks the PRs whose risk warrants changes while letting low-risk PRs through. See [how to require security review before merging](/docs/how-to/require-security-review).
+The check conclusion mirrors the review verdict: a risk score of 40 or higher reports `action_required` ("request changes"), anything lower reports `success`. On its own this only surfaces a status: it blocks nothing. Teams that want a hard gate add the check as a required status check in GitHub branch protection, which then blocks the PRs whose risk warrants changes while letting low-risk PRs through. See [how to require security review before merging](/docs/how-to/require-security-review).

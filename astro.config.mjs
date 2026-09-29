@@ -59,16 +59,26 @@ export default defineConfig({
 					],
 				},
 				{
-					label: 'How-to guides',
+					label: 'PR review guides',
 					items: [
 						{ slug: 'how-to/connect-github' },
 						{ slug: 'how-to/connect-gitlab' },
 						{ slug: 'how-to/pr-settings' },
-						{ slug: 'how-to/bring-your-own-key' },
 						{ slug: 'how-to/require-security-review' },
 						{ slug: 'how-to/exposed-secrets' },
+						{ slug: 'how-to/bring-your-own-key' },
+					],
+				},
+				{
+					label: 'Live BattleTest guides',
+					items: [
 						{ slug: 'how-to/adding-a-target' },
 						{ slug: 'how-to/out-of-band-testing' },
+					],
+				},
+				{
+					label: 'Findings & notifications',
+					items: [
 						{ slug: 'how-to/manage-findings' },
 						{ slug: 'how-to/export-findings' },
 						{ slug: 'how-to/configure-notifications' },
@@ -82,10 +92,16 @@ export default defineConfig({
 						{ slug: 'reference/scan-results' },
 						{ slug: 'reference/limits-and-quotas' },
 						{ slug: 'reference/soft-limits' },
-						{ slug: 'reference/github-app' },
 						{ slug: 'reference/notification-events' },
-						{ slug: 'reference/network-and-egress' },
+						{ slug: 'reference/github-app' },
+						{ slug: 'api-reference/overview' },
+					],
+				},
+				{
+					label: 'Deployment & self-hosting',
+					items: [
 						{ slug: 'reference/security-and-data' },
+						{ slug: 'reference/network-and-egress' },
 						{
 							label: 'Provider adapters',
 							items: [
@@ -104,10 +120,6 @@ export default defineConfig({
 				{
 					label: 'Using AI',
 					items: [{ slug: 'using-ai/ai-assistant' }, { slug: 'using-ai/docs-mcp' }],
-				},
-				{
-					label: 'API',
-					items: [{ slug: 'api-reference/overview' }],
 				},
 			],
 		}),

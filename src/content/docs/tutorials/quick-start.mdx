@@ -19,7 +19,7 @@ You'll need a GitHub account and at least one repository with an open (or easily
   </Step>
 
   <Step title="Create your workspace">
-    A workspace is where your repositories, findings, team, and billing live. Enter a name — your own or your company's is fine — and click **Create workspace**.
+    A workspace is where your repositories, findings, team, and billing live. Enter a name (your own or your company's is fine) and click **Create workspace**.
 
     You can rename it later, so don't overthink it.
   </Step>
@@ -39,7 +39,7 @@ You'll need a GitHub account and at least one repository with an open (or easily
   </Step>
 
   <Step title="Open a pull request">
-    Go to your repository on GitHub and open a pull request — any change, however small. If one is already open, push any new commit to it.
+    Go to your repository on GitHub and open a pull request: any change, however small. If one is already open, push any new commit to it.
 
     Within 30 seconds, a new check appears at the bottom of the PR page: _BattleTest Security Review — In progress_.
   </Step>
@@ -47,7 +47,7 @@ You'll need a GitHub account and at least one repository with an open (or easily
   <Step title="Read the security review">
     After 2–4 minutes, BattleTest posts a comment from **battletest[bot]**.
 
-    The comment opens with a **risk score** (0–100). Scores up to 20 are clean — the diff looks clear. Scores above 60 mean findings require attention before merging. [How risk scores are calculated →](/docs/concepts/risk-score)
+    The comment opens with a **risk score** (0–100). Scores up to 20 are clean: the diff looks clear. Scores above 60 mean findings require attention before merging. [How risk scores are calculated →](/docs/concepts/risk-score)
 
     Below the score, findings are listed by severity: CRITICAL first, then HIGH, MEDIUM, LOW. Each finding shows:
 
@@ -57,7 +57,7 @@ You'll need a GitHub account and at least one repository with an open (or easily
     - A drop-in fix with a working code example
     - CWE and OWASP category references
 
-    If the PR has no findings, the comment will say so — that's also useful signal. Not every finding requires immediate action; read [Understanding findings](/docs/concepts/findings) to know how to triage them.
+    If the PR has no findings, the comment will say so: that's also useful signal. Not every finding requires immediate action; read [Understanding findings](/docs/concepts/findings) to know how to triage them.
   </Step>
 
   <Step title="View the full run in the dashboard">
@@ -65,7 +65,7 @@ You'll need a GitHub account and at least one repository with an open (or easily
   </Step>
 </Steps>
 
-Every pull request on this repository will now be reviewed automatically — you don't need to trigger it manually. No YAML to write, no runner minutes, no configuration to maintain. Every PR that opens from this point forward gets a full security pass: dependency CVEs, exposed secrets, injection patterns, config gaps.
+Every pull request on this repository will now be reviewed automatically: you don't need to trigger it manually. No YAML to write, no runner minutes, no configuration to maintain. Every PR that opens from this point forward gets a full security pass: dependency CVEs, exposed secrets, injection patterns, config gaps.
 
 Here's what a typical finding looks like in the PR comment:
 
@@ -84,7 +84,7 @@ Fix:
 References: CWE-89 · OWASP A03:2021
 ```
 
-The finding tells you exactly what's wrong, where it is, why it's a problem, and what to type to fix it — in your language and framework.
+The finding tells you exactly what's wrong, where it is, why it's a problem, and what to type to fix it, in your language and framework.
 
 ## What's next
 
@@ -93,7 +93,7 @@ The finding tells you exactly what's wrong, where it is, why it's a problem, and
     What each field in a finding means, how risk scores are calculated, and the finding lifecycle.
   </Card>
   <Card title="Run a live battletest" icon="terminal" href="/docs/tutorials/live-battletest">
-    Test your running infrastructure — not just the code.
+    Test your running infrastructure, not just the code.
   </Card>
   <Card title="Require review before merging" icon="lock" href="/docs/how-to/require-security-review">
     Block PRs with the BattleTest status check.

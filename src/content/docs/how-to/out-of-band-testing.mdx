@@ -1,6 +1,6 @@
 ---
 title: How to configure out-of-band testing
-description: Choosing between the bundled callback catcher, a self-hosted interactsh server, and no out-of-band testing at all — what each one detects, and exactly what delegating a domain's nameservers to interactsh will cost your network team.
+description: "Choosing between the bundled callback catcher, a self-hosted interactsh server, and no out-of-band testing at all: what each one detects, and exactly what delegating a domain's nameservers to interactsh will cost your network team."
 sidebar:
   label: Out-of-band testing
 ---
@@ -12,12 +12,12 @@ Some vulnerabilities never tell you they worked. Blind SSRF, XXE, out-of-band SQ
 That server is the out-of-band (OAST) backend, and this page is about choosing one.
 
 <Warning>
-  A run with no OAST backend produces a report that looks exactly like a run against a target with no blind vulnerabilities. That is the failure this whole page exists to prevent — so a run without one says so in its own event stream, and the statement travels inside the signed export.
+  A run with no OAST backend produces a report that looks exactly like a run against a target with no blind vulnerabilities. That is the failure this whole page exists to prevent, so a run without one says so in its own event stream, and the statement travels inside the signed export.
 </Warning>
 
 ## Why this is not simply "on"
 
-The out-of-band hostname is embedded **in the payload**. It is therefore your target — not the scanner — that makes the callback.
+The out-of-band hostname is embedded **in the payload**. It is therefore your target (not the scanner) that makes the callback.
 
 The template scanner's own default is a set of public servers operated by its vendor. Left alone, that means a machine inside your network resolves and connects to a third-party host, disclosing that the machine exists, that it is reachable, and that it processes attacker-supplied input. A packet capture of the scanner would show none of it, because the scanner is not the thing making the call.
 
@@ -31,24 +31,24 @@ Set `OAST_MODE` in your deployment's environment.
 |---|---|---|---|
 | `catcher` (default) | Yes | No | Nothing, or one wildcard A record |
 | `interactsh` | Yes | Yes | A whole domain, delegated |
-| `off` | No — reported as unavailable | No | Nothing |
+| `off` | No: reported as unavailable | No | Nothing |
 
-### `catcher` — the default
+### `catcher`: the default
 
 The deployment ships a small, self-hosted callback catcher (`oob-catcher`). It is receive-only, has no egress of its own, and speaks a simple register-and-poll contract that BattleTest's own agents use directly.
 
-**What it detects.** Everything the agents probe for: blind SSRF, XXE, out-of-band SQL injection, blind XSS, DNS exfiltration — anywhere an agent constructs the payload itself.
+**What it detects.** Everything the agents probe for: blind SSRF, XXE, out-of-band SQL injection, blind XSS, DNS exfiltration (anywhere an agent constructs the payload itself).
 
 **What it does not.** The template scanner (nuclei) does not speak this protocol and cannot be pointed at it. Its OAST template set stays excluded. The catcher is not a drop-in replacement for interactsh and no configuration makes it one.
 
 **What it costs you.** At most one DNS record:
 
 - A single A record plus `OOB_PUBLIC_URL` gives path-token correlation (`https://oob.example.com/c/<id>`). Enough for payloads that take a URL.
-- A wildcard A record — `*.oast.example.com` → the catcher — additionally catches payloads that take a bare hostname rather than a URL, which is the common shape for XXE and for DNS-only exfiltration. Set `OOB_DOMAIN` to the wildcard's base.
+- A wildcard A record (`*.oast.example.com` → the catcher) additionally catches payloads that take a bare hostname rather than a URL, which is the common shape for XXE and for DNS-only exfiltration. Set `OOB_DOMAIN` to the wildcard's base.
 
 The address must be reachable **by your targets**. Check it from outside your network, not from the API host: an internal-only catcher observes nothing, and the run still looks clean.
 
-### `interactsh` — the full capability
+### `interactsh`: the full capability
 
 A self-hosted [interactsh](https://github.com/projectdiscovery/interactsh) server, run by you. The template scanner is pointed at it with `-iserver` and `-itoken`, which restores its entire OAST template set.
 
@@ -56,35 +56,35 @@ Everything `catcher` does, plus the template scanner's blind-vulnerability templ
 
 The rest of this page is about what it takes to run one, because that is the part worth knowing before you agree to it.
 
-### `off` — no out-of-band testing
+### `off`: no out-of-band testing
 
 The template scanner runs with OAST disabled, and the agent's out-of-band tools report themselves **unavailable** rather than returning an empty result that reads like a negative finding. The run emits a degradation notice naming the classes that went untested, and that notice is part of the signed export.
 
-Choose this deliberately. It is the honest setting for a deployment that cannot expose any callback surface — not a way to make a report look cleaner.
+Choose this deliberately. It is the honest setting for a deployment that cannot expose any callback surface, not a way to make a report look cleaner.
 
 ## What running interactsh actually requires
 
 <Warning>
-  **interactsh cannot run on a delegated subdomain.** It runs its own authoritative DNS server for the domain you give it. You cannot hand it `oast.example.com` from your existing zone — you delegate the **nameservers** of a domain to it, which means that domain's DNS stops being served by your provider and starts being served by this container.
+  **interactsh cannot run on a delegated subdomain.** It runs its own authoritative DNS server for the domain you give it. You cannot hand it `oast.example.com` from your existing zone; you delegate the **nameservers** of a domain to it, which means that domain's DNS stops being served by your provider and starts being served by this container.
 
   If your DNS is centrally managed, this is a conversation with your network team, not a configuration change. Have it before you plan the work.
 </Warning>
 
 Concretely, four things:
 
-**1. A domain you can repoint.** Not a subdomain — a registered domain whose nameserver records you can change at the registrar. In practice this is a domain bought for the purpose. Whatever else that domain was serving stops being served the moment you delegate it.
+**1. A domain you can repoint.** Not a subdomain: a registered domain whose nameserver records you can change at the registrar. In practice this is a domain bought for the purpose. Whatever else that domain was serving stops being served the moment you delegate it.
 
 **2. A host with a stable public IP,** reachable from your targets on ports 53 (TCP and UDP), 80, 443, 25, 587 and 389.
 
 **3. Those ports free on that host.** Port 80 and 443 rule out sharing with a reverse proxy; port 25 collides with BattleTest's own test-mailbox catcher if you run one. In practice interactsh wants a machine of its own.
 
-**4. Ports that stay as they are.** The port is implied by the payload the target receives — `http://<id>.<domain>` is port 80 — so remapping on the host side breaks correlation silently, with no error to show for it.
+**4. Ports that stay as they are.** The port is implied by the payload the target receives (`http://<id>.<domain>` is port 80), so remapping on the host side breaks correlation silently, with no error to show for it.
 
 ### Delegating the domain
 
 <Steps>
   <Step title="Create host (glue) records at your registrar">
-    Add two hostnames on the domain, `ns1` and `ns2`, both pointing at your server's public IP address. Registrars call this "host records", "glue records", or "personal nameservers" — the wording varies, the operation does not.
+    Add two hostnames on the domain, `ns1` and `ns2`, both pointing at your server's public IP address. Registrars call this "host records", "glue records", or "personal nameservers"; the wording varies, the operation does not.
 
     Both may point at the same IP. Two records exist because most registrars require two nameservers.
   </Step>
@@ -104,7 +104,7 @@ Concretely, four things:
     OAST_INTERACTSH_URL=https://your-domain.example
     ```
 
-    `OAST_INTERACTSH_IP` is **not** optional. Left unset, interactsh tries to discover its own address by fetching a public IP-echo service and by opening a socket toward one of its vendor's hosts — two undeclared outbound calls at startup, and a hard exit when both fail. Worse, inside a container the address it would settle on is the container's, so every DNS answer would point your targets at a private address and no callback would ever arrive.
+    `OAST_INTERACTSH_IP` is **not** optional. Left unset, interactsh tries to discover its own address by fetching a public IP-echo service and by opening a socket toward one of its vendor's hosts: two undeclared outbound calls at startup, and a hard exit when both fail. Worse, inside a container the address it would settle on is the container's, so every DNS answer would point your targets at a private address and no callback would ever arrive.
 
     `OAST_INTERACTSH_TOKEN` is **not** optional either. A server started without one accepts registration from anyone who finds it, which makes it an open relay running on your infrastructure under your domain. The service refuses to start without a token rather than defaulting to open.
   </Step>
@@ -118,7 +118,7 @@ Concretely, four things:
   </Step>
 
   <Step title="Verify a callback actually lands">
-    From a host **outside** your network — not the deployment host:
+    From a host **outside** your network, not the deployment host:
 
     ```bash
     dig +short test123.your-domain.example @ns1.your-domain.example
@@ -139,7 +139,7 @@ OAST_INTERACTSH_CERT_PATH=/etc/ssl/internal/oast-wildcard.crt
 OAST_INTERACTSH_KEY_PATH=/etc/ssl/internal/oast-wildcard.key
 ```
 
-The certificate must be a **wildcard** for the domain. Correlation hostnames are randomly generated subdomains, so a single-name certificate makes every HTTPS and SMTPS interaction fail its handshake — which looks identical to a target that never called back.
+The certificate must be a **wildcard** for the domain. Correlation hostnames are randomly generated subdomains, so a single-name certificate makes every HTTPS and SMTPS interaction fail its handshake, which looks identical to a target that never called back.
 
 `-skip-acme` on its own, with no certificate supplied, disables TLS entirely. HTTP, DNS and SMTP interactions still work; HTTPS ones do not.
 
@@ -150,13 +150,13 @@ Storage is on disk (`-disk`) so a redeploy does not discard interactions a run i
 The objection you will meet is the delegation, and it is a fair one. What helps:
 
 - **The domain is single-purpose.** Buy one for this. It serves no mail, no web presence, and nothing else depends on its DNS.
-- **It replaces a worse arrangement, not a safe one.** The alternative is not "no callbacks" — it is your targets calling a third party's servers. This moves that traffic onto infrastructure you own.
+- **It replaces a worse arrangement, not a safe one.** The alternative is not "no callbacks"; it is your targets calling a third party's servers. This moves that traffic onto infrastructure you own.
 - **The server is receive-only.** It answers DNS and accepts connections. It initiates nothing outbound once `OAST_INTERACTSH_IP` is set.
 - **`catcher` is a real fallback.** If delegation is refused, you keep blind-vulnerability coverage on the agent-driven paths and lose only the template scanner's OAST templates. That is a smaller loss than it sounds, and the report says which one you have.
 
 ## What a run tells you
 
-Whichever mode you choose, the run is explicit about it. If the out-of-band capability is unavailable, the run emits a degradation notice at the start — alongside the scope contract, before any findings, so it cannot be read past — naming the classes individually rather than saying "blind vulnerabilities", and stating that a clean result does not cover them.
+Whichever mode you choose, the run is explicit about it. If the out-of-band capability is unavailable, the run emits a degradation notice at the start (alongside the scope contract, before any findings, so it cannot be read past), naming the classes individually rather than saying "blind vulnerabilities", and stating that a clean result does not cover them.
 
 That notice is recorded inside the signed manifest content, so the caveat cannot be separated from the report it qualifies.
 

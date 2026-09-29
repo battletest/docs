@@ -1,6 +1,6 @@
 ---
-title: PR Findings
-description: Reference for BattleTest PR findings — severity definitions, risk score bands and weights, finding record fields, and the Open to Resolved lifecycle.
+title: PR findings
+description: "Reference for BattleTest PR findings: severity definitions, risk score bands and weights, finding record fields, and the Open to Resolved lifecycle."
 ---
 
 ## Severity levels
@@ -30,7 +30,7 @@ The risk score (0–100) summarises the security posture of the PR. It is driven
 | 21–40 | Low risk |
 | 41–60 | Moderate risk |
 | 61–80 | High risk |
-| 81–100 | Critical — fix before any deployment |
+| 81–100 | Critical: fix before any deployment |
 
 See [Risk score](/docs/concepts/risk-score) for how these factors are weighted and how to use score trends over time.
 
@@ -60,7 +60,7 @@ See [Risk score](/docs/concepts/risk-score) for how these factors are weighted a
 Each completed review produces:
 
 - A GitHub PR comment from `battletest[bot]`
-- A `BattleTest Security Review` check run — `success` when the risk score is below 40, `action_required` at 40 or higher ("request changes"), and `failure` only on an internal review error
+- A `BattleTest Security Review` check run: `success` when the risk score is below 40, `action_required` at 40 or higher ("request changes"), and `failure` only on an internal review error
 - A run record in the BattleTest dashboard linked from the PR comment
 
 ## Dashboard run detail

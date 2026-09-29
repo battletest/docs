@@ -3,35 +3,35 @@ title: Soft limits & fair use
 description: What BattleTest's monthly fair-use compute limit is, what makes a run use more of it, and what happens when you reach it.
 ---
 
-BattleTest counts reviews and runs — the figures are in [Limits & Quotas](/docs/reference/limits-and-quotas). Underneath those countable limits sits a second one that is measured in compute rather than in events: a **monthly fair-use compute limit** on the total AI work an organisation runs, across PR reviews and battletests combined.
+BattleTest counts reviews and runs; the figures are in [Limits & Quotas](/docs/reference/limits-and-quotas). Underneath those countable limits sits a second one that is measured in compute rather than in events: a **monthly fair-use compute limit** on the total AI work an organisation runs, across PR reviews and battletests combined.
 
-It exists because the countable limits alone don't bound cost. Reviews vary enormously in how much work they take, so a month that looks identical by count can differ by an order of magnitude in compute. The fair-use limit is the backstop against that tail. For almost everyone it's invisible — typical usage sits far below it.
+It exists because the countable limits alone don't bound cost. Reviews vary enormously in how much work they take, so a month that looks identical by count can differ by an order of magnitude in compute. The fair-use limit is the backstop against that tail. For almost everyone it's invisible: typical usage sits far below it.
 
 ## What the fair-use compute limit is
 
 BattleTest's live battletests and advanced PR reviews are driven by AI agents. Most runs are inexpensive, but a few can do far more work than average. The fair-use compute limit is a **soft cap** on the total of that work per month:
 
-- It is measured across **all** AI usage for your organisation — PR reviews and battletests together.
+- It is measured across **all** AI usage for your organisation: PR reviews and battletests together.
 - It is a **soft** limit: work already in progress always finishes. It only affects **new** work.
 - It resets each month.
 
-Because it's sized well above normal usage, the limit you'll actually meet day to day is the countable one — the hourly or monthly review window — not the fair-use limit.
+Because it's sized well above normal usage, the limit you'll actually meet day to day is the countable one (the hourly or monthly review window), not the fair-use limit.
 
 ## What makes a run use more compute
 
 Cost scales with how much there is to examine, not with a clock. A pull request uses more compute when the diff is large, when it touches security-relevant code paths that pull more of the surrounding codebase into context, or when confirmed findings send the analysis agent deeper. A battletest uses more when:
 
-- **The target is exploit-rich.** Every confirmed weakness opens new avenues — a recovered credential unlocks authenticated areas, an exposed endpoint reveals more endpoints. The agents follow each thread, so a target with many real issues is tested far more deeply than a hardened one.
+- **The target is exploit-rich.** Every confirmed weakness opens new avenues: a recovered credential unlocks authenticated areas, an exposed endpoint reveals more endpoints. The agents follow each thread, so a target with many real issues is tested far more deeply than a hardened one.
 - **The site is large or dense.** More pages, forms, and API endpoints mean more surface to map and probe. The agents are deliberately thorough, so a big application takes more work to cover well.
 
-None of these are problems — they're the agent doing its job. They just consume more of the monthly allowance.
+None of these are problems; they're the agent doing its job. They just consume more of the monthly allowance.
 
 ## What happens when you reach it
 
 When your organisation reaches its monthly fair-use compute limit:
 
-1. **Work already in progress finishes normally** — nothing is interrupted mid-run.
-2. **PR reviews keep running in a lighter-weight mode.** Reviews are never suspended — the pipeline drops to the faster model rather than stopping, so no pull request is left unreviewed.
+1. **Work already in progress finishes normally**: nothing is interrupted mid-run.
+2. **PR reviews keep running in a lighter-weight mode.** Reviews are never suspended; the pipeline drops to the faster model rather than stopping, so no pull request is left unreviewed.
 3. **New battletests soft-stop** until the month resets. You'll see a **Soft limit reached this month** note on **Settings → Usage**, and you'll get a notification.
 
 The limit resets at the start of each month with no action needed.
@@ -40,4 +40,4 @@ The limit resets at the start of each month with no action needed.
 
 Your countable allowances (reviews used this month) are shown on **Settings → Usage**. When you're near the fair-use compute limit, the "Soft limit reached this month" hint appears there with a link back to this page.
 
-Reaching it regularly means BattleTest is doing more work for you than the free product is sized to absorb. If that's where you are, [get in touch](https://battletest.dev/contact) — that conversation is about a dedicated deployment, not a bigger bucket.
+Reaching it regularly means BattleTest is doing more work for you than the free product is sized to absorb. If that's where you are, [get in touch](https://battletest.dev/contact): that conversation is about a dedicated deployment, not a bigger bucket.

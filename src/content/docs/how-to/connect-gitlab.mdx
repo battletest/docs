@@ -17,7 +17,7 @@ import { Note, Tab, Tabs } from '@mintlify';
 
 You need:
 
-- **A GitLab access token** — a group access token if you want several projects covered,
+- **A GitLab access token**: a group access token if you want several projects covered,
   or a project access token for one. It needs the `api` scope.
 - **A BattleTest organisation** to attribute reviews to. Every merge request reviewed
   through this connection bills and reports to it.
@@ -29,21 +29,21 @@ than a personal one if you would rather comments not appear under an individual'
 
 1. Open **Setup → Source control** and choose **GitLab / GitLab self-managed**.
 2. Fill in:
-   - **GitLab host** — leave blank for gitlab.com, or enter your hostname, e.g.
+   - **GitLab host**: leave blank for gitlab.com, or enter your hostname, e.g.
      `gitlab.yourco.com`.
-   - **Access token** — the token from above.
-   - **Organisation** — which BattleTest organisation these reviews belong to.
-   - **Webhook secret token** — see below. You can come back to this.
+   - **Access token**: the token from above.
+   - **Organisation**: which BattleTest organisation these reviews belong to.
+   - **Webhook secret token**: see below. You can come back to this.
 3. Select **Test connection**. BattleTest calls `GET /user` on your host and shows which
    account it authenticated as. If the host answers but has no `/api/v4`, you will be
-   told that separately from a rejected token — it usually means a typo in the hostname.
+   told that separately from a rejected token; it usually means a typo in the hostname.
 4. Save.
 
 <Note>
   If your GitLab uses a certificate from an internal certificate authority, mount your CA
   bundle and point `NODE_EXTRA_CA_CERTS` at it. BattleTest inspects that file at startup
   and logs an error if it is unreadable or expired, rather than carrying on with nothing
-  trusted — which would otherwise show up as every internal integration failing TLS for
+  trusted, which would otherwise show up as every internal integration failing TLS for
   reasons that look like the remote host's fault.
 </Note>
 
@@ -51,8 +51,8 @@ than a personal one if you would rather comments not appear under an individual'
 
 In your GitLab project or group, go to **Settings → Webhooks** and add:
 
-- **URL** — `https://<your-battletest-host>/webhook/gitlab`
-- **Trigger** — **Merge request events** only. Other event types are accepted and
+- **URL**: `https://<your-battletest-host>/webhook/gitlab`
+- **Trigger**: **Merge request events** only. Other event types are accepted and
   ignored, so enabling them adds deliveries that do nothing.
 
 ### Choose a secret
@@ -64,7 +64,7 @@ GitLab offers two ways to authenticate a webhook, and they are not equivalent.
     GitLab signs the request body, and BattleTest verifies the signature. Someone who
     reads the request in a log learns nothing they can replay.
 
-    Paste the signing token — it begins `whsec_` — into the **Webhook secret token**
+    Paste the signing token (it begins `whsec_`) into the **Webhook secret token**
     field in BattleTest.
   </Tab>
   <Tab title="Secret token (legacy)">
@@ -98,7 +98,7 @@ Closing or merging cancels a review that is still running.
 ## What GitLab shows, compared with GitHub
 
 GitLab and GitHub are genuinely different here. Nothing below is a limitation of
-BattleTest that a later release removes — they are things GitLab's API does not have.
+BattleTest that a later release removes; they are things GitLab's API does not have.
 
 | | GitHub | GitLab |
 |---|---|---|
@@ -106,7 +106,7 @@ BattleTest that a later release removes — they are things GitLab's API does no
 | Per-line findings | Inline review comments | Inline discussions |
 | Per-line annotations on the check | Yes | **No** |
 | Pass/fail signal | Check run | Commit status |
-| Blocking review | Requests changes | **No** — use a required commit status |
+| Blocking review | Requests changes | **No**: use a required commit status |
 | Superseding an old review | Dismissed | Body replaced with a link to the current one |
 
 Two consequences worth planning for:
@@ -114,7 +114,7 @@ Two consequences worth planning for:
 **The full report lives in a note, not the status.** A GitLab commit status carries a
 description of at most 255 characters and no annotations, so BattleTest posts the summary
 and every per-line finding as a note on the merge request and uses the status purely as
-the pass/fail signal. Nothing is dropped — it is in a different place than on GitHub.
+the pass/fail signal. Nothing is dropped; it is in a different place than on GitHub.
 
 **To block a merge, require the status.** BattleTest cannot request changes on GitLab. In
 **Settings → Merge requests**, require the `BattleTest Security Review` commit status to
@@ -134,6 +134,6 @@ If you are using a signing token, confirm you pasted the whole value including t
 **Deliveries return 409.** The connection has no organisation set, so reviews cannot be
 attributed or metered. Set it in **Setup → Source control**.
 
-**Deliveries succeed but nothing happens.** The response body says why — the most common
+**Deliveries succeed but nothing happens.** The response body says why: the most common
 reasons are a draft merge request, one targeting a non-default branch, and an `update`
 event that changed no commits.

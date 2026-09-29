@@ -1,6 +1,6 @@
 ---
 title: How to review, dismiss, and track findings
-description: Triage BattleTest findings from PR reviews and live scans — dismiss false positives with a reason, mark issues resolved, and track open findings over time.
+description: "Triage BattleTest findings from PR reviews and live scans: dismiss false positives with a reason, mark issues resolved, and track open findings over time."
 sidebar:
   label: Manage findings
 ---
@@ -17,7 +17,7 @@ Both types share the same lifecycle: **Open → Dismissed** or **Resolved**.
 
 ## Dismiss a false positive
 
-When a finding is not a real vulnerability — for example, a secret detected in a test fixture file, or an injection pattern in documentation — dismiss it so it doesn't affect future risk scores.
+When a finding is not a real vulnerability (for example, a secret detected in a test fixture file, or an injection pattern in documentation), dismiss it so it doesn't affect future risk scores.
 
 <Steps>
   <Step title="Open the finding">
@@ -34,7 +34,7 @@ When a finding is not a real vulnerability — for example, a secret detected in
   </Step>
 </Steps>
 
-Dismissed findings are excluded from the risk score on subsequent scans of the same code path or endpoint. They're also excluded from regression detection — a dismissed finding will not trigger a regression alert if it reappears.
+Dismissed findings are excluded from the risk score on subsequent scans of the same code path or endpoint. They're also excluded from regression detection: a dismissed finding will not trigger a regression alert if it reappears.
 
 <Note>
   Dismissals are recorded against your account, not the GitHub PR. If you connect a new repository or add a new target, you'll need to re-dismiss findings there.
@@ -46,7 +46,7 @@ You don't need to mark findings as resolved manually. BattleTest detects resolut
 
 For live scan findings, trigger a new scan after deploying the fix. In the comparison view, the fixed finding will appear under _Resolved_ in the scan diff.
 
-Resolved findings contribute to the regression detection baseline. If the same vulnerability pattern reappears in a future scan, it's flagged as a regression — not a new finding — and the risk score includes a regression penalty.
+Resolved findings contribute to the regression detection baseline. If the same vulnerability pattern reappears in a future scan, it's flagged as a regression (not a new finding) and the risk score includes a regression penalty.
 
 ## View all open findings for a repository
 

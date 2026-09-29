@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: Fix common BattleTest problems — missing PR review comments, stuck GitHub status checks, repositories not appearing, scans stuck Running, lost notifications.
+description: "Fix common BattleTest problems: missing PR review comments, stuck GitHub status checks, repositories not appearing, scans stuck Running, lost notifications."
 ---
 
 import { Accordion } from '@mintlify';
@@ -16,27 +16,27 @@ import { Accordion } from '@mintlify';
 
   Common causes:
   - **Non-2xx response:** A temporary infrastructure issue. Use the **Redeliver** button to retry.
-  - **No delivery shown:** The PR may target a base branch other than your default branch — BattleTest only reviews PRs targeting the default branch. See [which branches get reviewed](/docs/how-to/pr-settings#which-branches-get-reviewed).
+  - **No delivery shown:** The PR may target a base branch other than your default branch; BattleTest only reviews PRs targeting the default branch. See [which branches get reviewed](/docs/how-to/pr-settings#which-branches-get-reviewed).
 </Accordion>
 
 <Accordion title="3. Check your review limit">
-  If your account hit the advanced review limit when the PR was opened, BattleTest automatically ran a basic fallback scan instead — the PR comment notes when this happened. The windows and how each one resets are in [Limits & Quotas](/docs/reference/limits-and-quotas).
+  If your account hit the advanced review limit when the PR was opened, BattleTest automatically ran a basic fallback scan instead; the PR comment notes when this happened. The windows and how each one resets are in [Limits & Quotas](/docs/reference/limits-and-quotas).
 </Accordion>
 
 ## BattleTest Security Review check stuck on "pending" in GitHub
 
 The check shows as pending either because the review is still running (expected for 2–4 minutes after the PR event) or because the webhook delivery failed before BattleTest received the event.
 
-Check **Settings → GitHub Apps → BattleTest Security → Recent Deliveries** in your repository. If no `pull_request` delivery is listed for the PR that's stuck, the webhook didn't fire — re-trigger it by pushing any new commit to the PR branch or closing and reopening the PR.
+Check **Settings → GitHub Apps → BattleTest Security → Recent Deliveries** in your repository. If no `pull_request` delivery is listed for the PR that's stuck, the webhook didn't fire; re-trigger it by pushing any new commit to the PR branch or closing and reopening the PR.
 
 ## GitHub App installed but no repositories appear in BattleTest
 
-After installation, check the GitHub App configuration page: **Settings → GitHub Apps → BattleTest Security → Configure**. Under Repository access, confirm at least one repository is selected. The default GitHub App flow sometimes leaves the selection empty — this is a GitHub UI issue on initial install.
+After installation, check the GitHub App configuration page: **Settings → GitHub Apps → BattleTest Security → Configure**. Under Repository access, confirm at least one repository is selected. The default GitHub App flow sometimes leaves the selection empty; this is a GitHub UI issue on initial install.
 
 ## Live battletest scan failed or is stuck in "Running" for more than 30 minutes
 
 <Accordion title="Domain not reachable from the internet">
-  BattleTest scans from cloud infrastructure. The target must be accessible from the public internet — VPN-only, localhost, and internal-only targets are not supported.
+  BattleTest scans from cloud infrastructure. The target must be accessible from the public internet; VPN-only, localhost, and internal-only targets are not supported.
 
   Test from your terminal:
 
@@ -48,28 +48,28 @@ After installation, check the GitHub App configuration page: **Settings → GitH
 </Accordion>
 
 <Accordion title="SSL certificate error on the target domain">
-  An invalid, self-signed, or expired SSL certificate causes the crawler to fail immediately. Resolve the certificate issue first, then retry the scan. For staging environments that intentionally use self-signed certificates, contact [wale@battletest.dev](mailto:wale@battletest.dev) — there is a workaround available.
+  An invalid, self-signed, or expired SSL certificate causes the crawler to fail immediately. Resolve the certificate issue first, then retry the scan. For staging environments that intentionally use self-signed certificates, contact [wale@battletest.dev](mailto:wale@battletest.dev); there is a workaround available.
 </Accordion>
 
 <Accordion title="Scan stuck in Running for over 30 minutes">
-  Cancel the scan from the run detail page (**Actions → Cancel**). Start a fresh scan. If the issue repeats, contact support with the scan run ID from the URL — it looks like `scan_abc123` in the dashboard URL.
+  Cancel the scan from the run detail page (**Actions → Cancel**). Start a fresh scan. If the issue repeats, contact support with the scan run ID from the URL; it looks like `scan_abc123` in the dashboard URL.
 </Accordion>
 
-## Secret was committed to git and BattleTest flagged it — what do I do?
+## Secret was committed to git and BattleTest flagged it: what do I do?
 
 See [How to respond to an exposed credential](/docs/how-to/exposed-secrets) for a step-by-step guide: rotating the credential, removing it from current code, purging it from git history, and preventing recurrence.
 
 ## BattleTest not scanning pull requests on feature branches
 
-This is expected. BattleTest reviews pull requests that target your repository's **default branch** only — PRs opened against other base branches (such as `feature-A → feature-B`) are skipped by design so they don't burn your review limits. Reviews run on the PR that merges the work into your default branch, which is where the merge gate matters. See [which branches get reviewed](/docs/how-to/pr-settings#which-branches-get-reviewed).
+This is expected. BattleTest reviews pull requests that target your repository's **default branch** only; PRs opened against other base branches (such as `feature-A → feature-B`) are skipped by design so they don't burn your review limits. Reviews run on the PR that merges the work into your default branch, which is where the merge gate matters. See [which branches get reviewed](/docs/how-to/pr-settings#which-branches-get-reviewed).
 
 ## I'm not receiving BattleTest email notifications
 
-Check [Settings → Notifications](https://battletest.dev/settings?tab=notifications) and confirm email is enabled. Check your spam folder — the first email from `noreply@battletest.dev` is sometimes filtered. Add the address to your contacts to prevent future filtering.
+Check [Settings → Notifications](https://battletest.dev/settings?tab=notifications) and confirm email is enabled. Check your spam folder; the first email from `noreply@battletest.dev` is sometimes filtered. Add the address to your contacts to prevent future filtering.
 
 ## GitHub App was uninstalled accidentally
 
-Reinstall it from **Dashboard → Repositories → Connect GitHub**. Your findings history and settings are preserved — nothing is deleted on uninstall, only the GitHub access is revoked.
+Reinstall it from **Dashboard → Repositories → Connect GitHub**. Your findings history and settings are preserved; nothing is deleted on uninstall, only the GitHub access is revoked.
 
 ## Still stuck?
 

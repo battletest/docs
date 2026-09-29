@@ -1,6 +1,6 @@
 ---
-title: Integrations & API
-description: BattleTest integrations — the GitHub status check for PR merge gating, finding export, and the upcoming REST API.
+title: Integrations and API
+description: "BattleTest integrations: the GitHub status check for PR merge gating, finding export, and the upcoming REST API."
 ---
 
 BattleTest integrates with your existing tooling through the GitHub status check and finding export today, with a REST API on the roadmap.
@@ -15,13 +15,13 @@ The check reports `success` when the risk score is below 40, `action_required` a
 
 Scan reports and PR findings export as PDF for auditors or JSON for ticketing systems and security dashboards, per run or across every PR in a repository. See [How to export findings](/docs/how-to/export-findings).
 
-## REST API — coming soon
+## Public REST API
 
-A REST API is in development and will support:
+BattleTest runs on an internal versioned API (`/api/v1`) that the web app and integrations use today. A **public, documented, stable** REST API is not yet released. When it is, it will support:
 
 - Triggering PR and live scan runs programmatically
 - Querying findings, scan history, and risk score trends
 - Managing targets, repository connections, and settings
 - Bulk export of finding data
 
-To be notified when the API is available, email [wale@battletest.dev](mailto:wale@battletest.dev).
+To be notified when the public API is available, email [wale@battletest.dev](mailto:wale@battletest.dev).

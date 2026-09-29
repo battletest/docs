@@ -27,7 +27,7 @@ This provider fills the **scm** slot. Configure it in
 | `clientSecret` | OAuth client secret | secret reference | No | — |
 
 <Note>
-  3 fields are secrets (`privateKey`, `webhookSecret`, `clientSecret`). Secrets are never stored in the database — you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
+  3 fields are secrets (`privateKey`, `webhookSecret`, `clientSecret`). Secrets are never stored in the database: you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
 </Note>
 
 ## What the connection test checks

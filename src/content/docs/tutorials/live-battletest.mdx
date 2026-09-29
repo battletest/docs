@@ -23,13 +23,13 @@ Discovery is passive. It sends ordinary HTTP requests to map what the applicatio
 and nothing it does is distinguishable from normal traffic. It takes 5–15 minutes depending
 on application size, and it produces:
 
-- An **endpoint inventory** — pages, API routes, and forms the crawler found
-- A **technology fingerprint** — what stack the application appears to run
+- An **endpoint inventory**: pages, API routes, and forms the crawler found
+- A **technology fingerprint**: what stack the application appears to run
 - An **SSL/TLS assessment** and header analysis
 - Informational findings from the passive pass
 
 At the lowest permission tier this is where a run stops. There are no injection findings, no
-port scan results, and no active probes — not because the agent is asked to hold back, but
+port scan results, and no active probes, not because the agent is asked to hold back, but
 because the tooling that would do those things is not available to it at that tier.
 
 ## 2. Active probing
@@ -71,8 +71,8 @@ The comparison tells you whether your fixes held.
 
 ## Setting one up
 
-The prerequisites — authorisation, reachability, and the self-serve signup requirement for
-authenticated coverage — are in [How to prepare a target](/docs/how-to/adding-a-target). Read that
+The prerequisites (authorisation, reachability, and the self-serve signup requirement for
+authenticated coverage) are in [How to prepare a target](/docs/how-to/adding-a-target). Read that
 before the scoping conversation.
 
 ## What's next
