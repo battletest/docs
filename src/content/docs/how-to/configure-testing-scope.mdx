@@ -1,31 +1,29 @@
 ---
-title: Authorise testing targets
-description: Declare organisation scope and approve public hosts.
+title: Configure testing scope
+description: Restrict an Enterprise organisation to selected domains and network ranges.
 ---
 
-## Declare scope
+Enterprise deployments rely on the customer's authorisation to test targets under their agreement. DNS verification and individual public-host approvals are not required. Register a target, then choose its testing level when starting a battletest.
 
-Open **Settings → Policy → Testing scope** and select the organisation. You need permission to manage its testing scope.
+## Restrict targets (optional)
 
-1. Select **Add entry**.
-2. Choose **Domain** or **Network range**.
-3. Enter a domain or CIDR range and record a note if needed.
-4. Save the entry.
+With no scope entries, all registered targets in the organisation are allowed. Add entries to restrict testing to specific domains or network ranges.
 
-A domain entry covers that domain and its subdomains. A CIDR entry covers IP addresses inside that range.
+1. Open **Settings → Policy → Testing scope** and select the organisation.
+2. Select **Add entry**.
+3. Choose **Domain** or **Network range**.
+4. Enter a domain or CIDR range, add an optional note, and save.
 
-## Approve a public host
+A domain entry covers that domain and its subdomains. A CIDR entry covers IP address targets inside that range. For a hostname or local alias, add its domain name.
 
-A public hostname inside declared scope also requires a host approval.
+The target picker checks these restrictions before you continue. Launches and scheduled runs check them again. DNS verification does not override a configured restriction.
 
-1. Select **Authorise host** in the public host approvals section.
-2. Enter the exact hostname, explain the authorisation, and select its validity period.
-3. Save the approval.
+## Change restrictions
 
-Approving `example.com` does not approve `www.example.com`. Approve each public hostname to be tested. The account, justification, and approval date are recorded. Revoke an approval to withdraw it.
+Remove an entry to exclude its targets, unless another entry covers them. Removing the last entry removes the organisation's scope restrictions.
 
-## Internal targets and DNS verification
+Scope management requires the organisation's testing scope permission. Member permissions, licensing, testing levels, and human approval requirements still apply.
 
-Private IP addresses and recognised internal domain names, such as `service.corp.internal`, can run when included in declared scope. Ordinary public-style hostnames are treated as public by this check, even if your DNS points them at an internal address.
+## Managed deployments
 
-A target with active DNS verification can run through the DNS verification path without a scope entry or host approval. Follow [Add a target](/docs/how-to/adding-a-target) to publish its verification record. Declaring scope does not create a DNS verification record.
+Managed deployments retain their domain ownership checks. Follow [Add a target](/docs/how-to/adding-a-target) to publish the DNS verification record.
