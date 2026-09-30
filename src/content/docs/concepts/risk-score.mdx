@@ -37,7 +37,7 @@ A score near 0 on a PR that introduced a lot of new code is a positive signal: t
 
 A score in the High or Critical band doesn't always mean the PR should be rejected. Read the findings driving the score. If the Critical finding is a secret that was removed in a later commit (but still in branch history), the fix is to purge it from history, not to close the PR. If the High finding is a dependency CVE in a package that's only used in tests, the risk profile differs from the same CVE in a production-facing library.
 
-The score is a prompt to look, not a verdict.
+Use the score to prioritise findings for review.
 
 ## Reading the score for live scans
 

@@ -26,7 +26,7 @@ This provider fills the **scm** slot. Configure it in
 | `appId` | GitHub App ID | text | No | Shown when **authMode** is `github_app`. |
 | `installationId` | GitHub App installation ID | number | No | Shown when **authMode** is `github_app`. |
 | `username` | Username | text | No | Shown when **authMode** is `basic`. |
-| `credential` | Credential | secret reference | No | Token, password, or GitHub App private-key reference (env:NAME / file:/path). Leave blank only for anonymous local SCM. |
+| `credential` | Credential | secret or reference | No | Token, password, or GitHub App private-key reference (env:NAME / file:/path). Leave blank only for anonymous local SCM. |
 | `headerName` | Header name | text | No | Shown when **authMode** is `header`. |
 | `scheme` | Header scheme | text | No | Optional prefix such as Bearer. Shown when **authMode** is `header`. |
 | `owner` | Account / organisation | text | No | Used by Azure DevOps drivers. |
@@ -36,10 +36,10 @@ This provider fills the **scm** slot. Configure it in
 | `botLogin` | Integration bot login | text | No | Used only to identify and supersede this integration’s own reviews. GitHub Apps default to GITHUB_APP_SLUG[bot]. |
 | `probeRepo` | Connection-test repository | text | No | Optional provider-native repository path, for example owner/repo. Required when testing anonymous access. |
 | `orgId` | BattleTest organisation | text | Yes | Runs received through this connection are attributed to this BattleTest organisation. |
-| `webhookSecret` | Webhook secret | secret reference | No | — |
+| `webhookSecret` | Webhook secret | secret or reference | No | — |
 
 <Note>
-  2 fields are secrets (`credential`, `webhookSecret`). Secrets are never stored in the database: you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
+  2 fields are secrets (`credential`, `webhookSecret`). Pasted secrets are encrypted before storage. You can also supply a reference resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
 </Note>
 
 ## What the connection test checks

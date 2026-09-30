@@ -24,7 +24,7 @@ This provider fills the **model.reasoning**, **model.fast**, **model.exploit** s
 | `baseUrl` | Custom base URL | URL | No | The API root, usually ending at /v1. HTTP is supported for private/local deployments. Shown when **endpointMode** is `custom`. |
 | `model` | Model ID | text | Yes | — |
 | `pricingModel` | Pricing model ID | text | No | Only needed when Model ID is a gateway alias. Enter the upstream billable model from the bundled aggregate, for example anthropic/claude-sonnet-5. |
-| `apiKey` | API key | secret reference | No | Optional secret reference: env:NAME or file:/run/secrets/x. Leave blank for a keyless local endpoint. |
+| `apiKey` | API key | secret or reference | No | Paste the key (encrypted at rest), or use a reference (env:NAME / file:/run/secrets/x). Leave blank for a keyless local endpoint. |
 | `reasoningStyle` | Thinking mode style | one of: `none`, `openai_effort`, `anthropic_thinking`, `qwen_enable_thinking` | No | How this endpoint expresses reasoning/thinking. none = the model has no toggle. Default: `none`. |
 | `defaultReasoning` | Default thinking level | one of: `off`, `low`, `medium`, `high` | No | Recommended: high for the reasoning slot, off for the fast slot. Default: `off`. |
 | `reasoningBudgetTokens` | Thinking token budget (high) | number | No | Budget for "high" effort on Anthropic-style thinking. Defaults to 24576. Shown when **reasoningStyle** is `anthropic_thinking`. |
@@ -34,7 +34,7 @@ This provider fills the **model.reasoning**, **model.fast**, **model.exploit** s
 | `outputUsdPerM` | Output $ / 1M tokens | number | No | Required with the other overrides. Local inference can use 0 for all three. |
 
 <Note>
-  One field is a secret (`apiKey`). Secrets are never stored in the database: you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
+  One field is a secret (`apiKey`). Pasted secrets are encrypted before storage. You can also supply a reference resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
 </Note>
 
 ## What the connection test checks

@@ -1,6 +1,6 @@
 ---
 title: "SMTP relay"
-description: "Your own mail server. Notification content (including finding titles) never reaches a third-party email vendor."
+description: "Send notifications through your configured SMTP relay."
 ---
 
 import { Note } from '@mintlify';
@@ -10,7 +10,7 @@ import { Note } from '@mintlify';
     instead. Those are the same strings the setup wizard renders, so changing them here
     would fix the docs and leave the product saying the old thing. */}
 
-Your own mail server. Notification content (including finding titles) never reaches a third-party email vendor.
+Send notifications through your configured SMTP relay.
 
 This provider fills the **mail** slot. Configure it in
 **Settings → Providers**, or during first-run setup.
@@ -23,12 +23,12 @@ This provider fills the **mail** slot. Configure it in
 | `port` | Port | number | No | 587 for STARTTLS, 465 for implicit TLS, 25 for an internal relay that does not authenticate. Default: `587`. |
 | `secure` | Implicit TLS | yes / no | No | Defaults from the port: on for 465, STARTTLS otherwise. |
 | `user` | Username | text | No | Leave empty for an internal relay that accepts unauthenticated mail from this host. |
-| `pass` | Password | secret reference | No | — |
+| `pass` | Password | secret or reference | No | Paste the SMTP password (encrypted at rest), or use a reference: env:NAME / file:/path. |
 | `from` | From address | text | Yes | Must be an address your relay will accept as a sender, or everything is rejected after the connection succeeds. |
 | `testRecipient` | Send the test message to | text | No | Only used when you press Test. Nothing is sent here otherwise. |
 
 <Note>
-  One field is a secret (`pass`). Secrets are never stored in the database: you give a reference and the value is resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
+  One field is a secret (`pass`). Pasted secrets are encrypted before storage. You can also supply a reference resolved when it is used. `env:NAME` reads a process environment variable; `file:/run/secrets/name` reads a mounted secret file.
 </Note>
 
 ## What the connection test checks

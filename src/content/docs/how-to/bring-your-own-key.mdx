@@ -30,11 +30,11 @@ BattleTest resolves known model prices from its bundled aggregate snapshot. If t
 
 Every review runs at **advanced** depth, with no hourly or monthly cap. The public-repo hourly limit and the private-repo monthly allowance both stop applying: reviews are what cost us, and on your own key they cost us nothing.
 
-This is not a plan tier. Tiers describe what someone bought; this describes who pays for the compute, and the two are independent.
+Bring-your-own infrastructure is configured separately from your plan.
 
 ### If the key stops working
 
-A configured key that fails **never silently falls back to ours**. If your provider rejects a request, the review fails and the error is surfaced. You are never quietly moved back onto our account, and limits are not silently re-applied.
+If your configured provider rejects a request, the review fails and displays the error. It does not fall back to BattleTest credentials.
 
 The last verification result is shown in Settings, including the reason for the most recent failure.
 
@@ -58,7 +58,7 @@ Works with any S3-compatible storage: AWS S3, Cloudflare R2, MinIO, Ceph.
 
 When a review finishes, its record is written to your bucket and **our copy is deleted**. The durable form of your review history then exists only in storage you control.
 
-This also means your credentials are used at view time, not just at run end: the full report linked from a PR comment is a real page, and once our copy is gone that page reads from your bucket.
+After the BattleTest copy expires, report requests read from your bucket using the configured credentials.
 
 ### Why verification writes, reads and deletes
 
@@ -72,7 +72,7 @@ The probe object it writes is deleted as part of the check.
 
 They are independent and can be used separately, but together they are the configuration described in our [pricing](https://battletest.dev/pricing): reviews are unlimited because you pay your provider directly, and finished reports are stored in your bucket rather than ours.
 
-What we retain either way is review counts and organisation metadata, so we can see which teams are getting value from the product. See [Security & Data Handling](/docs/reference/security-and-data) for the full picture.
+BattleTest retains review counts and organisation metadata. See [Security & Data Handling](/docs/reference/security-and-data) for retention details.
 
 ## API
 

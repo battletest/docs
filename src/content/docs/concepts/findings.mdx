@@ -38,7 +38,7 @@ The **Source** field on a finding tells you how it was detected:
 
 - **CVE**: matched a new or updated dependency against vulnerability databases. Deterministic: the CVE either applies to this version or it doesn't. Near zero false positives, but only covers known, catalogued vulnerabilities.
 
-- **Secret**: a credential, API key, or cryptographic key found in the commit history or current code. Also deterministic: the pattern either matches or it doesn't. Check the evidence to confirm it's a real credential and not a test fixture.
+- **Secret**: a credential, API key, or cryptographic key found in the commit history or current code. Check the evidence to confirm it's a real credential and not a test fixture.
 
 - **Config**: a structural repository check failed (missing `SECURITY.md`, no lockfile committed, no Dependabot). These are observations that represent gaps in your security process, not exploitable vulnerabilities on their own.
 
@@ -80,6 +80,6 @@ The practical effect: your first few PR reviews surface a backlog of findings. A
 
 ## When findings disagree with your own assessment
 
-BattleTest's AI analysis is context-aware but not infallible. If a finding doesn't reflect how your code actually works, dismiss it with a note explaining why. Do not simply ignore it. The dismissal is recorded in your audit trail and feeds back into the model for your repository.
+BattleTest's AI analysis is context-aware but not infallible. If a finding doesn't reflect how your code actually works, dismiss it with a note explaining why. The dismissal is recorded in your audit trail and feeds back into the model for your repository.
 
 If you believe a finding is systematically wrong (the same false positive keeps appearing across PRs) contact [wale@battletest.dev](mailto:wale@battletest.dev) with the finding IDs. Patterns in false positives usually indicate a codebase pattern that the model isn't handling correctly.

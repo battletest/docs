@@ -148,13 +148,13 @@ In `airgap`, the endpoint is checked against an **allowlist**: a request proceed
 
 The credential is resolved alongside the endpoint. Pointing inference at your own server does not hand that server a third-party API key.
 
-This is asserted as a **property**: the test suite constructs the adapters the way the server does and fails if any of them can reach a public host under `EGRESS_MODE=airgap`, including a table of public providers and lookalike domains. An earlier version of this page claimed a single seam when two others existed; the test prevents that silently recurring.
+This is asserted as a **property**: the test suite constructs the adapters the way the server does and fails if any of them can reach a public host under `EGRESS_MODE=airgap`, including a table of public providers and lookalike domains.
 
 ### The Room's audio
 
 The default configuration of the library we use would have made the Room's audio a Category A leak, and the problem is not visible from a dependency list.
 
-**PeerJS ships public TURN servers in its default config.** A TURN server is not a broker: when two browsers cannot reach each other directly, media **relays through it**. An instance using the default would have relayed the audio of a call about your unpatched criticals through a third party you have no agreement with. The packets are encrypted, so the relay cannot hear the call, but it sees every participant's IP address, who called whom, when, and for how long.
+**PeerJS ships public TURN servers in its default config.** A TURN server is not a broker: when two browsers cannot reach each other directly, media **relays through it**. An instance using the default would have relayed call audio through a third-party server. The packets are encrypted, so the relay cannot hear the call, but it sees every participant's IP address, who called whom, when, and for how long.
 
 We pass an explicit ICE configuration and **refuse any TURN URL containing `peerjs.com`**, including one an operator supplies. Two tests fail if that changes.
 
@@ -176,7 +176,7 @@ The catalogue and payload import scripts reach public sources at build time. The
 
 ## What is recorded in every export
 
-A deployment may legitimately use a public model endpoint, live advisory feeds, or a hosted callback catcher. All three are supported. **None of them may be silent.**
+Public model endpoints, live advisory feeds, and hosted callback catchers are supported. Their use must be disclosed in the deployment manifest.
 
 Each dependency is classified as `self`, `battletest`, or `external`. The readiness panel shows the classification, and the list of anything that ran off-instance is recorded **inside the signed manifest content**, so the disclosure cannot be separated from the report it qualifies. An empty list is a positive claim, and it is only ever empty when nothing left your network.
 
@@ -186,7 +186,7 @@ Classification errs toward disclosure: a host we cannot prove is internal is rep
 
 This list is maintained by source audit plus packet capture on a live deployment. Some things are neither confirmed present nor confirmed absent, and we would rather say so.
 
-- **The crawler SDK has no telemetry to disable.** We audited the pinned version's complete set of environment variables and found no telemetry, analytics or reporting entry, and the vendor's own SDK is not a dependency of that image. We set no opt-out variable: one the library ignores would be believed, and worse than none.
+- **The crawler SDK has no telemetry to disable.** We audited the pinned version's complete set of environment variables and found no telemetry, analytics or reporting entry, and the vendor's own SDK is not a dependency of that image. No telemetry opt-out variable is required for this version.
 - **The sandbox layer** is not yet audited to the same standard. Treat it as unproven.
 - **A Cloudflare API token** is accepted as configuration, but no runtime call using it was found in the application source.
 - Confirmed **absent**: PostHog and OpenTelemetry exporters. Not merely unimported: no dependency and no source match.
@@ -198,7 +198,7 @@ This list is maintained by source audit plus packet capture on a live deployment
 **The command tool in the security sidecar accepts arbitrary shell.** This is deliberate (it is an offensive testing tool and its agents need a shell) and it means the sidecar's egress controls are layered rather than absolute:
 
 - Package installation is **refused** outside `open` mode. That layer is solid: installing reaches the network by definition, so refusing it cannot be worked around at that entry point.
-- Known out-of-band and passive-recon tool names are **refused on the shell path** as well as the task path. This layer is an honest speed bump against accidental invocation, **not** a security boundary: the argument is arbitrary shell, and a determined caller can obfuscate a tool name.
+- Known out-of-band and passive-recon tool names are **refused on the shell path** as well as the task path. This check blocks known tool names. Arbitrary shell commands can bypass it, so it is not a security boundary.
 - The out-of-band callback client has been **removed from the image** entirely. It was never wired into any executor.
 
 **The enforceable control for this container is network-level.** Deny egress from the security-tools container in air-gapped operation and allow only what your deployment declares. Everything above is a supporting layer over that.
@@ -240,7 +240,7 @@ own.
 |---|---|
 | `proxied` | **Real.** The forward proxy is set as a process environment variable before anything starts, so every outbound request routes through it regardless of what extension code does. The proxy is the chokepoint, outside the extension's reach. |
 | `airgap` | Outbound is refused wholesale. Grants apply only to internal hosts reachable via `NO_PROXY`. |
-| `open` | **Advisory.** There is no chokepoint. The host check catches honest mistakes; a determined extension shares the process and can step around it. |
+| `open` | **Advisory.** There is no chokepoint. The host check does not isolate extensions from the shared process and can be bypassed. |
 
 Run `proxied` in production, not `open`. Only under `proxied` is an extension's declared
 boundary a boundary rather than a promise.
@@ -255,5 +255,5 @@ a source your policy blocked from one that cannot work in your deployment:
 - **`none`**: reaches nothing off-host; runs in every mode.
 - **`required`**: cannot function without network. Under airgap this is reported as a
   capability mismatch, not a policy refusal: no grant would change it.
-- **`optional`**: works either way.
+- **`optional`**: supports execution with or without network access.
 - **`degraded`**: works without network and returns less; the run says what was missing.

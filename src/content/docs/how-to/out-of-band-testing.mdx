@@ -1,6 +1,6 @@
 ---
 title: How to configure out-of-band testing
-description: "Choosing between the bundled callback catcher, a self-hosted interactsh server, and no out-of-band testing at all: what each one detects, and exactly what delegating a domain's nameservers to interactsh will cost your network team."
+description: "Configure the bundled callback catcher or self-hosted interactsh, including DNS and network requirements."
 sidebar:
   label: Out-of-band testing
 ---
@@ -9,10 +9,10 @@ import { Card, CardGroup, Step, Steps, Warning } from '@mintlify';
 
 Some vulnerabilities never tell you they worked. Blind SSRF, XXE, out-of-band SQL injection and blind XSS all produce the same response as a target that is not vulnerable at all. The only way to observe them is to make the target call a server you control, and then watch that server.
 
-That server is the out-of-band (OAST) backend, and this page is about choosing one.
+That server is the out-of-band (OAST) backend.
 
 <Warning>
-  A run with no OAST backend produces a report that looks exactly like a run against a target with no blind vulnerabilities. A run without a backend says so in its own event stream, and the statement travels inside the signed export.
+  Without an OAST backend, blind-vulnerability tests are unavailable. This limitation is recorded in the event stream and signed export.
 </Warning>
 
 ## Why this is not simply "on"
@@ -39,7 +39,7 @@ The deployment ships a small, self-hosted callback catcher (`oob-catcher`). It i
 
 **What it detects.** Everything the agents probe for: blind SSRF, XXE, out-of-band SQL injection, blind XSS, DNS exfiltration (anywhere an agent constructs the payload itself).
 
-**What it does not.** The template scanner (nuclei) does not speak this protocol and cannot be pointed at it. Its OAST template set stays excluded. The catcher is not a drop-in replacement for interactsh and no configuration makes it one.
+**What it does not.** The template scanner (nuclei) does not speak this protocol and cannot be pointed at it. Its OAST template set stays excluded. Use self-hosted interactsh to enable nuclei OAST templates.
 
 **What it costs you.** At most one DNS record:
 
@@ -54,7 +54,7 @@ A self-hosted [interactsh](https://github.com/projectdiscovery/interactsh) serve
 
 Everything `catcher` does, plus the template scanner's blind-vulnerability templates. It also captures SMTP and LDAP interactions, which the catcher does not.
 
-The rest of this page is about what it takes to run one, because that is the part worth knowing before you agree to it.
+
 
 ### `off`: no out-of-band testing
 
@@ -92,7 +92,7 @@ Concretely, four things:
   <Step title="Repoint the domain's nameservers">
     In the domain's DNS settings, choose to use your own nameservers and enter `ns1.YOUR-DOMAIN` and `ns2.YOUR-DOMAIN`.
 
-    This is the irreversible-feeling step: from here the domain's DNS is answered by your interactsh server and by nothing else. Delegation can take up to 48 hours to propagate, though it is usually much faster.
+    Delegation makes your interactsh server authoritative for the domain. DNS propagation can take up to 48 hours.
   </Step>
 
   <Step title="Configure the deployment">
@@ -145,18 +145,18 @@ The certificate must be a **wildcard** for the domain. Correlation hostnames are
 
 Storage is on disk (`-disk`) so a redeploy does not discard interactions a run is still polling for.
 
-## Persuading a network team
+## Network requirements
 
-The objection you will meet is the delegation, and it is a fair one. What helps:
+Confirm these requirements before delegating the domain:
 
 - **The domain is single-purpose.** Buy one for this. It serves no mail, no web presence, and nothing else depends on its DNS.
-- **It replaces a worse arrangement, not a safe one.** The alternative is not "no callbacks"; it is your targets calling a third party's servers. This moves that traffic onto infrastructure you own.
+- **Callback destination.** Self-hosting keeps callback traffic on infrastructure you control.
 - **The server is receive-only.** It answers DNS and accepts connections. It initiates nothing outbound once `OAST_INTERACTSH_IP` is set.
-- **`catcher` is a real fallback.** If delegation is refused, you keep blind-vulnerability coverage on the agent-driven paths and lose only the template scanner's OAST templates. That is a smaller loss than it sounds, and the report says which one you have.
+- **Without delegation.** The bundled catcher supports agent-driven tests. Nuclei OAST templates require interactsh. The report records which backend was used.
 
 ## What a run tells you
 
-Whichever mode you choose, the run is explicit about it. If the out-of-band capability is unavailable, the run emits a degradation notice at the start (alongside the scope contract, before any findings, so it cannot be read past), naming the classes individually rather than saying "blind vulnerabilities", and stating that a clean result does not cover them.
+If out-of-band testing is unavailable, the run emits a coverage notice before testing. The notice lists the vulnerability classes that will not be tested.
 
 That notice is recorded inside the signed manifest content, so the caveat cannot be separated from the report it qualifies.
 
