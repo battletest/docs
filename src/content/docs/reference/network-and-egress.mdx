@@ -110,7 +110,6 @@ Off by default, opt-in, or absent from the enterprise image.
 |---|---|---|
 | `*.ingest.*.sentry.io` | Error reporting | Opt-in via `SENTRY_MODE`, default off, redacted |
 | `cloud.langfuse.com` | LLM tracing | Key-gated. In airgap, disabled unless `LANGFUSE_BASE_URL` is your own instance |
-| `api.paddle.com`, `cdn.paddle.com` | Billing | `BILLING_PROVIDER=none` removes the billing router entirely; `PUBLIC_BILLING_ENABLED=false` stops the frontend loading the CDN |
 | `next-api.useplunk.com` | Lifecycle email | Hard no-op in airgap |
 | `api.pdtm.sh` | Version ping from the bundled ProjectDiscovery scanners | Disabled image-wide. Sends tool name, version, OS and Go version (no target data), but it is still an undeclared call, so it is switched off rather than documented |
 | FCM / Mozilla autopush | Web Push relay | Off in airgap unless explicitly enabled |
@@ -120,7 +119,7 @@ Off by default, opt-in, or absent from the enterprise image.
 
 ### Licensing is offline
 
-`BILLING_PROVIDER=none` is backed by an Ed25519-signed licence verified locally against a public key baked into the image. **Zero egress.** Entitlements (tier, caps, feature flags, expiry and grace period) drive the product directly. A missing or forged licence falls back to a locked free floor.
+The enterprise edition is backed by an Ed25519-signed licence verified locally against a public key baked into the image. **Zero egress.** Installing a licence is what makes an instance the enterprise edition; its entitlements (tier, caps, feature flags, expiry and grace period) drive the product directly. A missing or forged licence falls back to a locked free floor. There is no billing integration and no payment egress — payment is handled out of band.
 
 It is forgery-proof, not tamper-proof: the inherent limit of client-side enforcement.
 
