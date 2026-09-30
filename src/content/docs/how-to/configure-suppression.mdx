@@ -1,0 +1,25 @@
+---
+title: Write finding suppression rules
+description: Create narrow organisation rules and preview their impact.
+---
+
+## Create a rule
+
+Open **Settings → Policy → Finding suppression** and select the organisation. You need permission to remove findings.
+
+1. Select **Write a rule**.
+2. Enter one or more conditions. Class and category match exact identifiers. Title, description, and location match part of the text. Each condition must contain at least three characters.
+3. Read the rule summary. **All filled conditions must match** for a finding to be suppressed.
+4. Choose the severity ceiling. New rules default to **medium**; high and critical findings are excluded at this ceiling.
+5. Choose the dismissal reason and enter an explanation of at least ten characters.
+6. Read the impact preview against recent PR review findings. If no sample exists, the UI says that impact is unknown.
+7. If you choose high, critical, or no ceiling, explicitly acknowledge the higher-severity suppression.
+8. Select **Save rule**.
+
+These rules apply to future PR reviews for the organisation. They do not retroactively dismiss existing findings. Suppressed findings carry the rule, explanation, and author in the review's dismissal record.
+
+## Review a rule
+
+Select **Disable** to stop applying a rule while keeping its record. Select **Enable** to resume it. Delete a rule only when you intend to remove its rule record. For temporary exceptions, record a review date in the reason and disable the rule when that date arrives.
+
+See [Manage findings](/docs/how-to/manage-findings) for individual finding actions.

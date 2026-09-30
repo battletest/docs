@@ -1,0 +1,29 @@
+---
+title: Configure AI models
+description: Configure reasoning, supporting, embedding, and optional model connections.
+---
+
+## Choose a model slot
+
+Open **Settings → Providers**. Configure the model slots used by your deployment:
+
+- **Reasoning model**: primary security analysis.
+- **Fast model**: supporting tasks and extraction.
+- **Embeddings model**: repository memory and semantic recall.
+- **Vision model**: optional visual fallback.
+- **Exploit specialist model**: optional exploit construction and verification.
+
+## Save a connection
+
+1. Select **Configure** or **Set up** on the slot.
+2. Choose the adapter and API format. Enter its endpoint, model identifier, and credentials. Use a model identifier offered by that endpoint.
+3. Select **Test connection** and review the prerequisite checks.
+4. Select **Save connection**. Changes apply across the deployment.
+
+Use **Advanced settings** for pricing overrides, reasoning modes, and extra request JSON. These values must match the endpoint's API. See [Chat model fields](/docs/reference/adapters/openai-chat), [Embedding fields](/docs/reference/adapters/openai-embeddings), and [Vision fields](/docs/reference/adapters/openai-vision).
+
+## Understand effective configuration
+
+An environment-configured connection is marked **Environment configuration**. Saving it creates a Settings override. Removing that override restores the environment configuration when one exists. Pasted credentials are encrypted; blank saved credential fields retain their current value.
+
+Editing a connection invalidates its current test result. After saving, check the row's test state and timestamp.

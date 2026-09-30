@@ -1,0 +1,22 @@
+---
+title: Set up source control
+description: Connect repository providers and verify review access.
+---
+
+## Choose a provider
+
+Open **Settings → Integrations** and select **Add source-control connection**. Name the connection and choose the provider. Connections are shared across the deployment; repository access remains subject to organisation membership and provider permissions.
+
+- For a native GitHub App connection, follow [Set up GitHub as source control](/docs/how-to/configure-github-app).
+- For GitLab, use a token with the `api` scope and select the BattleTest organisation that receives its reviews. See [Connect GitLab](/docs/how-to/connect-gitlab).
+- For the universal gateway, configure the gateway URL, provider, endpoint, authentication method, and organisation. See [SCM gateway settings](/docs/reference/adapters/go-scm-gateway).
+
+## Verify the connection
+
+1. Enter the provider credentials and any repository used for testing.
+2. Select **Test connection** and read each result. The checks depend on the selected provider.
+3. Select **Save connection**.
+4. Configure the provider webhook using the URL and secret in the dialog. Native GitHub uses its GitHub webhook URL; gateway connections use their connection-specific callback.
+5. Open **Change Reviews**. Confirm a repository is accessible, then open or update a source change to verify event delivery.
+
+A saved connection is configuration. A passing credential test, repository discovery, and webhook delivery verify different parts of the review workflow.

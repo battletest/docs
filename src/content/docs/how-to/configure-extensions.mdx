@@ -1,0 +1,15 @@
+---
+title: Manage extension access
+description: Grant and revoke the hosts a registered extension can contact.
+---
+
+Open **Settings → Policy → Extensions**. Extension grants apply to the deployment; you need testing scope management permission to change them.
+
+1. Find the registered extension and read its requested hosts and capabilities.
+2. Select only the requested hosts you intend to grant.
+3. Select the extension’s save action and review the resulting allowed hosts.
+4. Use **Revoke all** to withdraw its grants.
+
+A grant authorises that extension's requested access. It does not authorise testing a target, replace DNS verification, or prove network connectivity. Configure target authorisation in [Testing scope](/docs/how-to/configure-testing-scope).
+
+Review the deployment's [network and egress policy](/docs/reference/network-and-egress) before granting access to external services.

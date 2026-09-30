@@ -1,0 +1,20 @@
+---
+title: Set up SSO
+description: Connect an OpenID Connect identity provider and verify sign-in.
+---
+
+## Register the application
+
+1. Open **Settings → Providers → Identity / SSO → Configure**.
+2. Copy the displayed **Redirect URI** into an OpenID Connect application in your identity provider. The URL must match exactly.
+3. Obtain the issuer URL, client ID, and client secret. Confirm the issuer's discovery endpoint is reachable from the deployment.
+
+## Configure and verify sign-in
+
+1. Enter the issuer URL, client ID, and client secret. Pasted secrets are encrypted before storage; a blank saved secret retains the current value.
+2. Keep local password sign-in available while verifying the connection.
+3. Select **Test connection** to check discovery and provider configuration, then **Save connection**.
+4. Use **Verify sign-in** from the dialog, or open `/auth/oidc/login` on your deployment. Sign in with a test identity and verify the account and organisation access.
+5. Disable local password fallback only after sign-in succeeds and you have an administrator recovery procedure.
+
+Connection testing does not exercise a user's full sign-in flow. This identity connection applies to the entire deployment. See [OIDC settings](/docs/reference/adapters/oidc-identity).

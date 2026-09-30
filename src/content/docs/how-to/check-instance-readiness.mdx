@@ -1,0 +1,18 @@
+---
+title: Resolve instance readiness gaps
+description: Find required services and coverage gaps and open their configuration.
+---
+
+1. Open **Settings → Deployment → Instance readiness**, or select **Review readiness** in the header banner.
+2. Address **required** services first. A missing required service prevents its workflow from operating.
+3. Review each **coverage gap**. Its impact explains the evidence or tests that are unavailable.
+4. Configure optional capabilities that your organisation uses.
+5. Follow the row's action to its provider editor or configuration guide. Provider changes save at runtime; deployment-managed changes may require restarting the API and worker.
+
+A model, mail, or identity action opens its specific editor. The source-control action opens Integrations. License actions open the Deployment license section.
+
+## Storage and vulnerability data
+
+Configure evidence storage and any required mirrors or offline vulnerability database through deployment configuration. The database and Redis connections must be available at startup. See [Self-hosted deployment configuration](/docs/how-to/enterprise-setup) and [Network and egress settings](/docs/reference/network-and-egress) for the settings, mounts, and restart requirements.
+
+The **External endpoints** list reports configured or default destinations. It is not an outbound request log and does not establish that network policy permits a destination. Verify policy and network access separately.

@@ -115,6 +115,17 @@ export default defineConfig({
 				{
 					label: 'Deployment & self-hosting',
 					items: [
+						{ slug: 'how-to/configure-github-app' },
+						{ slug: 'how-to/configure-source-control' },
+						{ slug: 'how-to/configure-smtp' },
+						{ slug: 'how-to/configure-sso' },
+						{ slug: 'how-to/configure-models' },
+						{ slug: 'how-to/configure-testing-scope' },
+						{ slug: 'how-to/configure-suppression' },
+						{ slug: 'how-to/configure-extensions' },
+						{ slug: 'how-to/check-instance-readiness' },
+						{ slug: 'how-to/manage-deployment-license' },
+
 						{ slug: 'reference/security-and-data' },
 						{ slug: 'reference/network-and-egress' },
 						{

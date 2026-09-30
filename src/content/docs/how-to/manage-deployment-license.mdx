@@ -1,0 +1,14 @@
+---
+title: Install or renew a deployment license
+description: Review the signed license and replace it on a self-hosted deployment.
+---
+
+1. Open **Settings → Deployment → Deployment license**. Review the license state and expiry or grace period.
+2. Obtain the signed license for the deployment.
+3. Follow the card's installation instructions: supply the token through `LICENSE_KEY`, or mount a license file and set `LICENSE_FILE` to its path.
+4. Keep the signing verification configuration consistent with the license issuer. Recreate the API and worker after changing environment configuration. Mounted-file changes are detected without rebuilding the image.
+5. Return to the license card and confirm it is valid. Review **Instance readiness** for remaining prerequisites.
+
+Treat the license token as a deployment secret. Supply it through your platform's secret management. Installing a license does not complete setup; finish first-run configuration separately.
+
+See [Self-hosted deployment configuration](/docs/how-to/enterprise-setup) for optional environment configuration and setup completion.

@@ -1,0 +1,25 @@
+---
+title: Set up email delivery
+description: Configure an SMTP relay for account and review notifications.
+---
+
+## Before you start
+
+Obtain the relay hostname, port, authentication credentials, and an allowed sender address from your email administrator. Confirm the API can reach the relay.
+
+## Configure the relay
+
+1. Open **Settings → Providers → Email transport → Configure**.
+2. Enter **SMTP host** and **Port**. Use `587` for STARTTLS or `465` for implicit TLS. Use port `25` only when your internal relay requires it.
+3. Set **Implicit TLS** to match the relay. Enter the username and password if authentication is required.
+4. Enter **From address**. The relay must allow this sender.
+5. Enter a recipient under **Send the test message to**, then select **Test connection**. This sends a test email and checks relay access, authentication, and message acceptance. Message acceptance does not confirm inbox delivery.
+6. Select **Save connection**.
+
+The connection applies to the entire deployment. Pasted passwords are encrypted at rest. When you reopen the dialog, **saved · leave blank to keep** means the stored password is retained for testing and saving. To replace it, enter a new password.
+
+## Choose notifications
+
+Open **Settings → Notifications** to select your account's optional notification events and channels. Required account messages use the configured relay. See [Configure notification preferences](/docs/how-to/configure-notifications).
+
+A saved connection without a current test appears as **Untested**. If a test fails, check the error, sender address, relay access, and credentials. See [SMTP field reference](/docs/reference/adapters/smtp-mail).

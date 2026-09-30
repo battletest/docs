@@ -1,0 +1,34 @@
+---
+title: Set up GitHub as source control
+description: Connect a GitHub App to a self-hosted BattleTest deployment.
+---
+
+## Before you start
+
+You need an administrator account in BattleTest and permission to create and install a GitHub App. The connection applies to the deployment. Repository access also depends on the App installation and the BattleTest organisation associated with the GitHub account.
+
+## Create the GitHub App
+
+1. Open **Settings → Integrations → Add source-control connection**. Choose **GitHub / GitHub Enterprise Server** and name the connection.
+2. In GitHub, [register a GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app). For GitHub Enterprise Server, create it on your server.
+3. Copy the **Webhook URL** from the BattleTest dialog into the App. Enable webhooks and choose a webhook secret. Use the same secret in BattleTest.
+4. Grant repository permissions: **Contents: read**, **Metadata: read**, **Pull requests: read and write**, **Checks: read and write**, and **Commit statuses: read and write**. Subscribe to **Pull request** events.
+5. Generate an App private key and download the PEM file. Record the **App ID**.
+
+## Save and test the connection
+
+1. Enter the GitHub host for Enterprise Server, or leave it blank for github.com.
+2. Enter the App ID, private key, and webhook secret. Pasted secrets are encrypted before storage. Environment and mounted-file references are alternatives.
+3. Select **Test connection**. This verifies App credentials and identity. It does not verify repository permissions or webhook delivery.
+4. Select **Save connection**.
+
+OAuth client credentials are optional and separate from the App's repository access. If your deployment configures GitHub sign-in, use its configured OAuth callback URL.
+
+## Verify repository access and delivery
+
+1. Install the App on the GitHub account or organisation that owns the repositories. Select the repositories it should review.
+2. Associate that GitHub installation with the intended BattleTest organisation. An App credential test alone does not grant your BattleTest account access to repositories.
+3. Open **Change Reviews** and check the repository selector. A saved connection and accessible repositories are reported separately.
+4. Open or update a pull request in an installed repository. Check **Advanced → Recent deliveries** in the GitHub App for the delivery response, then confirm the review appears in BattleTest.
+
+If the credentials pass but no repositories appear, check the installation, selected repositories, and organisation association. See [GitHub App reference](/docs/reference/github-app).
