@@ -1,23 +1,57 @@
 ---
 title: Run live application testing
-description: What a live run does from discovery through active probing to a confirmed finding, and how a dedicated per-client deployment is set up.
+description: Start a battletest, choose targets and invitees, reuse a previous configuration, and review results.
 sidebar:
   label: Live testing
 ---
 
-import { Card, CardGroup, Note } from '@mintlify';
+import { Card, CardGroup } from '@mintlify';
 
-<Note>
-  Live application testing is not self-serve. It ships as a **BattleTest Enterprise** deployment for each client,
-  scoped per engagement. This page describes what a run actually does, so you know what
-  you would be buying before you talk to anyone.
-  [Talk about a dedicated deployment →](https://battletest.dev/contact)
-</Note>
+Use **Battletests** in your Enterprise deployment to start testing and review past results.
+You need permission to run scans in the target's organization.
 
-A run moves through the same sequence every time: map the application, probe it, confirm what
-is real, and report both what was found and what was not reachable.
+## Start a battletest
 
-## 1. Discovery
+Open **Battletests** and select **Start battletest**.
+
+1. **Targets:** Choose an organization and select the hosts to test. Search by hostname or
+   filter by environment. To register a missing host, select **Add target**. Registration
+   does not authorize testing; the deployment checks scope and authorization before launch.
+2. **Testing level:** Choose **Discover**, **Probe**, or **Full exploit**. Full exploit
+   requires an explicit authorization confirmation for the selected targets.
+3. **People:** Search organization members by name, email, or username. Selected people
+   receive viewer access and an invitation notification when testing starts. Select
+   **Save as my default** to reuse that invitation list for future battletests in this organization.
+4. **Review:** Check the targets, level, and people, then select **Start battletest**.
+   Each selected target starts a separate battletest.
+
+If some targets cannot start, the dialog lists their errors and keeps only those targets
+selected for retry. The battletests that started remain in your history.
+
+[Prepare a target](/docs/how-to/adding-a-target) describes authorization, reachability,
+and the account requirements for authenticated coverage.
+
+## Reuse a configuration
+
+Select **Use configuration** beside a past battletest, or **Use a previous battletest**
+in the launch dialog. Review the loaded targets, testing level, and people before starting.
+Full exploit authorization must be confirmed again. Remove unavailable targets or people
+before continuing.
+
+Older battletests may not have a complete saved configuration. The dialog loads the recorded
+values and asks you to select any missing testing level.
+
+## Find past battletests
+
+Search by target or environment, then filter by status, testing level, environment, or date.
+Open a battletest to follow progress and inspect its findings. Completed and failed entries
+also provide a report link.
+
+## What happens during testing
+
+A run maps the application, tests within its selected level, and records findings and coverage.
+
+### 1. Discovery
 
 Discovery is passive. It sends ordinary HTTP requests to map what the application exposes, and
 nothing it does is distinguishable from normal traffic. It takes 5–15 minutes depending on
@@ -32,7 +66,7 @@ At the lowest permission tier this is where a run stops. There are no injection 
 port scan results, and no active probes, because the tooling that would do those things is not
 available to the agent at that tier.
 
-## 2. Active probing
+### 2. Active probing
 
 Raising the permission tier makes injection testing, directory enumeration, and port scanning
 available. This is an explicit, recorded approval, and steps that could change state pause for
@@ -41,7 +75,7 @@ a human decision. A typical application takes 15–30 minutes at this stage.
 The [permission tier model](/docs/concepts/live-testing#the-permission-tier-model)
 describes what each tier permits.
 
-## 3. Confirmation
+### 3. Confirmation
 
 Confirmation decides what ends up in the report. A finding is marked **Confirmed**
 only when the agent replayed it against the running system and reproduced it from a second,
@@ -60,20 +94,11 @@ A run also reports what it could **not** reach. An SSO-only login wall, an unrea
 subdomain, or a tier that withheld the tooling needed to prove something are all stated in
 the record. Coverage you did not get is a fact about the assessment.
 
-## 4. Comparison
+### 4. Comparison
 
 Each run is compared against the previous run of the same environment. Findings are classified
 **new**, **persistent**, **resolved**, or **regression**. Regressions get the most attention:
 they mean something the team already spent time fixing has come back.
-
-This makes a repeated engagement compound. One run tells you what is vulnerable today.
-The comparison tells you whether your fixes held.
-
-## Setting one up
-
-The prerequisites (authorisation, reachability, and the self-serve signup requirement for
-authenticated coverage) are in [How to prepare a target](/docs/how-to/adding-a-target). Read that
-before the scoping conversation.
 
 ## What's next
 
