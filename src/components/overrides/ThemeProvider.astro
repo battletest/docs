@@ -5,3 +5,30 @@
 	document.documentElement.dataset.theme = 'dark';
 	try { localStorage.setItem('starlight-theme', 'dark'); } catch {}
 </script>
+
+<script is:inline>
+	if (new URLSearchParams(location.search).has('embed')) {
+		document.documentElement.dataset.embedded = 'true';
+		document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { event.preventDefault(); parent.postMessage({type:'battletest-docs-close'}, location.origin); } });
+		document.addEventListener('click', (event) => {
+			const link = event.target.closest?.('a[href]');
+			if (!link) return;
+			const url = new URL(link.href, location.href);
+			if (url.origin === location.origin && url.pathname.startsWith('/docs/')) {
+				url.searchParams.set('embed', '1'); link.href = url.href;
+			} else { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+		});
+	}
+</script>
+<style is:global>
+	html[data-embedded] { --sl-nav-height: 0px; --sl-sidebar-width: 0px; }
+	html[data-embedded] :is(header.header, .sidebar-pane, .right-sidebar-container, .sl-menu-button, .mobile-preferences, .pagination-links, footer, .skip-link) { display: none !important; }
+	html[data-embedded] .main-frame { padding: 0; }
+	html[data-embedded] .main-pane { width: 100%; margin: 0; }
+	html[data-embedded] .content-panel { padding: 1.25rem; border: 0; }
+	html[data-embedded] .sl-container { max-width: none; }
+	html[data-embedded] h1 { font-size: 1.3rem; }
+	html[data-embedded] .sl-markdown-content h2 { font-size: 1.05rem; margin-top: 1.8rem; }
+	html[data-embedded] .sl-markdown-content h3 { font-size: .95rem; }
+	html[data-embedded] .sl-markdown-content { font-size: .875rem; }
+</style>
