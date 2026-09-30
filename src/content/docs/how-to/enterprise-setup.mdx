@@ -1,0 +1,39 @@
+---
+title: Configure a self-hosted deployment
+description: Save application configuration with the setup wizard or manage it through your environment.
+---
+
+The enterprise image opens `/setup` until you finish setup. Signing in or installing a license does not complete the wizard automatically.
+
+Enter the first-run token printed in the API log, or sign in with an existing account. Review your configuration and select **Finish setup**. Application settings and provider connections are stored in Postgres. Pasted secrets are encrypted with the deployment's `GITHUB_TOKEN_ENCRYPTION_KEY`, using the same storage as Settings → Providers. Keep that encryption key stable across the API and worker, restarts, and database restores.
+
+You do not need to copy the wizard's settings into Compose or an environment file. Empty secret fields retain existing credentials. Provider changes and application settings apply at runtime; changes to storage or tracing clients are saved and require an API and worker restart. The wizard identifies these changes when saved. Restarting reads the saved values from Postgres.
+
+After completion, `/setup` redirects to Settings and the Setup entry disappears. The first-run token stops working. Provider connections remain editable in Settings → Providers.
+
+## Environment configuration
+
+Environment variables remain an alternative for automated deployment. They supply defaults until a value is explicitly saved through setup; saved application values take precedence. Infrastructure needed before the application can start remains deployment-managed: database and Redis connections, the encryption key, mounted files, container networking, and shared sidecar credentials.
+
+To skip the wizard on a deployment that you have already configured, set this on the API:
+
+```dotenv
+BATTLETEST_SKIP_SETUP=true
+```
+
+The supplied enterprise Compose file forwards this variable. Its default is `false`. Removing it opens setup again only if setup has never been completed in the database. It does not grant a license or bypass authentication.
+
+Examples of optional application environment configuration:
+
+```dotenv
+LICENSE_FILE=/run/secrets/battletest-license
+EGRESS_MODE=airgap
+MAIL_PROVIDER=smtp
+SMTP_HOST=smtp.internal.example
+SMTP_PORT=587
+SMTP_USER=battletest
+SMTP_PASS=your-relay-password
+SMTP_FROM=battletest@example.com
+```
+
+Supply environment secrets using your deployment platform's secret management. Configure a private CA bundle with `NODE_EXTRA_CA_CERTS` and its mount on both API and worker. Configure `TURN_PUBLIC_IP` on coturn itself. These are shown as deployment-managed values in setup because saving an application setting cannot mount a host file or change another container's networking.
