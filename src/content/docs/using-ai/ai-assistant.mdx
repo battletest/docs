@@ -16,7 +16,7 @@ The assistant is grounded in two things: this documentation, and **your own data
 - **Explain your findings and PR reviews**: "why was this PR flagged?", "what are my open critical findings?", "summarise my last battletest."
 - **Answer usage and limit questions**: "am I close to a review limit?", "how many in-depth reviews have I used this month?".
 - **Explain how the product works**: anything covered in these docs: risk scores, the finding lifecycle, PR review vs live application testing, notifications.
-- **Take you there**: when doing something is the answer, it offers a button that deep-links to the exact page (a specific finding, your notification settings, the connect-GitHub flow).
+- **Take you there**: when doing something is the answer, it offers a button that deep-links to the exact page (a specific finding, your notification settings, source-control settings).
 
 ## What it will not do
 
@@ -24,7 +24,7 @@ The assistant is grounded in two things: this documentation, and **your own data
 The assistant is **read-only**. It cannot change a setting, dismiss a finding, start a battletest, or modify billing. When you want to *do* something, it points you to where in the app to do it.
 </Note>
 
-- It reads only **your own** account's data: your sites, findings, PR reviews, and usage. It cannot see other organisations.
+- It reads targets, findings, battletest history, and change reviews in organisations where your role permits access, plus your legacy personal targets. It cannot read an organisation where you lack permission.
 - It **won't invent specifics.** Exact numbers, thresholds, tiers, and limits come from the documentation or your account data. If something isn't documented, it says so rather than guessing.
 - It isn't a security scanner. It reports on battletests and PR reviews that have already run. It does not test your site itself.
 
@@ -37,3 +37,13 @@ Conversations are tied to your user account and are used only to answer your que
 - Ask about your **current situation** directly: "my usage this month", "my open findings on `example.com`", "my last three PR reviews." The assistant looks these up rather than guessing.
 - If an answer needs an exact number that isn't in the docs, the assistant tells you where in the app to find it.
 - Prefer to use your own AI tools (Claude, Cursor, ChatGPT)? You can connect the BattleTest documentation to them directly: see [Connect the docs to your AI tools](/docs/using-ai/docs-mcp).
+
+## Documentation index
+
+Raw documentation ships with the deployment. The assistant can search it without an embedding model.
+
+For semantic search, configure an embedding model in **Settings → Providers → AI models**, then select **Build index** under **Documentation index**. The same action is available during setup. The build uses the configured model and may incur charges from that provider.
+
+The index is stored in the deployment database and survives restarts. **Ready** means the saved index matches the shipped documentation and configured model. If either changes, select **Rebuild index** when **Update available** appears. **Build failed** offers a retry. A failed rebuild preserves the previously stored vectors; the assistant uses raw documentation until an index matches the current configuration.
+
+Enterprise deployments do not build or rebuild the documentation index automatically on startup.
