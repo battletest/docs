@@ -5,7 +5,7 @@ sidebar:
   label: First PR review
 ---
 
-import { Card, CardGroup, Note, Step, Steps } from '@mintlify';
+import { Card, CardGroup, Frame, Note, Step, Steps } from '@mintlify';
 
 In this tutorial you'll set up a BattleTest workspace, connect a GitHub repository, and get a real automated security review posted on a pull request. By the end you'll have seen what the tool does and be ready to use it on your own work.
 
@@ -69,20 +69,10 @@ Every pull request on this repository is now reviewed automatically. No manual t
 
 Here's what a typical finding looks like in the PR comment:
 
-```
-CRITICAL · SQL Injection · src/api/users.ts:47
-
-User input flows directly into a raw SQL query without parameterisation.
-An attacker can manipulate the `id` parameter to exfiltrate any table.
-
-Vulnerable code:
-  const result = await db.query(`SELECT * FROM users WHERE id = ${req.params.id}`)
-
-Fix:
-  const result = await db.query('SELECT * FROM users WHERE id = $1', [req.params.id])
-
-References: CWE-89 · OWASP A03:2021
-```
+<Frame
+	placeholder
+	caption="A single finding in the PR comment: severity, type, and file:line, followed by the explanation, the vulnerable code, the fix, and CWE/OWASP references."
+/>
 
 The finding tells you what's wrong, where it is, why it's a problem, and what to type to fix it, in your language and framework.
 

@@ -5,7 +5,7 @@ sidebar:
   label: Prepare a target
 ---
 
-import { Note, Warning } from '@mintlify';
+import { Frame, Note, Warning } from '@mintlify';
 
 <Note>
   Live application testing is not self-serve. It runs as a **BattleTest Enterprise** deployment inside a client's own
@@ -51,6 +51,11 @@ run covers the whole environment regardless of how many hostnames it contains.
 Group by application. Do not group by DNS. Splitting one application across two environments
 hides exactly the flaws worth finding: an agent that can move from the web app to the API in a
 single run is what surfaces a cross-service access-control break.
+
+<Frame
+	placeholder
+	caption="The dashboard environment view: an environment with its hostnames, each showing its registration status."
+/>
 
 ## Permission tiers
 

@@ -5,7 +5,7 @@ sidebar:
   label: Introduction
 ---
 
-import { Card, CardGroup } from '@mintlify';
+import { Card, CardGroup, Frame } from '@mintlify';
 
 One agent, one evidence standard, two scopes. **PR security review is free and open to anyone**: it reviews every pull request and posts what it finds on the diff. **Live application testing** is the same agent at full scope against a running system, shipped only as a **BattleTest Enterprise** deployment inside a client's own network.
 
@@ -20,23 +20,12 @@ One agent, one evidence standard, two scopes. **PR security review is free and o
 
 ## What you get on every pull request
 
-When a developer opens a PR, BattleTest runs automatically and posts a review like this within 2–4 minutes:
+When a developer opens a PR, BattleTest runs automatically and posts a review as a comment on the diff within 2–4 minutes:
 
-```
-Risk score: 63 / 100 · 1 CRITICAL · 2 HIGH · 3 MEDIUM
-
-CRITICAL · Secret Exposure · .env.example:12
-  AWS_ACCESS_KEY_ID=AKIA... committed 3 commits ago (still in branch history)
-  Rotate this key immediately.
-
-HIGH · SQL Injection · src/routes/search.ts:34
-  Unparameterised query. Input from req.query.term flows into raw SQL.
-  Fix: use parameterised query (example below).
-
-HIGH · Missing rate limiting · src/middleware/auth.ts:18
-  Login endpoint has no rate limiting. Brute-force attacks are feasible.
-  ...
-```
+<Frame
+	placeholder
+	caption="A real BattleTest review comment on a GitHub pull request: the risk-score header followed by findings, each with severity, file and line, and fix guidance."
+/>
 
 No configuration. No CI pipeline changes. Nothing to remember to trigger.
 

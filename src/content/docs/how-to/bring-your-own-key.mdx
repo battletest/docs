@@ -3,7 +3,7 @@ title: Bring your own key and storage
 description: Connect your own model provider to remove review limits, and your own S3-compatible bucket so finished reviews live in storage you control.
 ---
 
-import { Note } from '@mintlify';
+import { Frame, Note } from '@mintlify';
 
 PR review is free, and the limits on it exist for one reason: inference is the marginal cost of a review, and those limits bound our spend on your behalf.
 
@@ -23,6 +23,11 @@ The connection is provider-neutral. Choose the API format the host accepts (`Ope
 2. Under **Bring your own**, choose the API format and official/custom endpoint.
 3. Enter the model ID and, when the endpoint requires one, its API key. Leave the key blank for a keyless local endpoint.
 4. Save. BattleTest runs a real one-token model request in the selected format before accepting it.
+
+<Frame
+	placeholder
+	caption="Settings → Usage → Bring your own: the model-connection form with API format, endpoint, model ID, and the last verification result."
+/>
 
 BattleTest resolves known model prices from its bundled aggregate snapshot. If the model is not present, enter input, cached-input and output prices per million tokens. For local inference those overrides can all be `0`.
 

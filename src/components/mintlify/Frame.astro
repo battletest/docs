@@ -1,0 +1,27 @@
+---
+// Frame wraps a screenshot with an optional caption. Two modes:
+//   <Frame src="/docs/screenshots/x.png" alt="..." caption="..." />  — a real image
+//   <Frame placeholder caption="what screenshot goes here" />        — a scaffold slot
+// The placeholder renders a labelled box so an empty slot is obvious in the page
+// and the build stays green before real captures are dropped in. Put real images
+// in public/screenshots/ and reference them as /docs/screenshots/<name>.png.
+interface Props {
+	src?: string;
+	alt?: string;
+	caption?: string;
+	placeholder?: boolean;
+}
+const { src, alt, caption, placeholder } = Astro.props;
+const isPlaceholder = placeholder || !src;
+---
+<figure class="mint-frame">
+	{isPlaceholder ? (
+		<div class="mint-frame-placeholder" role="img" aria-label={alt ?? caption ?? 'Screenshot placeholder'}>
+			<span class="mint-frame-badge">Screenshot to add</span>
+			<span class="mint-frame-note">{caption ?? alt ?? 'A screenshot belongs here.'}</span>
+		</div>
+	) : (
+		<img class="mint-frame-img" src={src} alt={alt ?? caption ?? ''} loading="lazy" />
+	)}
+	{caption && !isPlaceholder && <figcaption class="mint-frame-caption">{caption}</figcaption>}
+</figure>

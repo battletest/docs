@@ -5,7 +5,7 @@ sidebar:
   label: Configure notifications
 ---
 
-import { Step, Steps } from '@mintlify';
+import { Frame, Step, Steps } from '@mintlify';
 
 BattleTest can notify you per event, per channel. Configure everything at [Settings → Notifications](https://battletest.dev/settings?tab=notifications). For the full list of events and their default channels, see the [Notification Events reference](/docs/reference/notification-events).
 
@@ -29,6 +29,11 @@ The GitHub PR comment is always posted regardless of these settings. It is the p
     Each event has an email, push, and in-app toggle. Switch the channel on or off for that event.
   </Step>
 </Steps>
+
+<Frame
+	placeholder
+	caption="Settings → Notifications: events grouped by category, each row with email, push, and in-app toggles and a per-category master toggle."
+/>
 
 Some security- and money-critical events (a password change, an ownership transfer, a failed payment on an account that still has billing records) keep **email locked on**; you can add channels but not remove email. These are marked in the [Notification Events reference](/docs/reference/notification-events).
 

@@ -5,7 +5,7 @@ sidebar:
   label: Require security review
 ---
 
-import { Step, Steps } from '@mintlify';
+import { Frame, Step, Steps } from '@mintlify';
 
 BattleTest posts findings as a PR comment and sets a commit status check, but does not block merges by default. To make the security review a required gate:
 
@@ -28,6 +28,11 @@ BattleTest posts findings as a PR comment and sets a commit status check, but do
     Click **Save changes**.
   </Step>
 </Steps>
+
+<Frame
+	placeholder
+	caption="GitHub's merge box on a pull request with the 'BattleTest Security Review' check listed as a required status check."
+/>
 
 After this, a PR is blocked from merging when:
 
