@@ -78,6 +78,7 @@ export default defineConfig({
 					label: 'PR review guides',
 					items: [
 						{ slug: 'how-to/connect-github' },
+						{ slug: 'how-to/add-badge' },
 						{ slug: 'how-to/connect-gitlab' },
 						{ slug: 'how-to/pr-settings' },
 						{ slug: 'how-to/require-security-review' },
