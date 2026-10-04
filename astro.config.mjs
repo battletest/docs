@@ -90,6 +90,7 @@ export default defineConfig({
 					items: [
 						{ slug: 'how-to/adding-a-target' },
 						{ slug: 'how-to/out-of-band-testing' },
+						{ slug: 'how-to/cleanup-after-a-test' },
 					],
 				},
 				{

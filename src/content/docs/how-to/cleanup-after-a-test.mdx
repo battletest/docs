@@ -1,0 +1,56 @@
+---
+title: Clean up after a live test
+description: "What BattleTest changed on your target during a live test, and how to undo it. Read the cleanup notes, understand each item, and reconcile against your own records."
+sidebar:
+  label: Clean up after a test
+---
+
+import { Note } from '@mintlify';
+
+A live test exercises your real application, so it can create and change data on the target: test accounts, records, uploaded files, activated items. BattleTest never undoes any of this for you. Instead it gives you a cleanup list of everything it changed, with how to undo each item, so you decide what to remove.
+
+## Where to find it
+
+Every finished live run has its cleanup list in two places:
+
+- **Cleanup notes**, the button next to **Written report** on the run. It opens a side panel with the full list.
+- The **written report** has the same list as a section you can print or export.
+
+Both cover the whole run, not one finding.
+
+## What each item tells you
+
+Each entry describes one change and how to reverse it:
+
+- **What changed**, in plain terms, naming the specific thing (for example the survey title, the account, the record id).
+- **The exact time** it happened, so you can match it to your own logs.
+- **Who it acted as**, when BattleTest used a test account or token (for example a Telegram id or an email). This is never a password or token, only the identity.
+- **How to undo it**, written as a step you can act on. Items are marked reversible, manual, or auto-expiring.
+
+## Export it
+
+From the written report you can download the cleanup list as:
+
+- A **checklist** inside the Markdown or printed report, with a checkbox per item.
+- A **JSON file** (`battletest-cleanup-<run>.json`) you can feed to a ticketing system or a script.
+
+## How complete it is
+
+BattleTest records every change it makes to your target:
+
+- **Ordinary web requests** are captured automatically. Anything the test created, updated, deleted, or uploaded over HTTP is on the list.
+- **Direct data changes** (for example a row written through SQL injection, or a file written through command injection) are recorded by the agent when it makes them, so they appear on the same list.
+
+If a run used an attack that can change data directly but recorded no such change, the cleanup notes show a reminder to check your database and files yourself, in case something was changed in a way the list could not capture.
+
+<Note>
+One thing the list cannot show is what your own users or systems did afterwards. For example, if the test switched a survey live and real people then responded, those responses are your production data, not a test change. Review your own records before deleting anything that went live.
+</Note>
+
+## Recommended order
+
+1. Open **Cleanup notes** and read the whole list.
+2. Reverse the plain creations first (test accounts, draft records, uploads).
+3. For anything that was made live, check your own records for real activity before you remove it.
+4. Note any manual items (for example a value that was changed and needs restoring from a backup).
+5. If the reminder about direct data changes is shown, check your database and files.
